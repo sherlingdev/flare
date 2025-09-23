@@ -1,0 +1,40 @@
+export const translations = {
+    en: {
+        title: "A faster way to exchange currencies",
+        subtitle: "Exchange currencies at the best rates with Flare. Fast and reliable currency conversion with real-time rates.",
+        youSend: "You Send",
+        recipientGets: "Recipient Gets",
+        comparePrice: "Compare Price",
+        getStarted: "Get Started",
+        youCouldSave: "You could save vs banks",
+        shouldArrive: "Should arrive by",
+        bestRates: "Best Rates",
+        bestRatesDesc: "Get the most competitive exchange rates in the market",
+        secure: "Secure",
+        secureDesc: "Bank-level security for all your transactions",
+        fast: "Fast",
+        fastDesc: "Instant transfers and real-time processing",
+        copyright: "Copyright © 2025 Flare Exchange. All rights reserved.",
+        terms: "Terms and Conditions",
+        privacy: "Privacy Policy"
+    },
+    es: {
+        title: "Una forma más rápida de cambiar monedas",
+        subtitle: "Cambia monedas a las mejores tasas con Flare. Conversión de monedas rápida y confiable con tasas en tiempo real.",
+        youSend: "Envías",
+        recipientGets: "El destinatario recibe",
+        comparePrice: "Comparar Precio",
+        getStarted: "Comenzar",
+        youCouldSave: "Podrías ahorrar vs bancos",
+        shouldArrive: "Debería llegar el",
+        bestRates: "Mejores Tasas",
+        bestRatesDesc: "Obtén las tasas de cambio más competitivas del mercado",
+        secure: "Seguro",
+        secureDesc: "Seguridad de nivel bancario para todas tus transacciones",
+        fast: "Rápido",
+        fastDesc: "Transferencias instantáneas y procesamiento en tiempo real",
+        copyright: "Copyright © 2025 Flare Exchange. Todos los derechos reservados.",
+        terms: "Términos y Condiciones",
+        privacy: "Política de Privacidad"
+    }
+};
