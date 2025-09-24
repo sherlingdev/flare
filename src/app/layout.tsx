@@ -47,6 +47,25 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('theme');
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else if (theme === 'light') {
+                  document.documentElement.classList.remove('dark');
+                } else {
+                  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                  }
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body
         className={`${dmSans.variable} font-sans antialiased`}

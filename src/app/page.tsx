@@ -1,19 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowUpDown, Sun, Moon, Globe } from "lucide-react";
 import { useTheme } from "../components/ThemeProvider";
 import { useLanguage } from "../hooks/useLanguage";
 import { translations } from "../lib/translations";
 
 export default function Home() {
-  const [fromAmount, setFromAmount] = useState("1,000.00");
-  const [toAmount, setToAmount] = useState("58,500.00");
+  const [fromAmountDisplay, setFromAmountDisplay] = useState("1.00");
+  const [toAmountDisplay, setToAmountDisplay] = useState("62.00");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("DOP");
+  const [lastUpdated, setLastUpdated] = useState("");
+  const fromAmountRef = useRef<HTMLInputElement>(null);
+  const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
   const t = translations[language];
+
+  // Tasa de cambio USD a DOP (SCT - Agente de Cambio: 1 USD = 62.00 DOP)
+  const exchangeRate = 62.00;
+
+  useEffect(() => {
+    if (mounted) {
+      setLastUpdated(new Date().toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      }));
+
+      // Seleccionar el input automáticamente al cargar
+      if (fromAmountRef.current) {
+        fromAmountRef.current.focus();
+        fromAmountRef.current.select();
+      }
+    }
+  }, [mounted]);
+
+
+  // Calcular automáticamente el monto de destino
+  useEffect(() => {
+    // Usar el valor de display para el cálculo (sin comas)
+    const cleanFromAmount = fromAmountDisplay.replace(/,/g, '');
+    const fromValue = parseFloat(cleanFromAmount) || 0;
+
+    if (fromCurrency === "USD" && toCurrency === "DOP") {
+      const calculatedAmount = (fromValue * exchangeRate).toFixed(2);
+      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }));
+    } else if (fromCurrency === "DOP" && toCurrency === "USD") {
+      const calculatedAmount = (fromValue / exchangeRate).toFixed(2);
+      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }));
+    }
+  }, [fromAmountDisplay, fromCurrency, toCurrency, exchangeRate]);
 
   const handleThemeToggle = () => {
     console.log('Theme toggle clicked, current theme:', theme);
@@ -27,11 +75,9 @@ export default function Home() {
 
   const handleSwapCurrencies = () => {
     const tempCurrency = fromCurrency;
-    const tempAmount = fromAmount;
     setFromCurrency(toCurrency);
     setToCurrency(tempCurrency);
-    setFromAmount(toAmount);
-    setToAmount(tempAmount);
+    // El cálculo automático se encargará de actualizar los montos
   };
 
   return (
@@ -83,90 +129,181 @@ export default function Home() {
               {/* Left sidebar ad space */}
             </div>
 
-            <div className="w-full max-w-4xl flex justify-center">
-              <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 p-8 w-full max-w-2xl">
-                {/* Exchange Form - Horizontal Layout */}
-                <div className="flex items-center justify-between space-x-6">
-                  {/* You Send Section */}
+            <div className="w-full max-w-6xl flex justify-center">
+              <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-3xl shadow-2xl p-10 w-full">
+                {/* Exchange Form - Clean Horizontal Layout */}
+                <div className="flex items-center justify-between space-x-8">
+                  {/* From Currency Section */}
                   <div className="flex-1">
                     <div className="space-y-4">
-                      <input
-                        type="text"
-                        value={fromAmount}
-                        onChange={(e) => setFromAmount(e.target.value)}
-                        className="w-full text-3xl font-bold text-gray-900 dark:text-white border-none outline-none bg-transparent"
-                      />
-                      <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-700 rounded-lg px-4 py-3">
-                        <span className="text-2xl">🇺🇸</span>
-                        <select
-                          value={fromCurrency}
-                          onChange={(e) => setFromCurrency(e.target.value)}
-                          className="text-lg font-semibold text-gray-900 dark:text-white bg-transparent border-none outline-none"
-                        >
-                          <option value="USD">USD</option>
-                          <option value="DOP">DOP</option>
-                          <option value="EUR">EUR</option>
-                          <option value="GBP">GBP</option>
-                        </select>
+                      <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3">
+                        <input
+                          ref={fromAmountRef}
+                          type="text"
+                          value={fromAmountDisplay}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || value === "0") {
+                              setFromAmountDisplay("1.00");
+                            } else {
+                              // Permitir escribir libremente
+                              setFromAmountDisplay(value);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || value === "0") {
+                              setFromAmountDisplay("1.00");
+                            } else {
+                              // Formatear al salir solo si es un número válido
+                              const num = parseFloat(value);
+                              if (!isNaN(num) && num > 0) {
+                                // Si el valor original tenía decimales, mantenerlos
+                                if (value.includes('.')) {
+                                  const parts = value.split('.');
+                                  const integerPart = parts[0];
+                                  const decimalPart = parts[1] || '00';
+
+                                  // Solo formatear con comas si la parte entera es >= 1000
+                                  if (parseFloat(integerPart) >= 1000) {
+                                    const formattedInteger = parseFloat(integerPart).toLocaleString('en-US');
+                                    setFromAmountDisplay(`${formattedInteger}.${decimalPart}`);
+                                  } else {
+                                    // Para números pequeños, mantener el formato original
+                                    setFromAmountDisplay(`${integerPart}.${decimalPart}`);
+                                  }
+                                } else {
+                                  // Si no tenía decimales, agregar .00
+                                  const formatted = num.toLocaleString('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                  });
+                                  setFromAmountDisplay(formatted);
+                                }
+                              }
+                            }
+                          }}
+                          onClick={(e) => {
+                            e.currentTarget.select();
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.select();
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.currentTarget.blur();
+                            }
+                          }}
+                          className="flex-1 text-2xl font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
+                          placeholder="1"
+                        />
+                        <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                          USD
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Swap Button - Centered with proper arrows */}
+                  {/* Swap Button - Horizontal Arrows */}
                   <div className="flex-shrink-0 flex flex-col items-center">
                     <button
                       onClick={handleSwapCurrencies}
-                      className="p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
+                      className="p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
-                      <ArrowUpDown className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                      <ArrowUpDown className="w-6 h-6 text-gray-600 dark:text-gray-300 rotate-90" />
                     </button>
                   </div>
 
-                  {/* Recipient Gets Section */}
+                  {/* To Currency Section */}
                   <div className="flex-1">
                     <div className="space-y-4">
-                      <input
-                        type="text"
-                        value={toAmount}
-                        onChange={(e) => setToAmount(e.target.value)}
-                        className="w-full text-3xl font-bold text-gray-900 dark:text-white border-none outline-none bg-transparent"
-                      />
-                      <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-700 rounded-lg px-4 py-3">
-                        <span className="text-2xl">🇩🇴</span>
-                        <select
-                          value={toCurrency}
-                          onChange={(e) => setToCurrency(e.target.value)}
-                          className="text-lg font-semibold text-gray-900 dark:text-white bg-transparent border-none outline-none"
-                        >
-                          <option value="DOP">DOP</option>
-                          <option value="USD">USD</option>
-                          <option value="EUR">EUR</option>
-                          <option value="GBP">GBP</option>
-                        </select>
+                      <div className="flex items-center space-x-3 bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3">
+                        <input
+                          ref={toAmountRef}
+                          type="text"
+                          value={toAmountDisplay}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Permitir escribir libremente
+                            setToAmountDisplay(value);
+                          }}
+                          onBlur={(e) => {
+                            const value = e.target.value;
+                            // Formatear al salir solo si es un número válido
+                            const num = parseFloat(value);
+                            if (!isNaN(num) && num > 0) {
+                              // Si el valor original tenía decimales, mantenerlos
+                              if (value.includes('.')) {
+                                const parts = value.split('.');
+                                const integerPart = parts[0];
+                                const decimalPart = parts[1] || '00';
+
+                                // Solo formatear con comas si la parte entera es >= 1000
+                                if (parseFloat(integerPart) >= 1000) {
+                                  const formattedInteger = parseFloat(integerPart).toLocaleString('en-US');
+                                  setToAmountDisplay(`${formattedInteger}.${decimalPart}`);
+                                } else {
+                                  // Para números pequeños, mantener el formato original
+                                  setToAmountDisplay(`${integerPart}.${decimalPart}`);
+                                }
+                              } else {
+                                // Si no tenía decimales, agregar .00
+                                const formatted = num.toLocaleString('en-US', {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2
+                                });
+                                setToAmountDisplay(formatted);
+                              }
+                            }
+                          }}
+                          onClick={(e) => {
+                            e.currentTarget.select();
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.select();
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.currentTarget.blur();
+                            }
+                          }}
+                          className="flex-1 text-2xl font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
+                          placeholder="62.00"
+                        />
+                        <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                          DOP
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Exchange Info */}
-                <div className="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-600 mt-8">
+                {/* Enhanced Exchange Info */}
+                <div className="flex justify-between items-center pt-8 mt-10">
                   <div className="text-left">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{t.youCouldSave}</p>
-                    <p className="text-lg font-semibold text-green-600">$15.50 USD</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">You could save vs banks</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">$15.50 USD</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{t.shouldArrive}</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">December 14th</p>
+                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Should arrive</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">by December 14th</p>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex space-x-4 pt-6">
-                  <button className="flex-1 text-indigo-600 dark:text-indigo-400 font-medium py-3 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
-                    {t.comparePrice}
+                {/* Rate Update Info */}
+                <div className="text-center mt-6">
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                    Last updated: {lastUpdated || "Loading..."}
+                  </p>
+                </div>
+
+                {/* Enhanced Action Buttons */}
+                <div className="flex space-x-6 pt-8">
+                  <button className="flex-1 text-indigo-600 dark:text-indigo-400 font-semibold py-4 text-lg hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+                    Compare Price
                   </button>
-                  <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors">
-                    {t.getStarted}
+                  <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 text-lg rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                    Get Started
                   </button>
                 </div>
               </div>

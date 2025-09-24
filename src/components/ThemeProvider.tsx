@@ -17,17 +17,29 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
-
-        // Check localStorage for saved theme
+        // Aplicar tema inmediatamente para evitar flash
         const savedTheme = localStorage.getItem("theme") as Theme;
         if (savedTheme) {
             setTheme(savedTheme);
+            const root = window.document.documentElement;
+            if (savedTheme === "dark") {
+                root.classList.add("dark");
+            } else {
+                root.classList.remove("dark");
+            }
         } else {
             // Check system preference
             const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
             setTheme(systemTheme);
+            const root = window.document.documentElement;
+            if (systemTheme === "dark") {
+                root.classList.add("dark");
+            } else {
+                root.classList.remove("dark");
+            }
         }
+
+        setMounted(true);
     }, []);
 
     useEffect(() => {
