@@ -2,16 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Prevenir flash de light mode */
+/* Critical CSS - Above the fold */
 html {
     color-scheme: light;
+    font-display: swap;
 }
 
 html.dark {
     color-scheme: dark;
 }
 
-/* Asegurar que el dark mode se aplique inmediatamente */
 .dark {
     color-scheme: dark;
+}
+
+/* Performance optimizations */
+* {
+    box-sizing: border-box;
+}
+
+/* Reduce layout shift */
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #475569 transparent;
+}
+
+/* Layout optimizations */
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
+/* AdSense transparency fixes */
+.adsbygoogle {
+    background: transparent !important;
+}
+
+.adsbygoogle iframe {
+    background: transparent !important;
+}
+
+/* Ensure ads blend with background */
+.adsense-container {
+    background: transparent;
+}
+
+.adsense-container * {
+    background: transparent !important;
 }
