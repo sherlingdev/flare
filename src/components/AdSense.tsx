@@ -24,7 +24,7 @@ export default function AdSense({
         const script = document.createElement('script');
         script.async = true;
         script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-        script.setAttribute('data-ad-client', 'ca-pub-XXXXXXXXXXXXXXXX'); // Replace with your AdSense ID
+        script.setAttribute('data-ad-client', 'ca-pub-7906398366781972'); // Your AdSense ID
         document.head.appendChild(script);
       }
 
@@ -42,7 +42,7 @@ export default function AdSense({
       <ins
         className="adsbygoogle"
         style={adStyle}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" // Replace with your AdSense ID
+        data-ad-client="ca-pub-7906398366781972" // Your AdSense ID
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive={responsive ? 'true' : 'false'}
