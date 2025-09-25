@@ -19,11 +19,11 @@ export const measureWebVitals = () => {
                     console.log('LCP:', entry.startTime);
                 }
                 if (entry.entryType === 'first-input') {
-                    const fidEntry = entry as any; // Cast to access processingStart
+                    const fidEntry = entry as PerformanceEventTiming; // Cast to specific type
                     console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
                 }
                 if (entry.entryType === 'layout-shift') {
-                    const clsEntry = entry as any; // Cast to access value
+                    const clsEntry = entry as LayoutShift; // Cast to specific type
                     console.log('CLS:', clsEntry.value);
                 }
             }

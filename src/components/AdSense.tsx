@@ -54,6 +54,6 @@ export default function AdSense({
 // Declare global types for AdSense
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: unknown[];
   }
 }
