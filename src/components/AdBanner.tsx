@@ -8,7 +8,7 @@ interface AdBannerProps {
 
 export default function AdBanner({ className = '' }: AdBannerProps) {
     return (
-        <div className={`w-full h-32 md:h-28 bg-slate-100/30 dark:bg-slate-700/30 rounded-lg flex items-center justify-center border border-slate-200/20 dark:border-slate-600/20 ${className}`}>
+        <div className={`w-full h-32 md:h-28 bg-slate-200/50 dark:bg-slate-700/30 rounded-lg flex items-center justify-center border border-slate-300/40 dark:border-slate-600/20 ${className}`}>
             <AdSense
                 adSlot="1234567890" // Replace with your banner ad slot
                 adFormat="horizontal"
