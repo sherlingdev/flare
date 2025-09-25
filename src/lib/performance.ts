@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Performance monitoring utilities
 export const measurePerformance = (name: string, fn: () => void) => {
     if (typeof window !== 'undefined' && 'performance' in window) {
@@ -19,11 +20,11 @@ export const measureWebVitals = () => {
                     console.log('LCP:', entry.startTime);
                 }
                 if (entry.entryType === 'first-input') {
-                    const fidEntry = entry as PerformanceEventTiming; // Cast to specific type
+                    const fidEntry = entry as any;
                     console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
                 }
                 if (entry.entryType === 'layout-shift') {
-                    const clsEntry = entry as LayoutShift; // Cast to specific type
+                    const clsEntry = entry as any;
                     console.log('CLS:', clsEntry.value);
                 }
             }
