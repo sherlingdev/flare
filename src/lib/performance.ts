@@ -23,7 +23,8 @@ export const measureWebVitals = () => {
                     console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
                 }
                 if (entry.entryType === 'layout-shift') {
-                    console.log('CLS:', entry.value);
+                    const clsEntry = entry as any; // Cast to access value
+                    console.log('CLS:', clsEntry.value);
                 }
             }
         });
