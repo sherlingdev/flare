@@ -1,0 +1,8 @@
+# ads.txt file for aesthetic-sundae-3e8908.netlify.app
+# This file helps verify authorized digital sellers for your website
+
+# Google AdSense
+google.com, pub-7906398366781972, DIRECT, f08c47fec0942fa0
+
+# Additional authorized sellers (you can add more as needed)
+# Example: google.com, pub-7906398366781972, DIRECT, f08c47fec0942fa0
