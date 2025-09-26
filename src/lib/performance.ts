@@ -19,12 +19,12 @@ export const measureWebVitals = () => {
                     if (entry.entryType === 'largest-contentful-paint') {
                         // LCP measurement disabled for production
                     }
-                            if (entry.entryType === 'first-input') {
-                                // FID measurement disabled for production
-                            }
-                            if (entry.entryType === 'layout-shift') {
-                                // CLS measurement disabled for production
-                            }
+                    if (entry.entryType === 'first-input') {
+                        // FID measurement disabled for production
+                    }
+                    if (entry.entryType === 'layout-shift') {
+                        // CLS measurement disabled for production
+                    }
                 }
             });
 
