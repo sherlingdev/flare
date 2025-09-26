@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
+import StructuredData from "../components/StructuredData";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -74,30 +75,6 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              "name": "Flare Currency Converter",
-              "description": "Fast and reliable USD to DOP currency converter with real-time exchange rates",
-              "url": "https://flare.com",
-              "applicationCategory": "FinanceApplication",
-              "operatingSystem": "Web Browser",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-              },
-              "provider": {
-                "@type": "Organization",
-                "name": "Flare Exchange",
-                "url": "https://flare.com"
-              }
-            })
-          }}
-        />
-        <script
           dangerouslySetInnerHTML={{
             __html: `
                   try {
@@ -128,6 +105,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProvider>
+          <StructuredData />
           {children}
         </ThemeProvider>
       </body>
