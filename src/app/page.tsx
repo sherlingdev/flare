@@ -100,14 +100,36 @@ export default function Home() {
 
   const handleSwapCurrencies = useCallback(() => {
     // Intercambiar monedas
-    const tempCurrency = fromCurrency;
-    setFromCurrency(toCurrency);
-    setToCurrency(tempCurrency);
+    const newFromCurrency = toCurrency;
+    const newToCurrency = fromCurrency;
     
     // Intercambiar montos
-    const tempAmount = fromAmountDisplay;
-    setFromAmountDisplay(toAmountDisplay);
-    setToAmountDisplay(tempAmount);
+    const newFromAmount = toAmountDisplay;
+    const newToAmount = fromAmountDisplay;
+    
+    // Actualizar estados
+    setFromCurrency(newFromCurrency);
+    setToCurrency(newToCurrency);
+    setFromAmountDisplay(newFromAmount);
+    setToAmountDisplay(newToAmount);
+    
+    // Calcular el nuevo monto de destino inmediatamente
+    const cleanFromAmount = newFromAmount.replace(/,/g, '');
+    const fromValue = parseFloat(cleanFromAmount) || 0;
+    
+    if (newFromCurrency === "USD" && newToCurrency === "DOP") {
+      const calculatedAmount = (fromValue * exchangeRate).toFixed(2);
+      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }));
+    } else if (newFromCurrency === "DOP" && newToCurrency === "USD") {
+      const calculatedAmount = (fromValue / exchangeRate).toFixed(2);
+      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }));
+    }
     
     // Seleccionar el input después del swap
     setTimeout(() => {
@@ -116,7 +138,7 @@ export default function Home() {
         fromAmountRef.current.select();
       }
     }, 100);
-  }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay]);
+  }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay, exchangeRate]);
 
 
   // Memoized components for better performance
