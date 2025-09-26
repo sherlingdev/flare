@@ -13,24 +13,28 @@ export const measurePerformance = (name: string, fn: () => void) => {
 
 export const measureWebVitals = () => {
     if (typeof window !== 'undefined' && 'performance' in window) {
-        // Measure Core Web Vitals
-        const observer = new PerformanceObserver((list) => {
-            for (const entry of list.getEntries()) {
-                if (entry.entryType === 'largest-contentful-paint') {
-                    console.log('LCP:', entry.startTime);
+        try {
+            // Measure Core Web Vitals
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (entry.entryType === 'largest-contentful-paint') {
+                        console.log('LCP:', entry.startTime);
+                    }
+                    if (entry.entryType === 'first-input') {
+                        const fidEntry = entry as any;
+                        console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
+                    }
+                    if (entry.entryType === 'layout-shift') {
+                        const clsEntry = entry as any;
+                        console.log('CLS:', clsEntry.value);
+                    }
                 }
-                if (entry.entryType === 'first-input') {
-                    const fidEntry = entry as any;
-                    console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
-                }
-                if (entry.entryType === 'layout-shift') {
-                    const clsEntry = entry as any;
-                    console.log('CLS:', clsEntry.value);
-                }
-            }
-        });
+            });
 
-        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+            observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+        } catch (error) {
+            console.warn('Web Vitals measurement failed:', error);
+        }
     }
 };
 

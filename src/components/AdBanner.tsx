@@ -9,7 +9,7 @@ interface AdBannerProps {
 
 export default function AdBanner({ className = '', position = 'top' }: AdBannerProps) {
     const adSlot = position === 'top' ? '6460980142' : '8428667939';
-    
+
     return (
         <div className={`w-full h-32 md:h-28 ${className}`} style={{ display: 'none' }}>
             <AdSense
