@@ -151,10 +151,10 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-4">
+        <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-2">
 
           {/* Top Banner Ad */}
-          <div className="mb-4">
+          <div className="mb-2">
             <AdBanner className="mx-auto" position="top" />
           </div>
 
