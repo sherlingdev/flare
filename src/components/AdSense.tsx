@@ -25,9 +25,9 @@ export default function AdSense({
         script.async = true;
         script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
         script.setAttribute('data-ad-client', 'ca-pub-7906398366781972'); // Your AdSense ID
-                script.onerror = () => {
-                  // AdSense script failed to load - silent handling
-                };
+        script.onerror = () => {
+          // AdSense script failed to load - silent handling
+        };
         document.head.appendChild(script);
       }
 
