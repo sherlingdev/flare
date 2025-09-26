@@ -25,7 +25,7 @@ export default function Home() {
   const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
-  const { rate: exchangeRate, loading: rateLoading, error: rateError, lastUpdated: rateLastUpdated, source } = useExchangeRate();
+  const { rate: exchangeRate, error: rateError, lastUpdated: rateLastUpdated } = useExchangeRate();
   const t = translations[language];
 
   useEffect(() => {
@@ -106,18 +106,18 @@ export default function Home() {
     // Intercambiar monedas
     const newFromCurrency = toCurrency;
     const newToCurrency = fromCurrency;
-    
+
     // Intercambiar montos - usar el valor actual del "to" como nuevo "from"
     const newFromAmount = toAmountDisplay;
-    
+
     // Limpiar el valor de destino para que se recalcule
-    setToAmountDisplay("0.00");
-    
+    setToAmountDisplay("1.00");
+
     // Actualizar estados
     setFromCurrency(newFromCurrency);
     setToCurrency(newToCurrency);
     setFromAmountDisplay(newFromAmount);
-    
+
     // Seleccionar el input después del swap
     setTimeout(() => {
       if (fromAmountRef.current) {
