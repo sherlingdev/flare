@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 interface ExchangeRateResponse {
   success: boolean;
@@ -104,7 +104,7 @@ async function fetchFromExchangeRateAPI(): Promise<ExchangeRateResponse> {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Try Banco Central first
     try {
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(fallbackRate);
 
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { 
         success: false, 
