@@ -77,21 +77,21 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-                  try {
-                    // Set default dark theme to prevent hydration mismatch
-                    document.documentElement.classList.add('dark');
-                    
-                    const theme = localStorage.getItem('theme');
-                    if (theme === 'light') {
-                      document.documentElement.classList.remove('dark');
-                    } else if (theme === 'dark') {
-                      document.documentElement.classList.add('dark');
-                    }
-                  } catch (e) {
-                    // Fallback to dark theme
-                    document.documentElement.classList.add('dark');
-                  }
-                `,
+              try {
+                // Set default dark theme to prevent hydration mismatch
+                document.documentElement.classList.add('dark');
+                
+                const theme = localStorage.getItem('theme');
+                if (theme === 'light') {
+                  document.documentElement.classList.remove('dark');
+                } else if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {
+                // Fallback to dark theme
+                document.documentElement.classList.add('dark');
+              }
+            `,
           }}
         />
         <script
