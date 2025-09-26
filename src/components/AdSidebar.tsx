@@ -8,7 +8,7 @@ interface AdSidebarProps {
 
 export default function AdSidebar({ className = '' }: AdSidebarProps) {
     return (
-        <div className={`w-48 h-80 ${className}`}>
+        <div className={`w-48 h-80 ${className}`} style={{ display: 'none' }}>
             <AdSense
                 adSlot="0987654321" // Replace with your sidebar ad slot
                 adFormat="vertical"
