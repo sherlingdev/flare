@@ -4,13 +4,16 @@ import AdSense from './AdSense';
 
 interface AdSidebarProps {
     className?: string;
+    position?: 'left' | 'right';
 }
 
-export default function AdSidebar({ className = '' }: AdSidebarProps) {
+export default function AdSidebar({ className = '', position = 'left' }: AdSidebarProps) {
+    const adSlot = position === 'left' ? '6540871197' : '5544332211';
+    
     return (
         <div className={`w-48 h-80 ${className}`} style={{ display: 'none' }}>
             <AdSense
-                adSlot="0987654321" // Replace with your sidebar ad slot
+                adSlot={adSlot}
                 adFormat="vertical"
                 className="w-full h-full"
                 adStyle={{

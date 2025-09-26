@@ -7,7 +7,7 @@ export const adSenseConfig = {
     adSlots: {
         topBanner: '6460980142',      // Top banner ad slot
         bottomBanner: '8428667939',   // Bottom banner ad slot
-        leftSidebar: '1122334455',   // Left sidebar ad slot
+        leftSidebar: '6540871197',   // Left sidebar ad slot
         rightSidebar: '5544332211',  // Right sidebar ad slot
     },
 

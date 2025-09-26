@@ -150,7 +150,7 @@ export default function Home() {
           <div className="flex justify-center items-center space-x-8">
             {/* Left Sidebar Ad */}
             <div className="hidden lg:block">
-              <AdSidebar />
+              <AdSidebar position="left" />
             </div>
 
             <div className="w-full max-w-4xl mx-8">
@@ -285,7 +285,7 @@ export default function Home() {
 
             {/* Right Sidebar Ad */}
             <div className="hidden lg:block">
-              <AdSidebar />
+              <AdSidebar position="right" />
             </div>
           </div>
 
