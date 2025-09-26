@@ -10,12 +10,12 @@ interface AdSenseProps {
   responsive?: boolean;
 }
 
-export default function AdSense({ 
-  adSlot, 
-  adFormat = 'auto', 
+export default function AdSense({
+  adSlot,
+  adFormat = 'auto',
   adStyle = { display: 'block' },
   className = '',
-  responsive = true 
+  responsive = true
 }: AdSenseProps) {
   useEffect(() => {
     try {
