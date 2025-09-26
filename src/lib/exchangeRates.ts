@@ -69,7 +69,7 @@ export class ExchangeRateService {
             this.cache.set(cacheKey, result.data);
             return result;
           }
-        } catch (error) {
+        } catch {
           // Continue to next source
           continue;
         }
@@ -87,7 +87,7 @@ export class ExchangeRateService {
       this.cache.set(cacheKey, fallbackRate);
       return { success: true, data: fallbackRate };
 
-    } catch (error) {
+    } catch {
       return {
         success: false,
         error: 'Failed to fetch exchange rate from all sources'
@@ -101,7 +101,7 @@ export class ExchangeRateService {
       // Use Next.js API Route for real scraping
       const response = await fetch('/api/exchange-rate');
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         return {
           success: true,
