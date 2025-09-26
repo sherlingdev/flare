@@ -13,54 +13,27 @@ interface UseExchangeRateReturn {
 }
 
 export function useExchangeRate(): UseExchangeRateReturn {
-  const [rate, setRate] = useState<number>(62.00); // Fallback rate
+  // Use a fixed, stable rate to prevent fluctuations
+  const [rate, setRate] = useState<number>(62.00); // Fixed rate
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [source, setSource] = useState<string>('fallback');
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
+  const [source, setSource] = useState<string>('fixed');
 
-  // Load cached rate immediately
+  // Set initial values immediately
   useEffect(() => {
-    const cachedRate = exchangeRateService.getCachedRate();
-    if (cachedRate) {
-      setRate(cachedRate.rate);
-      setLastUpdated(cachedRate.timestamp);
-      setSource(cachedRate.source);
-    }
+    setRate(62.00);
+    setLastUpdated(new Date());
+    setSource('fixed');
   }, []);
 
-  // Fetch fresh rate
+  // No auto-refresh to prevent rate fluctuations
   const refreshRate = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response: ExchangeRateResponse = await exchangeRateService.getUSDtoDOPRate();
-      
-      if (response.success && response.data) {
-        setRate(response.data.rate);
-        setLastUpdated(response.data.timestamp);
-        setSource(response.data.source);
-      } else {
-        setError(response.error || 'Failed to fetch exchange rate');
-      }
-    } catch (err) {
-      setError('Network error while fetching exchange rate');
-    } finally {
-      setLoading(false);
-    }
+    // Keep the same fixed rate
+    setRate(62.00);
+    setLastUpdated(new Date());
+    setSource('fixed');
   }, []);
-
-  // Auto-refresh every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(refreshRate, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [refreshRate]);
-
-  // Initial fetch
-  useEffect(() => {
-    refreshRate();
-  }, [refreshRate]);
 
   return {
     rate,
