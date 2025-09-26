@@ -11,7 +11,7 @@ export default function AdSidebar({ className = '', position = 'left' }: AdSideb
     const adSlot = position === 'left' ? '6540871197' : '5544332211';
     
     return (
-        <div className={`w-48 h-80 ${className} bg-slate-200/50 dark:bg-slate-700/30 rounded-lg border border-slate-300/40 dark:border-slate-600/20`}>
+        <div className={`w-48 h-80 ${className} bg-gradient-to-b from-slate-200/60 to-gray-200/60 dark:from-slate-700/40 dark:to-gray-700/40 rounded-lg border border-slate-300/50 dark:border-slate-600/30 shadow-sm`}>
             <AdSense
                 adSlot={adSlot}
                 adFormat="vertical"
