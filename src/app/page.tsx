@@ -357,9 +357,7 @@ export default function Home() {
       <footer className="relative z-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50">
         <div className="w-full px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 md:mb-0">
-              {t.copyright}
-            </div>
+            <div className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 md:mb-0" dangerouslySetInnerHTML={{ __html: t.copyright }} />
             <div className="flex space-x-6 text-slate-600 dark:text-slate-300 text-sm font-medium">
               <a href="#" className="hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
                 {t.terms}
