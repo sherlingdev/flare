@@ -101,3 +101,25 @@ svg {
 .adsense-container * {
     background: transparent !important;
 }
+
+/* Custom selection colors to match project theme */
+::selection {
+    background-color: #475569; /* slate-600 */
+    color: #f8fafc; /* slate-50 */
+}
+
+::-moz-selection {
+    background-color: #475569; /* slate-600 */
+    color: #f8fafc; /* slate-50 */
+}
+
+/* Dark mode selection */
+.dark ::selection {
+    background-color: #64748b; /* slate-500 */
+    color: #0f172a; /* slate-900 */
+}
+
+.dark ::-moz-selection {
+    background-color: #64748b; /* slate-500 */
+    color: #0f172a; /* slate-900 */
+}
