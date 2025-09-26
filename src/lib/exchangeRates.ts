@@ -17,11 +17,11 @@ export interface ExchangeRateResponse {
 const EXCHANGE_SOURCES = {
   // Banco Central de República Dominicana (Official) - Main source
   BANCO_CENTRAL: 'https://www.bancentral.gov.do/a/d/2545-tasa-de-cambio',
-  
+
   // Alternative sources for fallback
   EXCHANGE_RATE_API: 'https://api.exchangerate-api.com/v4/latest/USD',
   FIXER_IO: 'https://api.fixer.io/latest?base=USD&symbols=DOP',
-  
+
   // Web scraping targets
   XE_COM: 'https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=DOP',
   GOOGLE_FINANCE: 'https://www.google.com/finance/quote/USD-DOP'
@@ -46,7 +46,7 @@ export class ExchangeRateService {
   async getUSDtoDOPRate(): Promise<ExchangeRateResponse> {
     const cacheKey = 'USD-DOP';
     const cached = this.cache.get(cacheKey);
-    
+
     // Return cached data if still valid
     if (cached && Date.now() - cached.timestamp.getTime() < this.cacheTimeout) {
       return { success: true, data: cached };
@@ -98,22 +98,25 @@ export class ExchangeRateService {
   // Scrape from Banco Central de República Dominicana (Official)
   private async scrapeFromBancoCentral(): Promise<ExchangeRateResponse> {
     try {
-      // Note: This would require a backend service due to CORS
-      // For now, we'll simulate the response with realistic rate
-      const simulatedRate = 62.00 + (Math.random() - 0.5) * 0.5; // ±0.25 DOP variation
+      // Use Next.js API Route for real scraping
+      const response = await fetch('/api/exchange-rate');
+      const data = await response.json();
       
-      return {
-        success: true,
-        data: {
-          from: 'USD',
-          to: 'DOP',
-          rate: Math.round(simulatedRate * 100) / 100,
-          timestamp: new Date(),
-          source: 'Banco Central RD (simulated)'
-        }
-      };
+      if (data.success && data.data) {
+        return {
+          success: true,
+          data: {
+            from: data.data.from,
+            to: data.data.to,
+            rate: data.data.rate,
+            timestamp: new Date(data.data.timestamp),
+            source: data.data.source
+          }
+        };
+      }
+      throw new Error(data.error || 'API returned unsuccessful response');
     } catch (error) {
-      throw new Error(`Banco Central scraping failed: ${error}`);
+      throw new Error(`Banco Central API failed: ${error}`);
     }
   }
 
@@ -122,7 +125,7 @@ export class ExchangeRateService {
     try {
       const response = await fetch(EXCHANGE_SOURCES.EXCHANGE_RATE_API);
       const data = await response.json();
-      
+
       if (data.rates && data.rates.DOP) {
         return {
           success: true,
@@ -146,7 +149,7 @@ export class ExchangeRateService {
     try {
       const response = await fetch(EXCHANGE_SOURCES.FIXER_IO);
       const data = await response.json();
-      
+
       if (data.rates && data.rates.DOP) {
         return {
           success: true,
@@ -171,7 +174,7 @@ export class ExchangeRateService {
       // Note: This would require a backend service due to CORS
       // For now, we'll simulate the response
       const simulatedRate = 62.00 + (Math.random() - 0.5) * 2; // ±1 DOP variation
-      
+
       return {
         success: true,
         data: {
@@ -193,7 +196,7 @@ export class ExchangeRateService {
       // Note: This would require a backend service due to CORS
       // For now, we'll simulate the response
       const simulatedRate = 62.00 + (Math.random() - 0.5) * 1.5; // ±0.75 DOP variation
-      
+
       return {
         success: true,
         data: {

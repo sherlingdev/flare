@@ -25,10 +25,8 @@ export default function Home() {
   const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
+  const { rate: exchangeRate, loading: rateLoading, error: rateError, lastUpdated, source } = useExchangeRate();
   const t = translations[language];
-
-  // Tasa de cambio USD a DOP (SCT - Agente de Cambio: 1 USD = 62.00 DOP)
-  const exchangeRate = 62.00;
 
   useEffect(() => {
     if (mounted) {
@@ -282,6 +280,16 @@ export default function Home() {
                   <p className="text-xs text-gray-400 dark:text-gray-500">
                     {t.lastUpdated} {lastUpdated || t.loading}
                   </p>
+                  {source && (
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                      Source: {source}
+                    </p>
+                  )}
+                  {rateError && (
+                    <p className="text-xs text-red-400 dark:text-red-500 mt-1">
+                      Rate error: {rateError}
+                    </p>
+                  )}
                 </div>
 
 
