@@ -99,11 +99,24 @@ export default function Home() {
   }, [language, toggleLanguage]);
 
   const handleSwapCurrencies = useCallback(() => {
+    // Intercambiar monedas
     const tempCurrency = fromCurrency;
     setFromCurrency(toCurrency);
     setToCurrency(tempCurrency);
-    // El cálculo automático se encargará de actualizar los montos
-  }, [fromCurrency, toCurrency]);
+    
+    // Intercambiar montos
+    const tempAmount = fromAmountDisplay;
+    setFromAmountDisplay(toAmountDisplay);
+    setToAmountDisplay(tempAmount);
+    
+    // Seleccionar el input después del swap
+    setTimeout(() => {
+      if (fromAmountRef.current) {
+        fromAmountRef.current.focus();
+        fromAmountRef.current.select();
+      }
+    }, 100);
+  }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay]);
 
 
   // Memoized components for better performance
