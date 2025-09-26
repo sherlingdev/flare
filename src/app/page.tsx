@@ -25,21 +25,34 @@ export default function Home() {
   const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
-  const { rate: exchangeRate, loading: rateLoading, error: rateError, lastUpdated, source } = useExchangeRate();
+  const { rate: exchangeRate, loading: rateLoading, error: rateError, lastUpdated: rateLastUpdated, source } = useExchangeRate();
   const t = translations[language];
 
   useEffect(() => {
     if (mounted) {
       measurePerformance('Component Mount', () => {
-        setLastUpdated(new Date().toLocaleString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZoneName: 'short'
-        }));
+        // Use rate timestamp if available, otherwise use current time
+        if (rateLastUpdated) {
+          setLastUpdated(rateLastUpdated.toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZoneName: 'short'
+          }));
+        } else {
+          setLastUpdated(new Date().toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZoneName: 'short'
+          }));
+        }
 
         // Seleccionar el input automáticamente al cargar
         if (fromAmountRef.current) {
@@ -51,7 +64,7 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
     }
-  }, [mounted]);
+  }, [mounted, rateLastUpdated]);
 
 
   // Calcular automáticamente el monto de destino

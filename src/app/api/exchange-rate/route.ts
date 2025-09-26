@@ -31,11 +31,11 @@ async function scrapeBancoCentral(): Promise<ExchangeRateResponse> {
     }
 
     const html = await response.text();
-    
+
     // Parse HTML to extract exchange rate
     // Look for patterns like "USD/DOP: 62.50" or similar
     const rateMatch = html.match(/(?:USD|DOP|dólar|peso).*?(\d+\.?\d*)/i);
-    
+
     if (rateMatch) {
       const rate = parseFloat(rateMatch[1]);
       if (rate > 0 && rate < 1000) { // Sanity check
@@ -85,7 +85,7 @@ async function fetchFromExchangeRateAPI(): Promise<ExchangeRateResponse> {
   try {
     const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
     const data = await response.json();
-    
+
     if (data.rates && data.rates.DOP) {
       return {
         success: true,
@@ -142,9 +142,9 @@ export async function GET() {
 
   } catch {
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to fetch exchange rate from all sources' 
+      {
+        success: false,
+        error: 'Failed to fetch exchange rate from all sources'
       },
       { status: 500 }
     );
