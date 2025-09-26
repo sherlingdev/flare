@@ -205,7 +205,8 @@ export default function Home() {
                           if (e.key === 'Enter') e.currentTarget.blur();
                         }}
                         className="flex-1 text-base font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
-                        placeholder="1"
+                        placeholder={t.enterAmount}
+                        aria-label={t.fromCurrency}
                       />
                       <span className="text-base font-semibold text-gray-900 dark:text-white">
                         USD
@@ -218,6 +219,8 @@ export default function Home() {
                     <button
                       onClick={handleSwapCurrencies}
                       className="p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      aria-label={t.swap}
+                      title={t.swap}
                     >
                       <Suspense fallback={<div className="w-6 h-6" />}>
                         <ArrowUpDown className="w-6 h-6 text-gray-600 dark:text-gray-300 rotate-90" />
@@ -262,7 +265,8 @@ export default function Home() {
                           if (e.key === 'Enter') e.currentTarget.blur();
                         }}
                         className="flex-1 text-base font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
-                        placeholder="62.00"
+                        placeholder={t.enterAmount}
+                        aria-label={t.toCurrency}
                       />
                       <span className="text-base font-semibold text-gray-900 dark:text-white">
                         DOP
@@ -301,7 +305,7 @@ export default function Home() {
         <div className="w-full px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 md:mb-0">
-              Copyright <span className="text-indigo-600 dark:text-indigo-400">©</span> 2025 Flare Exchange. All rights reserved.
+              {t.copyright}
             </div>
             <div className="flex space-x-6 text-slate-600 dark:text-slate-300 text-sm font-medium">
               <a href="#" className="hover:text-slate-800 dark:hover:text-slate-100 transition-colors">

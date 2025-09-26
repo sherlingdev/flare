@@ -18,7 +18,13 @@ export const translations = {
         terms: "Terms and Conditions",
         privacy: "Privacy Policy",
         lastUpdated: "Last updated:",
-        loading: "Loading..."
+        loading: "Loading...",
+        exchangeRate: "Exchange Rate",
+        fromCurrency: "From Currency",
+        toCurrency: "To Currency",
+        swap: "Swap Currencies",
+        enterAmount: "Enter amount",
+        selectCurrency: "Select currency"
     },
     es: {
         title: "Una forma más rápida de cambiar monedas",
@@ -39,6 +45,12 @@ export const translations = {
         terms: "Términos y Condiciones",
         privacy: "Política de Privacidad",
         lastUpdated: "Última actualización:",
-        loading: "Cargando..."
+        loading: "Cargando...",
+        exchangeRate: "Tasa de Cambio",
+        fromCurrency: "Moneda de Origen",
+        toCurrency: "Moneda de Destino",
+        swap: "Intercambiar Monedas",
+        enterAmount: "Ingresa el monto",
+        selectCurrency: "Selecciona moneda"
     }
 };
