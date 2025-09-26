@@ -101,18 +101,19 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
                   try {
+                    // Set default dark theme to prevent hydration mismatch
+                    document.documentElement.classList.add('dark');
+                    
                     const theme = localStorage.getItem('theme');
-                    if (theme === 'dark') {
-                      document.documentElement.classList.add('dark');
-                    } else if (theme === 'light') {
+                    if (theme === 'light') {
                       document.documentElement.classList.remove('dark');
-                    } else {
-                      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                      if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                      }
+                    } else if (theme === 'dark') {
+                      document.documentElement.classList.add('dark');
                     }
-                  } catch (e) {}
+                  } catch (e) {
+                    // Fallback to dark theme
+                    document.documentElement.classList.add('dark');
+                  }
                 `,
           }}
         />
@@ -124,6 +125,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${dmSans.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <ThemeProvider>
           {children}
