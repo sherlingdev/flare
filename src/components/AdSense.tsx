@@ -35,11 +35,11 @@ export default function AdSense({
       if (window.adsbygoogle) {
         try {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
-        } catch (error) {
+        } catch {
           console.warn('AdSense initialization failed - this is normal during development');
         }
       }
-    } catch (error) {
+    } catch {
       console.warn('AdSense setup failed - this is normal during development');
     }
   }, []);
