@@ -145,12 +145,12 @@ export default function Home() {
   ), [mounted, theme, langMounted, language, handleThemeToggle, handleLanguageToggle]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">
+    <div className="h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col overflow-hidden">
       {/* Header */}
       {Header}
 
       {/* Main Content */}
-      <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center">
+      <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center overflow-hidden">
         <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-4">
 
           {/* Top Banner Ad */}
