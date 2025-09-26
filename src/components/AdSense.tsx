@@ -25,9 +25,9 @@ export default function AdSense({
         script.async = true;
         script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
         script.setAttribute('data-ad-client', 'ca-pub-7906398366781972'); // Your AdSense ID
-        script.onerror = () => {
-          console.warn('AdSense script failed to load - this is normal during development');
-        };
+                script.onerror = () => {
+                  // AdSense script failed to load - silent handling
+                };
         document.head.appendChild(script);
       }
 
@@ -36,11 +36,11 @@ export default function AdSense({
         try {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
         } catch {
-          console.warn('AdSense initialization failed - this is normal during development');
+          // AdSense initialization failed - silent handling
         }
       }
     } catch {
-      console.warn('AdSense setup failed - this is normal during development');
+      // AdSense setup failed - silent handling
     }
   }, []);
 

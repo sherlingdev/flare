@@ -5,7 +5,7 @@ export const measurePerformance = (name: string, fn: () => void) => {
         const start = performance.now();
         fn();
         const end = performance.now();
-        console.log(`${name} took ${end - start} milliseconds`);
+        // Performance logging disabled for production
     } else {
         fn();
     }
@@ -15,25 +15,25 @@ export const measureWebVitals = () => {
     if (typeof window !== 'undefined' && 'performance' in window) {
         try {
             // Measure Core Web Vitals
-            const observer = new PerformanceObserver((list) => {
-                for (const entry of list.getEntries()) {
-                    if (entry.entryType === 'largest-contentful-paint') {
-                        console.log('LCP:', entry.startTime);
-                    }
-                    if (entry.entryType === 'first-input') {
-                        const fidEntry = entry as any;
-                        console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
-                    }
-                    if (entry.entryType === 'layout-shift') {
-                        const clsEntry = entry as any;
-                        console.log('CLS:', clsEntry.value);
-                    }
-                }
-            });
+                    const observer = new PerformanceObserver((list) => {
+                        for (const entry of list.getEntries()) {
+                            if (entry.entryType === 'largest-contentful-paint') {
+                                // LCP measurement disabled for production
+                            }
+                            if (entry.entryType === 'first-input') {
+                                const fidEntry = entry as any;
+                                // FID measurement disabled for production
+                            }
+                            if (entry.entryType === 'layout-shift') {
+                                const clsEntry = entry as any;
+                                // CLS measurement disabled for production
+                            }
+                        }
+                    });
 
             observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
-        } catch (error) {
-            console.warn('Web Vitals measurement failed:', error);
+        } catch {
+            // Web Vitals measurement failed - silent handling
         }
     }
 };
