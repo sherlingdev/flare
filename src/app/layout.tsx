@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import StructuredData from "../components/StructuredData";
+import AdSenseScript from "../components/AdSenseScript";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -94,11 +95,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7906398366781972"
-          crossOrigin="anonymous"
-        />
       </head>
       <body
         className={`${dmSans.variable} font-sans antialiased`}
@@ -106,6 +102,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <StructuredData />
+          <AdSenseScript />
           {children}
         </ThemeProvider>
       </body>
