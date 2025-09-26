@@ -16,7 +16,9 @@ export const translations = {
         fastDesc: "Instant transfers and real-time processing",
         copyright: "Copyright © 2025 Flare Exchange. All rights reserved.",
         terms: "Terms and Conditions",
-        privacy: "Privacy Policy"
+        privacy: "Privacy Policy",
+        lastUpdated: "Last updated:",
+        loading: "Loading..."
     },
     es: {
         title: "Una forma más rápida de cambiar monedas",
@@ -35,6 +37,8 @@ export const translations = {
         fastDesc: "Transferencias instantáneas y procesamiento en tiempo real",
         copyright: "Copyright © 2025 Flare Exchange. Todos los derechos reservados.",
         terms: "Términos y Condiciones",
-        privacy: "Política de Privacidad"
+        privacy: "Política de Privacidad",
+        lastUpdated: "Última actualización:",
+        loading: "Cargando..."
     }
 };

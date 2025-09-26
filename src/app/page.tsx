@@ -138,12 +138,12 @@ export default function Home() {
       {Header}
 
       {/* Main Content */}
-      <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center">
-        <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-8">
+      <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center min-h-0">
+        <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-4">
 
           {/* Top Banner Ad */}
-          <div className="mb-8">
-            <AdBanner className="mx-auto" />
+          <div className="mb-4">
+            <AdBanner className="mx-auto" position="top" />
           </div>
 
           {/* Currency Exchange Card - Centered Layout */}
@@ -275,7 +275,7 @@ export default function Home() {
                 {/* Rate Update Info */}
                 <div className="text-center mt-6">
                   <p className="text-xs text-gray-400 dark:text-gray-500">
-                    Last updated: {lastUpdated || "Loading..."}
+                    {t.lastUpdated} {lastUpdated || t.loading}
                   </p>
                 </div>
 
@@ -290,8 +290,8 @@ export default function Home() {
           </div>
 
           {/* Bottom Banner Ad */}
-          <div className="mt-8">
-            <AdBanner className="mx-auto" />
+          <div className="mt-4">
+            <AdBanner className="mx-auto" position="bottom" />
           </div>
         </div>
       </main>
