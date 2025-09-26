@@ -32,8 +32,9 @@ export default function Home() {
     if (mounted) {
       measurePerformance('Component Mount', () => {
         // Use rate timestamp if available, otherwise use current time
+        const locale = language === 'es' ? 'es-ES' : 'en-US';
         if (rateLastUpdated) {
-          setLastUpdated(rateLastUpdated.toLocaleString('en-US', {
+          setLastUpdated(rateLastUpdated.toLocaleString(locale, {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -43,7 +44,7 @@ export default function Home() {
             timeZoneName: 'short'
           }));
         } else {
-          setLastUpdated(new Date().toLocaleString('en-US', {
+          setLastUpdated(new Date().toLocaleString(locale, {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -64,7 +65,7 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
     }
-  }, [mounted, rateLastUpdated]);
+  }, [mounted, rateLastUpdated, language]);
 
 
   // Calcular automáticamente el monto de destino
