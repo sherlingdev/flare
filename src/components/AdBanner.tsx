@@ -11,7 +11,7 @@ export default function AdBanner({ className = '', position = 'top' }: AdBannerP
     const adSlot = position === 'top' ? '6460980142' : '8428667939';
     
     return (
-        <div className={`w-full h-32 md:h-28 bg-transparent rounded-lg flex items-center justify-center ${className}`}>
+        <div className={`w-full h-32 md:h-28 ${className}`}>
             <AdSense
                 adSlot={adSlot}
                 adFormat="horizontal"
