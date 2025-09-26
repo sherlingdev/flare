@@ -74,18 +74,21 @@ export default function Home() {
     const cleanFromAmount = fromAmountDisplay.replace(/,/g, '');
     const fromValue = parseFloat(cleanFromAmount) || 0;
 
-    if (fromCurrency === "USD" && toCurrency === "DOP") {
-      const calculatedAmount = (fromValue * exchangeRate).toFixed(2);
-      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }));
-    } else if (fromCurrency === "DOP" && toCurrency === "USD") {
-      const calculatedAmount = (fromValue / exchangeRate).toFixed(2);
-      setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }));
+    // Solo calcular si hay un valor válido y mayor que 0
+    if (fromValue > 0 && exchangeRate > 0) {
+      if (fromCurrency === "USD" && toCurrency === "DOP") {
+        const calculatedAmount = (fromValue * exchangeRate).toFixed(2);
+        setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }));
+      } else if (fromCurrency === "DOP" && toCurrency === "USD") {
+        const calculatedAmount = (fromValue / exchangeRate).toFixed(2);
+        setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }));
+      }
     }
   }, [fromAmountDisplay, fromCurrency, toCurrency, exchangeRate]);
 
@@ -104,10 +107,13 @@ export default function Home() {
     const newFromCurrency = toCurrency;
     const newToCurrency = fromCurrency;
     
-    // Intercambiar montos
+    // Intercambiar montos - usar el valor actual del "to" como nuevo "from"
     const newFromAmount = toAmountDisplay;
     
-    // Actualizar estados - el useEffect se encargará del cálculo
+    // Limpiar el valor de destino para que se recalcule
+    setToAmountDisplay("0.00");
+    
+    // Actualizar estados
     setFromCurrency(newFromCurrency);
     setToCurrency(newToCurrency);
     setFromAmountDisplay(newFromAmount);
