@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback, lazy, Suspense } from "react";
 import { useTheme } from "../components/ThemeProvider";
 import { useLanguage } from "../hooks/useLanguage";
+import { useExchangeRate } from "../hooks/useExchangeRate";
 import { translations } from "../lib/translations";
 import { measurePerformance, measureWebVitals } from "../lib/performance";
 import AdBanner from "../components/AdBanner";
