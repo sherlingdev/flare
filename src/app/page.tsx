@@ -293,11 +293,6 @@ export default function Home() {
                   <p className="text-xs text-gray-400 dark:text-gray-500">
                     {t.lastUpdated} {lastUpdated || t.loading}
                   </p>
-                  {source && (
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                      Source: {source}
-                    </p>
-                  )}
                   {rateError && (
                     <p className="text-xs text-red-400 dark:text-red-500 mt-1">
                       Rate error: {rateError}
