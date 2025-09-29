@@ -21,11 +21,57 @@ html.dark {
     box-sizing: border-box;
 }
 
-/* Reduce layout shift */
+/* Reduce layout shift and optimize image spacing */
 img,
 svg {
     max-width: 100%;
     height: auto;
+    display: block;
+}
+
+/* Optimize image containers */
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Responsive image sizing */
+.responsive-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+
+/* Compact image spacing */
+.compact-image {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+}
+
+/* Lazy loading placeholder */
+.image-placeholder {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* Optimize animations */
@@ -104,22 +150,195 @@ svg {
 
 /* Custom selection colors to match project theme */
 ::selection {
-    background-color: #475569; /* slate-600 */
-    color: #f8fafc; /* slate-50 */
+    background-color: #475569;
+    /* slate-600 */
+    color: #f8fafc;
+    /* slate-50 */
 }
 
 ::-moz-selection {
-    background-color: #475569; /* slate-600 */
-    color: #f8fafc; /* slate-50 */
+    background-color: #475569;
+    /* slate-600 */
+    color: #f8fafc;
+    /* slate-50 */
 }
 
 /* Dark mode selection */
 .dark ::selection {
-    background-color: #64748b; /* slate-500 */
-    color: #0f172a; /* slate-900 */
+    background-color: #64748b;
+    /* slate-500 */
+    color: #0f172a;
+    /* slate-900 */
 }
 
 .dark ::-moz-selection {
-    background-color: #64748b; /* slate-500 */
-    color: #0f172a; /* slate-900 */
+    background-color: #64748b;
+    /* slate-500 */
+    color: #0f172a;
+    /* slate-900 */
+}
+
+/* Mobile-first responsive improvements */
+@media (max-width: 640px) {
+
+    /* Ensure touch targets are at least 44px */
+    button,
+    [role="button"],
+    input[type="button"],
+    input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Improve text readability on mobile */
+    body {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    /* Better spacing for mobile forms */
+    .currency-input {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+    }
+}
+
+/* Responsive currency converter specific styles - Mobile Only */
+@media (max-width: 1024px) {
+    .currency-converter-card {
+        margin: 0 1.5rem;
+        padding: 2rem 2rem;
+        width: calc(100% - 3rem);
+        max-width: none;
+    }
+
+    .currency-input-group {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .currency-input-group>div {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    /* Reduce spacing around swap button on mobile */
+    .currency-input-group>div:nth-child(2) {
+        display: flex;
+        justify-content: center;
+        margin: 0.25rem 0;
+    }
+    
+    /* Increase input padding only on mobile - same as desktop */
+    .currency-input-group .flex.items-center {
+        padding: 1rem 2rem;
+    }
+}
+
+/* Additional mobile spacing for very small screens */
+@media (max-width: 480px) {
+    .currency-converter-card {
+        margin: 0 1rem;
+        padding: 1.75rem 1.5rem;
+        width: calc(100% - 2rem);
+    }
+    
+    .currency-input-group {
+        gap: 0.5rem;
+    }
+    
+    .currency-input-group>div:nth-child(2) {
+        margin: 0.25rem 0;
+    }
+    
+    /* Maintain good padding for very small screens */
+    .currency-input-group .flex.items-center {
+        padding: 0.875rem 1.75rem;
+    }
+}
+
+/* Improve button hover states for touch devices */
+@media (hover: none) and (pointer: coarse) {
+    button:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    button:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* ===========================================
+   TYPOGRAPHY SYSTEM - BEST PRACTICES
+   =========================================== */
+
+/* Base Typography Setup */
+html {
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Error States */
+.text-error {
+    @apply text-red-600 dark:text-red-400;
+}
+
+/* ===========================================
+   COMPONENT-SPECIFIC TYPOGRAPHY
+   =========================================== */
+
+/* Header Typography */
+.header-logo {
+    @apply text-xl sm:text-2xl font-bold tracking-tight;
+    @apply text-slate-800 dark:text-slate-100;
+}
+
+.header-button-text {
+    @apply text-xs sm:text-sm font-medium;
+    @apply text-slate-700 dark:text-slate-200;
+}
+
+/* Currency Converter Typography */
+.currency-input {
+    @apply text-base font-medium;
+    @apply text-gray-900 dark:text-white;
+    font-size: 16px; /* Prevents zoom on iOS */
+}
+
+.currency-label {
+    @apply text-base font-semibold;
+    @apply text-gray-900 dark:text-white;
+}
+
+/* Footer Typography */
+.footer-text {
+    @apply text-xs sm:text-sm font-medium;
+    @apply text-slate-600 dark:text-slate-300;
+}
+
+.footer-link {
+    @apply text-xs sm:text-sm font-medium;
+    @apply text-slate-600 dark:text-slate-300;
+    @apply hover:text-slate-800 dark:hover:text-slate-100;
+    @apply transition-colors duration-200;
+}
+
+/* Rate Info Typography */
+.rate-info {
+    @apply text-xs font-normal;
+    @apply text-gray-400 dark:text-gray-500;
+}
+
+/* ===========================================
+   ACCESSIBILITY & BEST PRACTICES
+   =========================================== */
+
+/* Focus states for better accessibility */
+.focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-500;
 }

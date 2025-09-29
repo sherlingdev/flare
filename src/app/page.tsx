@@ -20,41 +20,16 @@ export default function Home() {
   const [toAmountDisplay, setToAmountDisplay] = useState("62.00");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("DOP");
-  const [lastUpdated, setLastUpdated] = useState("");
   const fromAmountRef = useRef<HTMLInputElement>(null);
   const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
-  const { rate: exchangeRate, error: rateError, lastUpdated: rateLastUpdated } = useExchangeRate();
+  const { rate: exchangeRate } = useExchangeRate();
   const t = translations[language];
 
   useEffect(() => {
     if (mounted) {
       measurePerformance('Component Mount', () => {
-        // Use rate timestamp if available, otherwise use current time
-        const locale = language === 'es' ? 'es-ES' : 'en-US';
-        if (rateLastUpdated) {
-          setLastUpdated(rateLastUpdated.toLocaleString(locale, {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'short'
-          }));
-        } else {
-          setLastUpdated(new Date().toLocaleString(locale, {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'short'
-          }));
-        }
-
         // Seleccionar el input automáticamente al cargar
         if (fromAmountRef.current) {
           fromAmountRef.current.focus();
@@ -65,7 +40,7 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
     }
-  }, [mounted, rateLastUpdated, language]);
+  }, [mounted, language]);
 
 
   // Calcular automáticamente el monto de destino
@@ -131,33 +106,33 @@ export default function Home() {
   // Memoized components for better performance
   const Header = useMemo(() => (
     <header className="relative z-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50">
-      <div className="w-full px-8 py-6 flex items-center justify-between">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex items-center justify-between">
         <div className="flex items-center">
-          <span className="text-slate-800 dark:text-slate-100 text-2xl font-bold tracking-tight cursor-pointer">Flare</span>
+          <span className="header-logo cursor-pointer">Flare</span>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <button
             onClick={handleLanguageToggle}
-            className="px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 flex items-center space-x-2 cursor-pointer backdrop-blur-sm"
+            className="px-3 sm:px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 flex items-center space-x-1 sm:space-x-2 cursor-pointer backdrop-blur-sm"
             aria-label="Toggle language"
           >
-            <Suspense fallback={<div className="w-4 h-4" />}>
-              <Globe className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+            <Suspense fallback={<div className="w-3 h-3 sm:w-4 sm:h-4" />}>
+              <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300" />
             </Suspense>
-            <span className="text-slate-700 dark:text-slate-200 text-sm font-medium">
+            <span className="header-button-text">
               {langMounted && language === "en" ? "EN" : "ES"}
             </span>
           </button>
           <button
             onClick={handleThemeToggle}
-            className="p-3 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm"
+            className="p-2 sm:p-3 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center"
             aria-label="Toggle theme"
           >
-            <Suspense fallback={<div className="w-5 h-5" />}>
+            <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
               {mounted && theme === "dark" ? (
-                <Sun className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 dark:text-slate-300" />
               ) : (
-                <Moon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 dark:text-slate-300" />
               )}
             </Suspense>
           </button>
@@ -172,7 +147,7 @@ export default function Home() {
       {Header}
 
       {/* Main Content */}
-      <main className="relative z-10 px-1 py-1 flex-1 flex items-center justify-center overflow-hidden">
+      <main className="relative z-10 px-6 sm:px-8 lg:px-1 py-1 flex-1 flex items-center justify-center overflow-hidden">
         <div className="max-w-7xl mx-auto w-full flex flex-col justify-center py-2">
 
           {/* Top Banner Ad */}
@@ -180,20 +155,20 @@ export default function Home() {
             <AdBanner className="mx-auto" position="top" />
           </div>
 
-          {/* Currency Exchange Card - Centered Layout */}
-          <div className="flex justify-center items-center space-x-8">
+          {/* Currency Exchange Card - Responsive Layout */}
+          <div className="flex flex-col lg:flex-row justify-center items-center lg:space-x-8 space-y-4 lg:space-y-0">
             {/* Left Sidebar Ad */}
             <div className="hidden lg:block">
               <AdSidebar position="left" />
             </div>
 
-            <div className="w-full max-w-4xl mx-8">
-              <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
-                {/* Exchange Form - Perfectly Symmetric Layout */}
-                <div className="flex items-center justify-center space-x-8">
+            <div className="w-full max-w-4xl mx-4 sm:mx-6 lg:mx-8">
+              <div className="currency-converter-card bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
+                {/* Exchange Form - Mobile Vertical Stack, Desktop Horizontal */}
+                <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8">
                   {/* From Currency Section */}
-                  <div className="flex-1 max-w-xs">
-                    <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 py-4">
+                  <div className="w-full lg:flex-1 lg:max-w-xs order-1 lg:order-1">
+                    <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
                       <input
                         ref={fromAmountRef}
                         type="text"
@@ -238,33 +213,33 @@ export default function Home() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') e.currentTarget.blur();
                         }}
-                        className="flex-1 text-base font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
+                        className="currency-input flex-1 border-none outline-none bg-transparent"
                         placeholder={t.enterAmount}
                         aria-label={t.fromCurrency}
                       />
-                      <span className="text-base font-semibold text-gray-900 dark:text-white">
+                      <span className="currency-label">
                         USD
                       </span>
                     </div>
                   </div>
 
-                  {/* Swap Button */}
-                  <div className="flex-shrink-0">
+                  {/* Swap Button - Centered on Mobile, Between inputs on Desktop */}
+                  <div className="flex-shrink-0 order-2 lg:order-2">
                     <button
                       onClick={handleSwapCurrencies}
-                      className="p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      className="p-3 sm:p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                       aria-label={t.swap}
                       title={t.swap}
                     >
-                      <Suspense fallback={<div className="w-6 h-6" />}>
-                        <ArrowUpDown className="w-6 h-6 text-gray-600 dark:text-gray-300 rotate-90" />
+                      <Suspense fallback={<div className="w-5 h-5 sm:w-6 sm:h-6" />}>
+                        <ArrowUpDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-300 rotate-90" />
                       </Suspense>
                     </button>
                   </div>
 
                   {/* To Currency Section */}
-                  <div className="flex-1 max-w-xs">
-                    <div className="flex items-center space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 py-4">
+                  <div className="w-full lg:flex-1 lg:max-w-xs order-3 lg:order-3">
+                    <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
                       <input
                         ref={toAmountRef}
                         type="text"
@@ -298,11 +273,11 @@ export default function Home() {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') e.currentTarget.blur();
                         }}
-                        className="flex-1 text-base font-medium text-gray-900 dark:text-white border-none outline-none bg-transparent"
+                        className="currency-input flex-1 border-none outline-none bg-transparent"
                         placeholder={t.enterAmount}
                         aria-label={t.toCurrency}
                       />
-                      <span className="text-base font-semibold text-gray-900 dark:text-white">
+                      <span className="currency-label">
                         DOP
                       </span>
                     </div>
@@ -311,16 +286,16 @@ export default function Home() {
 
 
                 {/* Rate Update Info */}
-                <div className="text-center mt-6">
-                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                {/* <div className="text-center mt-6">
+                  <p className="rate-info">
                     {t.lastUpdated} {lastUpdated || t.loading}
                   </p>
                   {rateError && (
-                    <p className="text-xs text-red-400 dark:text-red-500 mt-1">
+                    <p className="rate-info text-error mt-1">
                       Rate error: {rateError}
                     </p>
                   )}
-                </div>
+                </div> */}
 
 
               </div>
@@ -341,14 +316,14 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="relative z-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50">
-        <div className="w-full px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 md:mb-0" dangerouslySetInnerHTML={{ __html: t.copyright }} />
-            <div className="flex space-x-6 text-slate-600 dark:text-slate-300 text-sm font-medium">
-              <a href="#" className="hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+            <div className="footer-text text-center md:text-left" dangerouslySetInnerHTML={{ __html: t.copyright }} />
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6">
+              <a href="#" className="footer-link text-center">
                 {t.terms}
               </a>
-              <a href="#" className="hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
+              <a href="#" className="footer-link text-center">
                 {t.privacy}
               </a>
             </div>
