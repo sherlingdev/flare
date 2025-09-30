@@ -15,13 +15,13 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "USD to DOP Exchange Rate - Fast currency converter | Flare",
-  description: "Convert USD to DOP at competitive exchange rates. Real-time currency conversion with fast, secure, and reliable USD to Dominican peso exchange.",
-  keywords: "USD to DOP, USD DOP exchange rate, dollar to peso dominicano, currency converter, exchange rate, money transfer, forex, Dominican peso, USD conversion, best exchange rate, currency exchange, real-time rates",
+  title: "Currency Converter | Flare",
+  description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
+  keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex",
   authors: [{ name: "Flare Exchange" }],
   openGraph: {
-    title: "USD to DOP Exchange Rate - Fast currency converter | Flare",
-    description: "Convert USD to DOP at competitive exchange rates. Real-time currency conversion with fast, secure, and reliable service.",
+    title: "Currency Converter | Flare",
+    description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter.",
     type: "website",
     locale: "en_US",
     url: "https://flare.com",
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "USD to DOP Exchange Rate - Fast currency converter",
-    description: "Convert USD to DOP at competitive exchange rates. Real-time currency conversion.",
+    title: "Currency Converter",
+    description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter.",
     creator: "@flareexchange",
   },
   robots: {

@@ -20,12 +20,21 @@ export default function Home() {
   const [toAmountDisplay, setToAmountDisplay] = useState("62.00");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("DOP");
+  const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
+  const [toDropdownOpen, setToDropdownOpen] = useState(false);
   const fromAmountRef = useRef<HTMLInputElement>(null);
   const toAmountRef = useRef<HTMLInputElement>(null);
   const { theme, toggleTheme, mounted } = useTheme();
   const { language, toggleLanguage, mounted: langMounted } = useLanguage();
-  const { rate: exchangeRate } = useExchangeRate();
+  const { getRate } = useExchangeRate(fromCurrency, toCurrency);
   const t = translations[language];
+
+  // Available currencies
+  const currencies = useMemo(() => [
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'DOP', name: 'Dominican Peso', symbol: 'RD$' }
+  ], []);
 
   useEffect(() => {
     if (mounted) {
@@ -43,29 +52,26 @@ export default function Home() {
   }, [mounted, language]);
 
 
-  // Calcular automáticamente el monto de destino
+  // Calcular automáticamente el monto de destino con alta precisión
   useEffect(() => {
     // Usar el valor de display para el cálculo (sin comas)
     const cleanFromAmount = fromAmountDisplay.replace(/,/g, '');
     const fromValue = parseFloat(cleanFromAmount) || 0;
 
     // Solo calcular si hay un valor válido y mayor que 0
-    if (fromValue > 0 && exchangeRate > 0) {
-      if (fromCurrency === "USD" && toCurrency === "DOP") {
-        const calculatedAmount = (fromValue * exchangeRate).toFixed(2);
-        setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }));
-      } else if (fromCurrency === "DOP" && toCurrency === "USD") {
-        const calculatedAmount = (fromValue / exchangeRate).toFixed(2);
-        setToAmountDisplay(parseFloat(calculatedAmount).toLocaleString('en-US', {
+    if (fromValue > 0) {
+      const currentRate = getRate(fromCurrency, toCurrency);
+      if (currentRate > 0) {
+        // Use high precision calculation to avoid floating point errors
+        const precision = 100; // 2 decimal places
+        const calculatedAmount = Math.round(fromValue * currentRate * precision) / precision;
+        setToAmountDisplay(calculatedAmount.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
         }));
       }
     }
-  }, [fromAmountDisplay, fromCurrency, toCurrency, exchangeRate]);
+  }, [fromAmountDisplay, fromCurrency, toCurrency, getRate]);
 
   const handleThemeToggle = useCallback(() => {
     console.log('Theme toggle clicked, current theme:', theme);
@@ -101,6 +107,64 @@ export default function Home() {
       }
     }, 100);
   }, [fromCurrency, toCurrency, toAmountDisplay]);
+
+  // Handle currency changes with validation
+  const handleFromCurrencyChange = useCallback((newCurrency: string) => {
+    if (newCurrency === toCurrency) {
+      // If trying to select the same currency, find an alternative
+      const availableCurrencies = currencies.filter(c => c.code !== newCurrency);
+      if (availableCurrencies.length > 0) {
+        setToCurrency(availableCurrencies[0].code);
+      }
+    }
+    setFromCurrency(newCurrency);
+  }, [toCurrency, currencies]);
+
+  const handleToCurrencyChange = useCallback((newCurrency: string) => {
+    if (newCurrency === fromCurrency) {
+      // If trying to select the same currency, find an alternative
+      const availableCurrencies = currencies.filter(c => c.code !== newCurrency);
+      if (availableCurrencies.length > 0) {
+        setFromCurrency(availableCurrencies[0].code);
+      }
+    }
+    setToCurrency(newCurrency);
+  }, [fromCurrency, currencies]);
+
+  // Custom dropdown handlers
+  const handleFromDropdownClick = useCallback(() => {
+    setFromDropdownOpen(prev => !prev);
+    setToDropdownOpen(false); // Close other dropdown
+  }, []);
+
+  const handleToDropdownClick = useCallback(() => {
+    setToDropdownOpen(prev => !prev);
+    setFromDropdownOpen(false); // Close other dropdown
+  }, []);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.currency-select') && !target.closest('.dropdown-options')) {
+        setFromDropdownOpen(false);
+        setToDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+
+  // Function to get ordered currencies with selected first
+  const getOrderedCurrencies = useCallback((excludeCurrency: string, selectedCurrency: string) => {
+    const filteredCurrencies = currencies.filter(c => c.code !== excludeCurrency);
+    const selected = filteredCurrencies.find(c => c.code === selectedCurrency);
+    const others = filteredCurrencies.filter(c => c.code !== selectedCurrency);
+
+    return selected ? [selected, ...others] : filteredCurrencies;
+  }, [currencies]);
 
 
   // Memoized components for better performance
@@ -165,7 +229,7 @@ export default function Home() {
             <div className="w-full max-w-4xl mx-4 sm:mx-6 lg:mx-8">
               <div className="currency-converter-card bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
                 {/* Exchange Form - Mobile Vertical Stack, Desktop Horizontal */}
-                <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8">
+                <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative">
                   {/* From Currency Section */}
                   <div className="w-full lg:flex-1 lg:max-w-xs order-1 lg:order-1">
                     <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
@@ -217,22 +281,45 @@ export default function Home() {
                         placeholder={t.enterAmount}
                         aria-label={t.fromCurrency}
                       />
-                      <span className="currency-label">
-                        USD
-                      </span>
+                      <div className="relative">
+                        <div
+                          onClick={handleFromDropdownClick}
+                          className={`currency-label currency-select ${fromDropdownOpen ? 'dropdown-open' : ''}`}
+                          aria-label="From Currency"
+                        >
+                          {fromCurrency}
+                        </div>
+                        {fromDropdownOpen && (
+                          <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
+                            {getOrderedCurrencies(toCurrency, fromCurrency).map((currency) => (
+                              <div
+                                key={currency.code}
+                                onClick={() => {
+                                  handleFromCurrencyChange(currency.code);
+                                  setFromDropdownOpen(false);
+                                }}
+                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === fromCurrency ? 'selected' : ''
+                                  }`}
+                              >
+                                {currency.code}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   {/* Swap Button - Centered on Mobile, Between inputs on Desktop */}
-                  <div className="flex-shrink-0 order-2 lg:order-2">
+                  <div className="flex-shrink-0 order-2 lg:order-2 flex justify-center lg:justify-center">
                     <button
                       onClick={handleSwapCurrencies}
-                      className="p-3 sm:p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      className="p-3 sm:p-4 bg-gray-100 dark:bg-gray-600 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500 transition-all duration-300 ease-in-out shadow-lg hover:shadow-xl"
                       aria-label={t.swap}
                       title={t.swap}
                     >
-                      <Suspense fallback={<div className="w-5 h-5 sm:w-6 sm:h-6" />}>
-                        <ArrowUpDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-300 rotate-90" />
+                      <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                        <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300 rotate-90" />
                       </Suspense>
                     </button>
                   </div>
@@ -277,9 +364,32 @@ export default function Home() {
                         placeholder={t.enterAmount}
                         aria-label={t.toCurrency}
                       />
-                      <span className="currency-label">
-                        DOP
-                      </span>
+                      <div className="relative">
+                        <div
+                          onClick={handleToDropdownClick}
+                          className={`currency-label currency-select ${toDropdownOpen ? 'dropdown-open' : ''}`}
+                          aria-label="To Currency"
+                        >
+                          {toCurrency}
+                        </div>
+                        {toDropdownOpen && (
+                          <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
+                            {getOrderedCurrencies(fromCurrency, toCurrency).map((currency) => (
+                              <div
+                                key={currency.code}
+                                onClick={() => {
+                                  handleToCurrencyChange(currency.code);
+                                  setToDropdownOpen(false);
+                                }}
+                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === toCurrency ? 'selected' : ''
+                                  }`}
+                              >
+                                {currency.code}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
