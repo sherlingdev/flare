@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
+import Layout from "../components/Layout";
 import StructuredData from "../components/StructuredData";
 import AdSenseScript from "../components/AdSenseScript";
+import { LanguageProvider } from "../contexts/LanguageContext";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -15,23 +17,23 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Currency Converter | Flare",
+  title: "Flare Exchange Rate - Real-time Currency Converter",
   description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
   keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex",
-  authors: [{ name: "Flare Exchange" }],
+  authors: [{ name: "Flare Exchange Rate" }],
   openGraph: {
-    title: "Currency Converter | Flare",
+    title: "Flare Exchange Rate - Real-time Currency Converter",
     description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter.",
     type: "website",
     locale: "en_US",
-    url: "https://flare.com",
-    siteName: "Flare Exchange",
+    url: "https://flarexrate.com",
+    siteName: "Flare Exchange Rate",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Currency Converter",
+    title: "Flare Exchange Rate - Real-time Currency Converter",
     description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter.",
-    creator: "@flareexchange",
+    creator: "@flarexrate",
   },
   robots: {
     index: true,
@@ -45,17 +47,17 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://flare.com",
+    canonical: "https://flarexrate.com",
     languages: {
-      'en-US': 'https://flare.com',
-      'es-ES': 'https://flare.com/es',
+      'en-US': 'https://flarexrate.com',
+      'es-ES': 'https://flarexrate.com/es',
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-    yahoo: "your-yahoo-verification-code",
-  },
+  // verification: {
+  //   google: "your-google-verification-code",
+  //   yandex: "your-yandex-verification-code", 
+  //   yahoo: "your-yahoo-verification-code",
+  // },
   category: "Finance",
   classification: "Currency Exchange",
   referrer: "origin-when-cross-origin",
@@ -100,12 +102,17 @@ export default function RootLayout({
         className={`${dmSans.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider>
-          <StructuredData />
-          <AdSenseScript />
-          {children}
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <StructuredData />
+            <AdSenseScript />
+            <Layout>
+              {children}
+            </Layout>
+          </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
 }
+

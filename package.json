@@ -1,7 +1,9 @@
 {
-  "name": "flare",
+  "name": "flare-exchange-rate",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://flarexrate.com",
+  "description": "Real-time currency converter for USD, EUR, and DOP with competitive exchange rates",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
