@@ -3,8 +3,9 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Layout from "../components/Layout";
-import StructuredData from "../components/StructuredData";
+import StructuredData from "../components/Schema";
 import AdSenseScript from "../components/AdSenseScript";
+import GoogleAnalytics from "../components/GoogleAnalytics";
 import { LanguageProvider } from "../contexts/LanguageContext";
 import Loader from "../components/Loader";
 
@@ -129,6 +130,7 @@ export default function RootLayout({
             <Loader />
             <StructuredData />
             <AdSenseScript />
+            <GoogleAnalytics />
             <Layout>
               {children}
             </Layout>
