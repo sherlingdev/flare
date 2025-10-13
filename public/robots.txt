@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://flare.com/sitemap.xml
+Sitemap: https://flarexrate.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
@@ -16,3 +16,17 @@ Allow: /
 
 User-agent: Slurp
 Allow: /
+
+# Disallow admin areas (if any)
+Disallow: /admin/
+Disallow: /api/
+
+# Allow currency conversion pages
+Allow: /usd-to-dop
+Allow: /usd-to-eur
+Allow: /eur-to-dop
+
+# Allow legal pages
+Allow: /terms
+Allow: /privacy
+Allow: /about

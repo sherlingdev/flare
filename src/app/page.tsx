@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback, lazy, Suspense } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useExchangeRate } from "../hooks/useExchangeRate";
 import { translations } from "../lib/translations";
@@ -12,17 +12,23 @@ import AdSidebar from "../components/AdSidebar";
 const ArrowUpDown = lazy(() => import("lucide-react").then(module => ({ default: module.ArrowUpDown })));
 
 export default function Home() {
+  const { language, mounted } = useLanguage();
+  const t = translations[mounted ? language : "en"];
+
   const [fromAmountDisplay, setFromAmountDisplay] = useState("1.00");
-  const [toAmountDisplay, setToAmountDisplay] = useState("62.00");
+  const [toAmountDisplay, setToAmountDisplay] = useState("62.24");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("DOP");
   const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
   const fromAmountRef = useRef<HTMLInputElement>(null);
   const toAmountRef = useRef<HTMLInputElement>(null);
-  const { language, mounted: langMounted } = useLanguage();
   const { getRate } = useExchangeRate(fromCurrency, toCurrency);
-  const t = translations[language];
+
+  // Update page title dynamically - useLayoutEffect to prevent static title flash
+  useLayoutEffect(() => {
+    document.title = t.pageTitle;
+  }, [t.pageTitle]);
 
   // Available currencies
   const currencies = useMemo(() => [
@@ -32,7 +38,7 @@ export default function Home() {
   ], []);
 
   useEffect(() => {
-    if (langMounted) {
+    if (mounted) {
       measurePerformance('Component Mount', () => {
         // Seleccionar el input automáticamente al cargar
         if (fromAmountRef.current) {
@@ -44,7 +50,7 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
     }
-  }, [langMounted, language]);
+  }, [mounted, language]);
 
 
   // Calcular automáticamente el monto de destino con alta precisión
@@ -154,7 +160,7 @@ export default function Home() {
 
 
   return (
-    <main className="relative z-10 w-full">
+    <main className="relative z-10 w-full animate-fade-in">
       <div className="w-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
 
         {/* Top Banner Ad */}
@@ -170,7 +176,7 @@ export default function Home() {
           </div>
 
           <div className="w-full max-w-none px-4 sm:px-6 lg:px-8">
-            <div className="currency-converter-card bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
+            <div className="currency-converter-card bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50 animate-scale-in">
               {/* Exchange Form - Mobile Vertical Stack, Desktop Horizontal */}
               <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative">
                 {/* From Currency Section */}

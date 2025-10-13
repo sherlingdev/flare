@@ -132,7 +132,7 @@ export async function GET() {
       data: {
         from: 'USD',
         to: 'DOP',
-        rate: 62.00,
+        rate: 62.24,
         timestamp: new Date(),
         source: 'fallback'
       }

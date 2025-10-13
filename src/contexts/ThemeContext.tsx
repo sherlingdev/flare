@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 type Theme = "light" | "dark";
 
@@ -8,55 +8,60 @@ interface ThemeContextType {
     theme: Theme;
     toggleTheme: () => void;
     mounted: boolean;
+    isDark: boolean;
+    isLight: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+    // Always start with "dark" to match server rendering
     const [theme, setTheme] = useState<Theme>("dark");
     const [mounted, setMounted] = useState(false);
 
+    // Load theme from localStorage after mount
     useEffect(() => {
-        // Aplicar tema inmediatamente para evitar flash
-        const savedTheme = localStorage.getItem("theme") as Theme;
-        if (savedTheme) {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light" || savedTheme === "dark") {
             setTheme(savedTheme);
+        }
+        setMounted(true);
+    }, []);
+
+    // Apply theme to DOM when theme changes
+    useEffect(() => {
+        if (mounted) {
             const root = window.document.documentElement;
-            if (savedTheme === "dark") {
+
+            if (theme === "dark") {
                 root.classList.add("dark");
             } else {
                 root.classList.remove("dark");
             }
-        } else {
-            // Default to dark mode
-            setTheme("dark");
-            const root = window.document.documentElement;
-            root.classList.add("dark");
         }
-
-        setMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (!mounted) return;
-
-        const root = window.document.documentElement;
-
-        if (theme === "dark") {
-            root.classList.add("dark");
-        } else {
-            root.classList.remove("dark");
-        }
-
-        localStorage.setItem("theme", theme);
     }, [theme, mounted]);
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === "light" ? "dark" : "light");
+    // Save to localStorage when theme changes
+    useEffect(() => {
+        if (mounted) {
+            localStorage.setItem("theme", theme);
+        }
+    }, [theme, mounted]);
+
+    const toggleTheme = useCallback(() => {
+        setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    }, []);
+
+    const value = {
+        theme,
+        toggleTheme,
+        mounted,
+        isDark: theme === "dark",
+        isLight: theme === "light"
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
+        <ThemeContext.Provider value={value}>
             {children}
         </ThemeContext.Provider>
     );

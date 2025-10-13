@@ -16,9 +16,129 @@ html.dark {
     color-scheme: dark;
 }
 
+
 /* Performance optimizations */
 * {
     box-sizing: border-box;
+}
+
+/* Custom loader animations */
+@keyframes spin-smooth {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes text-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-3px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slide-left {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-right {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-spin-smooth {
+    animation: spin-smooth 1s linear infinite;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+.animate-text-fade-in {
+    animation: text-fade-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-slide-up {
+    animation: slide-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-slide-down {
+    animation: slide-down 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-slide-left {
+    animation: slide-left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-slide-right {
+    animation: slide-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Reduce layout shift and optimize image spacing */

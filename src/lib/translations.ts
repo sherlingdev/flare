@@ -6,6 +6,9 @@ export const translations = {
         toCurrency: "To currency",
         swap: "Swap currencies",
 
+        // Loader
+        loading: "Loading...",
+
         // Legal pages content
         aboutUs: "About us",
         privacyPolicy: "Privacy policy",
@@ -154,10 +157,10 @@ export const translations = {
         contactAboutText: "If you have any questions about our platform, please contact us at:",
 
         // Page titles
-        pageTitle: "Currency converter | Flare",
-        privacyTitle: "Privacy policy | Flare currency converter",
-        termsTitle: "Terms and conditions | Flare currency converter",
-        aboutTitle: "About us | Flare currency converter"
+        pageTitle: "Flare exchange rate | Real-time currency converter",
+        privacyTitle: "Privacy policy | Flare exchange rate",
+        termsTitle: "Terms and conditions | Flare exchange rate",
+        aboutTitle: "About us | Flare exchange rate"
     },
     es: {
         // Main converter
@@ -165,6 +168,9 @@ export const translations = {
         fromCurrency: "Moneda de origen",
         toCurrency: "Moneda de destino",
         swap: "Intercambiar monedas",
+
+        // Loader
+        loading: "Cargando...",
 
         // Legal pages content
         aboutUs: "Acerca de nosotros",
@@ -314,9 +320,9 @@ export const translations = {
         contactAboutText: "Si tienes alguna pregunta sobre nuestra plataforma, por favor contáctanos en:",
 
         // Page titles
-        pageTitle: "Convertidor de monedas | Flare",
-        privacyTitle: "Política de privacidad | Flare convertidor de monedas",
-        termsTitle: "Términos y condiciones | Flare convertidor de monedas",
-        aboutTitle: "Acerca de nosotros | Flare convertidor de monedas"
+        pageTitle: "Flare exchange rate | Convertidor de monedas en tiempo real",
+        privacyTitle: "Política de privacidad | Flare exchange rate",
+        termsTitle: "Términos y condiciones | Flare exchange rate",
+        aboutTitle: "Acerca de nosotros | Flare exchange rate"
     }
 };

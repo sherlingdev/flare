@@ -15,19 +15,20 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+    // Always start with "en" to match server rendering
     const [language, setLanguage] = useState<Language>("en");
     const [mounted, setMounted] = useState(false);
 
-    // Initialize from localStorage
+    // Load language from localStorage after mount
     useEffect(() => {
-        const saved = localStorage.getItem("language") as Language;
-        if (saved === "en" || saved === "es") {
-            setLanguage(saved);
+        const savedLanguage = localStorage.getItem("language");
+        if (savedLanguage === "es" || savedLanguage === "en") {
+            setLanguage(savedLanguage);
         }
         setMounted(true);
     }, []);
 
-    // Save to localStorage
+    // Save to localStorage when language changes
     useEffect(() => {
         if (mounted) {
             localStorage.setItem("language", language);
@@ -35,9 +36,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }, [language, mounted]);
 
     const toggleLanguage = useCallback(() => {
-        const newLang = language === "en" ? "es" : "en";
-        setLanguage(newLang);
-    }, [language]);
+        setLanguage((prev) => (prev === "en" ? "es" : "en"));
+    }, []);
 
     const value = {
         language,

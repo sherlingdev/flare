@@ -4,12 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 
 // Supported currencies with their rates (high precision)
 const CURRENCY_RATES = {
-  'USD-DOP': 62.00,
-  'EUR-DOP': 67.50,
-  'USD-EUR': 0.92,
-  'EUR-USD': 1.09,
-  'DOP-USD': 0.016129032258064516, // High precision: 1/62
-  'DOP-EUR': 0.014814814814814815  // High precision: 1/67.5
+  'USD-DOP': 62.24,
+  'EUR-DOP': 71.65,
+  'USD-EUR': 0.868,
+  'EUR-USD': 1.152,
+  'DOP-USD': 0.016067, // High precision: 1/62.24
+  'DOP-EUR': 0.013954  // High precision: 1/71.65
 };
 
 interface UseExchangeRateReturn {
