@@ -44,11 +44,11 @@ export default function AboutUs() {
     }, []);
 
     return (
-        <main className="relative z-10 w-full px-8 sm:px-10 lg:px-12 pt-8 pb-16">
+        <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-16 pb-16">
             <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full max-w-7xl">
+                <div className="w-full max-w-6xl">
                     <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200 mb-8 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center">
                             {t.aboutUs}
                         </h1>
 
@@ -150,7 +150,7 @@ export default function AboutUs() {
                                     {t.contactUs}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
-                                    {t.contactAboutText} <a href={`mailto:${t.contactEmail}`} className="text-blue-600 dark:text-blue-400 hover:underline">{t.contactEmail}</a>
+                                    {t.contactAboutText} <a href={`mailto:${t.contactEmail}`} className="text-indigo-600 dark:text-indigo-400 hover:underline">{t.contactEmail}</a>
                                 </p>
                             </section>
                         </div>

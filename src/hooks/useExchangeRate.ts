@@ -1,16 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-
-// Supported currencies with their rates (high precision)
-const CURRENCY_RATES = {
-  'USD-DOP': 62.24,
-  'EUR-DOP': 71.65,
-  'USD-EUR': 0.868,
-  'EUR-USD': 1.152,
-  'DOP-USD': 0.016067, // High precision: 1/62.24
-  'DOP-EUR': 0.013954  // High precision: 1/71.65
-};
+import { getCurrentLocalRates, getLastUpdated } from '../lib/scraper';
 
 interface UseExchangeRateReturn {
   rate: number;
@@ -23,27 +14,41 @@ interface UseExchangeRateReturn {
 }
 
 export function useExchangeRate(fromCurrency: string = 'USD', toCurrency: string = 'DOP'): UseExchangeRateReturn {
-  const [rate, setRate] = useState<number>(CURRENCY_RATES[`${fromCurrency}-${toCurrency}` as keyof typeof CURRENCY_RATES] || 1);
+  const [rate, setRate] = useState<number>(1);
   const [loading] = useState<boolean>(false);
   const [error] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(new Date());
-  const [source, setSource] = useState<string>('fixed');
+  const [source, setSource] = useState<string>('InfoDolar.com.do');
 
-  // Set initial values immediately
+  // Update rates when scraper runs or currencies change
   useEffect(() => {
-    const newRate = CURRENCY_RATES[`${fromCurrency}-${toCurrency}` as keyof typeof CURRENCY_RATES] || 1;
-    setRate(newRate);
-    setLastUpdated(new Date());
-    setSource('fixed');
+    const updateRates = () => {
+      const currentRates = getCurrentLocalRates();
+      const newRate = currentRates[`${fromCurrency}-${toCurrency}`] || 1;
+      setRate(newRate);
+
+      const lastUpdatedTime = getLastUpdated();
+      setLastUpdated(new Date(lastUpdatedTime));
+      setSource('InfoDolar.com.do');
+    };
+
+    // Update immediately
+    updateRates();
+
+    // Set up interval to check for updates every 30 seconds
+    const interval = setInterval(updateRates, 30000);
+
+    return () => clearInterval(interval);
   }, [fromCurrency, toCurrency]);
 
   // Get rate for any currency pair with high precision
   const getRate = useCallback((from: string, to: string): number => {
-    const directRate = CURRENCY_RATES[`${from}-${to}` as keyof typeof CURRENCY_RATES];
+    const currentRates = getCurrentLocalRates();
+    const directRate = currentRates[`${from}-${to}`];
     if (directRate) return directRate;
 
     // If no direct rate, try reverse with high precision
-    const reverseRate = CURRENCY_RATES[`${to}-${from}` as keyof typeof CURRENCY_RATES];
+    const reverseRate = currentRates[`${to}-${from}`];
     if (reverseRate) {
       // Use high precision calculation to avoid floating point errors
       const precision = 1000000; // 6 decimal places
@@ -54,12 +59,15 @@ export function useExchangeRate(fromCurrency: string = 'USD', toCurrency: string
     return 1;
   }, []);
 
-  // No auto-refresh to prevent rate fluctuations
+  // Manual refresh
   const refreshRate = useCallback(async () => {
-    const newRate = CURRENCY_RATES[`${fromCurrency}-${toCurrency}` as keyof typeof CURRENCY_RATES] || 1;
+    const currentRates = getCurrentLocalRates();
+    const newRate = currentRates[`${fromCurrency}-${toCurrency}`] || 1;
     setRate(newRate);
-    setLastUpdated(new Date());
-    setSource('fixed');
+
+    const lastUpdatedTime = getLastUpdated();
+    setLastUpdated(new Date(lastUpdatedTime));
+    setSource('InfoDolar.com.do');
   }, [fromCurrency, toCurrency]);
 
   return {

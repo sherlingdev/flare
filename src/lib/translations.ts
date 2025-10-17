@@ -1,19 +1,105 @@
 export const translations = {
     en: {
         // Main converter
-        enterAmount: "Enter amount",
+        enterAmount: "How much?",
         fromCurrency: "From currency",
         toCurrency: "To currency",
         swap: "Swap currencies",
+        login: "Login",
+        loginButton: "Log In",
+
+        // Site description
+        siteDescription: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+
+        // Authentication
+        register: "Register",
+        registerButton: "Create account",
+        loginSubtitle: "Sign in to your account",
+        registerSubtitle: "Create a new account",
+        fullName: "Full name",
+        fullNamePlaceholder: "Enter your full name",
+        email: "Email",
+        emailPlaceholder: "Enter your email",
+        password: "Password",
+        passwordPlaceholder: "Enter your password",
+        confirmPassword: "Confirm password",
+        confirmPasswordPlaceholder: "Confirm your password",
+        noAccount: "Don't have an account?",
+        haveAccount: "Already have an account?",
+        passwordRequirements: "Password Requirements:",
+        passwordReq1: "At least 8 characters long",
+        passwordReq2: "One uppercase letter",
+        passwordReq3: "One lowercase letter",
+        passwordReq4: "One number",
+        passwordReq5: "One special character",
 
         // Loader
         loading: "Loading...",
+
+        // Rate Display
+        liveExchangeRates: "Live",
+        lastUpdated: "Updated",
+
+        // Currency Variations
+        mainVariations: "Main Variations",
+        oneDollarToPeso: "1 dollar to peso",
+        oneEuroToPeso: "1 euro to peso",
+        onePesoToDollar: "1 peso to dollar",
+        onePesoToEuro: "1 peso to euro",
+        basedOnCurrentRates: "Based on current rates",
+
+        // API Guide
+        apiGuideTitle: "API Usage Guide",
+        apiGuideSubtitle: "Complete documentation for Flare Exchange Rate APIs",
+        authentication: "Authentication",
+        authenticationText: "All API endpoints require authentication except for public exchange rate data. Use the authentication endpoints to get an access token.",
+        registerUser: "Register user",
+        loginUser: "Login user",
+        requestBody: "Request body",
+        response: "Response",
+        exchangeRateApis: "Exchange rate APIs",
+        exchangeRateApisText: "Get real-time exchange rates from InfoDolar.com.do with multiple data options.",
+        getExchangeRates: "Get exchange rates",
+        getExchangeRatesDesc: "Retrieve the latest exchange rates. Data is cached and refreshed periodically.",
+        convertCurrency: "Convert currency",
+        convertCurrencyDesc: "Convert a specific amount from one currency to another using current exchange rates.",
+        triggerManualScraper: "Trigger manual scraper",
+        description: "Description",
+        triggerManualScraperDesc: "Manually trigger the exchange rate scraper to get fresh data.",
+
+        // API Guide specific content
+        completeDataInfo: "Complete data & information",
+        completeDataDesc: "Returns complete exchange rate data including USD, EUR details and global rates",
+        onlyGlobalRates: "Only global rates",
+        onlyGlobalRatesDesc: "Returns only the global cross-currency rates without detailed USD/EUR data",
+        onlyUsdData: "Only USD data",
+        onlyUsdDataDesc: "Returns only USD exchange rate data",
+        onlyEurData: "Only EUR data",
+        onlyEurDataDesc: "Returns only EUR exchange rate data",
+        alternativeExchangeRate: "Alternative exchange rate source",
+        alternativeExchangeRateDesc: "Get exchange rates from Banco Central de la República Dominicana as an alternative source",
+
+        rateLimits: "Rate limits",
+        unauthenticatedRequests: "Unauthenticated requests",
+        rateLimitUnauth: "10 requests per minute",
+        authenticatedRequests: "Authenticated requests",
+        rateLimitAuth: "100 requests per minute",
+        scraperRequests: "Scraper requests",
+        rateLimitScraper: "1 request per minute",
+        noRateLimiting: "No rate limiting currently applied",
+        cachedForOneHour: "Cached for 1 hour",
+
+        errorHandling: "Error handling",
+        errorHandlingText: "All endpoints return standardized error responses with appropriate HTTP status codes.",
+        errorResponseExample: "Error response example",
+        sdkExamples: "SDK examples",
+        needHelp: "Need help?",
+        needHelpText: "If you have questions about our API or need assistance with integration, please contact us.",
 
         // Legal pages content
         aboutUs: "About us",
         privacyPolicy: "Privacy policy",
         termsOfService: "Terms and conditions",
-        lastUpdated: "Last updated:",
         siteName: "Flare Exchange Rate",
         siteUrl: "flarexrate.com",
 
@@ -157,26 +243,112 @@ export const translations = {
         contactAboutText: "If you have any questions about our platform, please contact us at:",
 
         // Page titles
-        pageTitle: "Flare exchange rate | Real-time currency converter",
-        privacyTitle: "Privacy policy | Flare exchange rate",
-        termsTitle: "Terms and conditions | Flare exchange rate",
-        aboutTitle: "About us | Flare exchange rate"
+        pageTitle: "Flare Exchange Rate | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+        privacyTitle: "Privacy policy | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+        termsTitle: "Terms and conditions | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+        aboutTitle: "About us | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate."
     },
     es: {
         // Main converter
-        enterAmount: "Ingresa el monto",
+        enterAmount: "¿Cuánto?",
         fromCurrency: "Moneda de origen",
         toCurrency: "Moneda de destino",
         swap: "Intercambiar monedas",
+        login: "Iniciar sesión",
+        loginButton: "Acceder",
+
+        // Site description
+        siteDescription: "Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
+
+        // Authentication
+        register: "Registrarse",
+        registerButton: "Crear cuenta",
+        loginSubtitle: "Accede a tu cuenta",
+        registerSubtitle: "Crea una nueva cuenta",
+        fullName: "Nombre completo",
+        fullNamePlaceholder: "Ingresa tu nombre completo",
+        email: "Correo electrónico",
+        emailPlaceholder: "Ingresa tu correo electrónico",
+        password: "Contraseña",
+        passwordPlaceholder: "Ingresa tu contraseña",
+        confirmPassword: "Confirmar contraseña",
+        confirmPasswordPlaceholder: "Confirma tu contraseña",
+        noAccount: "¿No tienes una cuenta?",
+        haveAccount: "¿Ya tienes una cuenta?",
+        passwordRequirements: "Requisitos de Contraseña:",
+        passwordReq1: "Al menos 8 caracteres",
+        passwordReq2: "Una letra mayúscula",
+        passwordReq3: "Una letra minúscula",
+        passwordReq4: "Un número",
+        passwordReq5: "Un carácter especial",
 
         // Loader
         loading: "Cargando...",
+
+        // Rate Display
+        liveExchangeRates: "Vivo",
+        lastUpdated: "Actualizado",
+
+        // Currency Variations
+        mainVariations: "Variaciones Principales",
+        oneDollarToPeso: "1 dólar a peso",
+        oneEuroToPeso: "1 euro a peso",
+        onePesoToDollar: "1 peso a dólar",
+        onePesoToEuro: "1 peso a euro",
+        basedOnCurrentRates: "Basado en tasas actuales",
+
+        // API Guide
+        apiGuideTitle: "Guía de uso de API",
+        apiGuideSubtitle: "Documentación completa para APIs de Flare Exchange Rate",
+        authentication: "Autenticación",
+        authenticationText: "Todos los endpoints de API requieren autenticación excepto para datos públicos de tipos de cambio. Usa los endpoints de autenticación para obtener un token de acceso.",
+        registerUser: "Registrar usuario",
+        loginUser: "Iniciar sesión",
+        requestBody: "Cuerpo de solicitud",
+        response: "Respuesta",
+        exchangeRateApis: "APIs de tipo de cambio",
+        exchangeRateApisText: "Obtén tipos de cambio en tiempo real de InfoDolar.com.do con múltiples opciones de datos.",
+        getExchangeRates: "Obtener tipos de cambio",
+        getExchangeRatesDesc: "Recupera los últimos tipos de cambio. Los datos se almacenan en caché y se actualizan periódicamente.",
+        convertCurrency: "Convertir moneda",
+        convertCurrencyDesc: "Convierte una cantidad específica de una moneda a otra usando los tipos de cambio actuales.",
+        triggerManualScraper: "Activar scraper manual",
+        description: "Descripción",
+        triggerManualScraperDesc: "Activa manualmente el scraper de tipos de cambio para obtener datos frescos.",
+
+        // API Guide specific content
+        completeDataInfo: "Datos completos e información",
+        completeDataDesc: "Devuelve datos completos de tipos de cambio incluyendo detalles de USD, EUR y tasas globales",
+        onlyGlobalRates: "Solo tasas globales",
+        onlyGlobalRatesDesc: "Devuelve solo las tasas de cambio globales sin datos detallados de USD/EUR",
+        onlyUsdData: "Solo datos USD",
+        onlyUsdDataDesc: "Devuelve solo datos de tipos de cambio USD",
+        onlyEurData: "Solo datos EUR",
+        onlyEurDataDesc: "Devuelve solo datos de tipos de cambio EUR",
+        alternativeExchangeRate: "Fuente alternativa de tipos de cambio",
+        alternativeExchangeRateDesc: "Obtén tipos de cambio del Banco Central de la República Dominicana como fuente alternativa",
+
+        rateLimits: "Límites de velocidad",
+        unauthenticatedRequests: "Solicitudes no autenticadas",
+        rateLimitUnauth: "10 solicitudes por minuto",
+        authenticatedRequests: "Solicitudes autenticadas",
+        rateLimitAuth: "100 solicitudes por minuto",
+        scraperRequests: "Solicitudes de scraper",
+        rateLimitScraper: "1 solicitud por minuto",
+        noRateLimiting: "Sin límites de velocidad aplicados actualmente",
+        cachedForOneHour: "Almacenado en caché por 1 hora",
+
+        errorHandling: "Manejo de errores",
+        errorHandlingText: "Todos los endpoints devuelven respuestas de error estandarizadas con códigos de estado HTTP apropiados.",
+        errorResponseExample: "Ejemplo de respuesta de error",
+        sdkExamples: "Ejemplos de SDK",
+        needHelp: "¿Necesitas ayuda?",
+        needHelpText: "Si tienes preguntas sobre nuestra API o necesitas ayuda con la integración, por favor contáctanos.",
 
         // Legal pages content
         aboutUs: "Acerca de nosotros",
         privacyPolicy: "Política de privacidad",
         termsOfService: "Términos y condiciones",
-        lastUpdated: "Última actualización:",
         siteName: "Flare Exchange Rate",
         siteUrl: "flarexrate.com",
 
@@ -320,9 +492,9 @@ export const translations = {
         contactAboutText: "Si tienes alguna pregunta sobre nuestra plataforma, por favor contáctanos en:",
 
         // Page titles
-        pageTitle: "Flare exchange rate | Convertidor de monedas en tiempo real",
-        privacyTitle: "Política de privacidad | Flare exchange rate",
-        termsTitle: "Términos y condiciones | Flare exchange rate",
-        aboutTitle: "Acerca de nosotros | Flare exchange rate"
+        pageTitle: "Flare Exchange Rate | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
+        privacyTitle: "Política de privacidad | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
+        termsTitle: "Términos y condiciones | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
+        aboutTitle: "Acerca de nosotros | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso."
     }
 };

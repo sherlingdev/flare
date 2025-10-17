@@ -141,6 +141,14 @@ html.dark {
     animation: slide-right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* Fix text overflow in code blocks */
+pre {
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
 /* Reduce layout shift and optimize image spacing */
 img,
 svg {
@@ -461,12 +469,20 @@ html {
 }
 
 /* ===========================================
+   SMOOTH SCROLL BEHAVIOR
+   =========================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* ===========================================
    ACCESSIBILITY & BEST PRACTICES
    =========================================== */
 
 /* Focus states for better accessibility */
 .focus-visible {
-    @apply outline-2 outline-offset-2 outline-blue-500;
+    @apply outline-2 outline-offset-2 outline-indigo-500;
 }
 
 /* Currency selector styles - COMPLETE OVERRIDE */

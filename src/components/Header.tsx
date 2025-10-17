@@ -4,11 +4,12 @@ import { useCallback, lazy, Suspense } from "react";
 import Link from "next/link";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
+// import { translations } from "../lib/translations";
 
 // Lazy load icons for better performance
 const Sun = lazy(() => import("lucide-react").then(module => ({ default: module.Sun })));
 const Moon = lazy(() => import("lucide-react").then(module => ({ default: module.Moon })));
-const Globe = lazy(() => import("lucide-react").then(module => ({ default: module.Globe })));
+// const BookOpen = lazy(() => import("lucide-react").then(module => ({ default: module.BookOpen })));
 
 interface HeaderProps {
     showBackButton?: boolean;
@@ -20,6 +21,8 @@ export default function Header({
 }: HeaderProps) {
     const { toggleLanguage, mounted: langMounted, isEnglish } = useLanguage();
     const { theme, toggleTheme, mounted } = useTheme();
+
+    // const t = translations[mounted ? (isEnglish ? "en" : "es") : "en"];
 
     const handleLanguageToggle = useCallback(() => {
         toggleLanguage();
@@ -39,22 +42,33 @@ export default function Header({
                 <div className="flex items-center">
                     <Link href="/" className="header-logo cursor-pointer">Flare</Link>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                    {/* API Guide Link */}
+                    {/* <Link
+                        href="/api-guide"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center animate-slide-left"
+                        aria-label="API Guide"
+                    >
+                        <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 dark:text-slate-300" />
+                        </Suspense>
+                    </Link> */}
+
+                    {/* Language Toggle */}
                     <button
                         onClick={handleLanguageToggle}
-                        className="px-3 sm:px-4 py-2 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 flex items-center space-x-1 sm:space-x-2 cursor-pointer backdrop-blur-sm animate-slide-left"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center animate-slide-left"
                         aria-label="Toggle language"
                     >
-                        <Suspense fallback={<div className="w-3 h-3 sm:w-4 sm:h-4" />}>
-                            <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300" />
-                        </Suspense>
-                        <span className="header-button-text">
+                        <span className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">
                             {displayLanguage}
                         </span>
                     </button>
+
+                    {/* Theme Toggle */}
                     <button
                         onClick={handleThemeToggle}
-                        className="p-2 sm:p-3 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center animate-slide-right"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm flex items-center justify-center animate-slide-right"
                         aria-label="Toggle theme"
                     >
                         <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>

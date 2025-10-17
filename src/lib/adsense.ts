@@ -44,7 +44,6 @@ export const initAdSense = () => {
             script.setAttribute('data-ad-client', adSenseConfig.publisherId);
             document.head.appendChild(script);
 
-            console.log('AdSense script loaded successfully');
         } catch (error) {
             console.error('Error loading AdSense script:', error);
         }

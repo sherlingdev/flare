@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">
             <Header />
-            <div className={`flex-1 flex justify-center pt-20 sm:pt-24 ${isHomePage
+            <div className={`flex-1 flex justify-center pt-20 sm:pt-24 pb-20 ${isHomePage
                 ? "items-center"
                 : isLegalPage
                     ? "items-start overflow-y-auto"

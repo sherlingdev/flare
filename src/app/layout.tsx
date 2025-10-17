@@ -3,7 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import Layout from "../components/Layout";
-import StructuredData from "../components/Schema";
+import Schema from "../components/Schema";
 import AdSenseScript from "../components/AdSenseScript";
 import GoogleAnalytics from "../components/GoogleAnalytics";
 import { LanguageProvider } from "../contexts/LanguageContext";
@@ -19,11 +19,11 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
+  description: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
   keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex",
   authors: [{ name: "Flare exchange rate" }],
   openGraph: {
-    description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
+    description: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
     type: "website",
     locale: "en_US",
     url: "https://flarexrate.com",
@@ -68,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script
@@ -128,7 +128,7 @@ export default function RootLayout({
         <LanguageProvider>
           <ThemeProvider>
             <Loader />
-            <StructuredData />
+            <Schema />
             <AdSenseScript />
             <GoogleAnalytics />
             <Layout>
