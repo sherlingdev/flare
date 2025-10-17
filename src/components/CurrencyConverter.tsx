@@ -55,6 +55,10 @@ export default function CurrencyConverter() {
 
     const [fromAmountDisplay, setFromAmountDisplay] = useState("1.00");
 
+    // Debouncing refs
+    const fromDebounceRef = useRef<NodeJS.Timeout | null>(null);
+    const toDebounceRef = useRef<NodeJS.Timeout | null>(null);
+
     // Calculate initial rate from global rates
     const initialRate = getRate(fromCurrency, toCurrency);
     const [toAmountDisplay, setToAmountDisplay] = useState(
@@ -121,6 +125,52 @@ export default function CurrencyConverter() {
         return sanitizedValue;
     }, []);
 
+    // Unified conversion system - single source of truth
+    const performConversion = useCallback((fromValue: number, fromCurr: string, toCurr: string): number => {
+        const rate = getRate(fromCurr, toCurr);
+        if (rate > 0 && !isNaN(fromValue) && fromValue >= 0) {
+            return fromValue * rate;
+        }
+        return 0;
+    }, []);
+
+    const performReverseConversion = useCallback((toValue: number, fromCurr: string, toCurr: string): number => {
+        const rate = getRate(fromCurr, toCurr);
+        if (rate > 0 && !isNaN(toValue) && toValue >= 0) {
+            return toValue / rate;
+        }
+        return 0;
+    }, []);
+
+    // Debounced conversion functions using unified system
+    const debouncedFromConversion = useCallback((value: string) => {
+        if (fromDebounceRef.current) {
+            clearTimeout(fromDebounceRef.current);
+        }
+
+        fromDebounceRef.current = setTimeout(() => {
+            const fromValue = parseFloat(value.replace(/,/g, ''));
+            if (!isNaN(fromValue) && fromValue >= 0) {
+                const toValue = performConversion(fromValue, fromCurrency, toCurrency);
+                setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+            }
+        }, 300);
+    }, [fromCurrency, toCurrency, formatCurrencyValue, performConversion]);
+
+    const debouncedToConversion = useCallback((value: string) => {
+        if (toDebounceRef.current) {
+            clearTimeout(toDebounceRef.current);
+        }
+
+        toDebounceRef.current = setTimeout(() => {
+            const toValue = parseFloat(value.replace(/,/g, ''));
+            if (!isNaN(toValue) && toValue >= 0) {
+                const fromValue = performReverseConversion(toValue, fromCurrency, toCurrency);
+                setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
+            }
+        }, 300);
+    }, [fromCurrency, toCurrency, formatCurrencyValue, performReverseConversion]);
+
     // Currency configuration
     const currencies = useMemo(() => [
         { code: 'USD', name: 'US Dollar', symbol: '$' },
@@ -138,11 +188,21 @@ export default function CurrencyConverter() {
         const newFromCurrency = toCurrency;
         const newToCurrency = fromCurrency;
         const newFromAmount = toAmountDisplay;
+        const newToAmount = fromAmountDisplay;
 
-        setToAmountDisplay("1.00");
+        // Clear any pending debounced conversions
+        if (fromDebounceRef.current) {
+            clearTimeout(fromDebounceRef.current);
+        }
+        if (toDebounceRef.current) {
+            clearTimeout(toDebounceRef.current);
+        }
+
+        // Swap currencies and amounts directly without recalculation
         setFromCurrency(newFromCurrency);
         setToCurrency(newToCurrency);
         setFromAmountDisplay(newFromAmount);
+        setToAmountDisplay(newToAmount);
 
         setTimeout(() => {
             if (fromAmountRef.current) {
@@ -150,16 +210,42 @@ export default function CurrencyConverter() {
                 fromAmountRef.current.select();
             }
         }, 100);
-    }, [fromCurrency, toCurrency, toAmountDisplay]);
+    }, [fromCurrency, toCurrency, toAmountDisplay, fromAmountDisplay]);
 
-    // Handle currency changes without automatic switching
+    // Cleanup timeouts on unmount
+    useEffect(() => {
+        return () => {
+            if (fromDebounceRef.current) {
+                clearTimeout(fromDebounceRef.current);
+            }
+            if (toDebounceRef.current) {
+                clearTimeout(toDebounceRef.current);
+            }
+        };
+    }, []);
+
+    // Handle currency changes with unified conversion
     const handleFromCurrencyChange = useCallback((newCurrency: string) => {
         setFromCurrency(newCurrency);
-    }, []);
+
+        // Recalculate conversion when from currency changes
+        const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
+        if (!isNaN(fromValue) && fromValue >= 0) {
+            const toValue = performConversion(fromValue, newCurrency, toCurrency);
+            setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+        }
+    }, [fromAmountDisplay, toCurrency, performConversion, formatCurrencyValue]);
 
     const handleToCurrencyChange = useCallback((newCurrency: string) => {
         setToCurrency(newCurrency);
-    }, []);
+
+        // Recalculate conversion when to currency changes
+        const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
+        if (!isNaN(fromValue) && fromValue >= 0) {
+            const toValue = performConversion(fromValue, fromCurrency, newCurrency);
+            setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+        }
+    }, [fromAmountDisplay, fromCurrency, performConversion, formatCurrencyValue]);
 
     // Dropdown handlers
     const handleFromDropdownClick = useCallback(() => {
@@ -171,31 +257,6 @@ export default function CurrencyConverter() {
         setToDropdownOpen(!toDropdownOpen);
         setFromDropdownOpen(false);
     }, [toDropdownOpen]);
-
-    // Simple conversion calculation
-    const conversionResult = useMemo(() => {
-        const currentRate = getRate(fromCurrency, toCurrency);
-        const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
-
-        if (!isNaN(fromValue) && fromValue >= 0 && currentRate > 0) {
-            const result = fromValue * currentRate;
-            return result.toFixed(2);
-        }
-
-        return "0.00";
-    }, [fromAmountDisplay, fromCurrency, toCurrency]);
-
-    // Update conversion result
-    useEffect(() => {
-        setToAmountDisplay(conversionResult);
-    }, [conversionResult]);
-
-    // Update when currencies change
-    useEffect(() => {
-        const rate = getRate(fromCurrency, toCurrency);
-        const calculatedAmount = (parseFloat(fromAmountDisplay.replace(/,/g, '')) * rate).toFixed(2);
-        setToAmountDisplay(calculatedAmount);
-    }, [fromCurrency, toCurrency, fromAmountDisplay]);
 
     // Handle clicks outside dropdowns to close them
     useEffect(() => {
@@ -238,11 +299,17 @@ export default function CurrencyConverter() {
                                 onChange={(e) => {
                                     const sanitizedValue = sanitizeInputValue(e.target.value);
                                     setFromAmountDisplay(sanitizedValue);
+
+                                    // Debounced conversion
+                                    debouncedFromConversion(sanitizedValue);
                                 }}
                                 onBlur={(e) => {
                                     const value = e.target.value;
                                     if (value === "") {
                                         setFromAmountDisplay("1.00");
+                                        // Trigger conversion with default value
+                                        const toValue = performConversion(1, fromCurrency, toCurrency);
+                                        setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
                                     } else {
                                         const formattedValue = formatCurrencyValue(value);
                                         setFromAmountDisplay(formattedValue);
@@ -317,11 +384,17 @@ export default function CurrencyConverter() {
                                 onChange={(e) => {
                                     const sanitizedValue = sanitizeInputValue(e.target.value);
                                     setToAmountDisplay(sanitizedValue);
+
+                                    // Debounced conversion
+                                    debouncedToConversion(sanitizedValue);
                                 }}
                                 onBlur={(e) => {
                                     const value = e.target.value;
                                     if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
-                                        setToAmountDisplay("0.00");
+                                        setToAmountDisplay("1.00");
+                                        // Trigger reverse conversion with default value
+                                        const fromValue = performReverseConversion(1, fromCurrency, toCurrency);
+                                        setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
                                     } else {
                                         const formattedValue = formatCurrencyValue(value);
                                         setToAmountDisplay(formattedValue);
