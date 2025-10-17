@@ -16,7 +16,6 @@ html.dark {
     color-scheme: dark;
 }
 
-
 /* Performance optimizations */
 * {
     box-sizing: border-box;
@@ -326,20 +325,13 @@ svg {
 
     /* Better spacing for mobile forms */
     .currency-input {
-        font-size: 16px;
+        font-size: 14px;
         /* Prevents zoom on iOS */
     }
 }
 
 /* Responsive currency converter specific styles - Mobile Only */
 @media (max-width: 1024px) {
-    .currency-converter-card {
-        margin: 0 1.5rem;
-        padding: 2rem 2rem;
-        width: calc(100% - 3rem);
-        max-width: none;
-    }
-
     .currency-input-group {
         flex-direction: column;
         gap: 0.75rem;
@@ -368,12 +360,6 @@ svg {
 
 /* Additional mobile spacing for very small screens */
 @media (max-width: 480px) {
-    .currency-converter-card {
-        margin: 0 1rem;
-        padding: 1.75rem 1.5rem;
-        width: calc(100% - 2rem);
-    }
-    
     .currency-input-group {
         gap: 0.5rem;
     }
@@ -441,7 +427,7 @@ html {
 .currency-input {
     @apply text-base font-medium;
     @apply text-gray-900 dark:text-white;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 14px; /* Prevents zoom on iOS */
 }
 
 .currency-label {
@@ -485,547 +471,135 @@ html {
     @apply outline-2 outline-offset-2 outline-indigo-500;
 }
 
-/* Currency selector styles - COMPLETE OVERRIDE */
+/* ===========================================
+   CURRENCY CONVERTER STYLES - CLEAN VERSION
+   =========================================== */
+
+/* Currency selector styles */
 .currency-select {
     @apply bg-transparent border-none outline-none cursor-pointer text-right;
     min-width: 80px;
     width: auto;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
+    font-size: 14px;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 1rem center;
     background-repeat: no-repeat;
     background-size: 1.5em 1.5em;
     padding-right: 2.5rem;
+    padding-left: 0.75rem;
     flex-shrink: 0;
-    border-radius: 0.5rem !important; /* Slightly more rounded */
-    overflow: hidden !important; /* Prevent border overflow */
-    box-sizing: border-box !important; /* Ensure proper sizing */
-    position: relative !important; /* For proper positioning */
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Dropdown container styling */
-.currency-select:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #6b7280; /* Gray focus ring */
-    border-radius: 0.375rem; /* Match other elements - less rounded */
-    overflow: hidden; /* Prevent border overflow */
-}
-
-/* Ensure the selector container doesn't overflow */
-.currency-select {
+    border-radius: 0.5rem;
     overflow: hidden;
     box-sizing: border-box;
-    max-width: 100%;
+    position: relative;
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
-/* Fix any potential border overflow issues */
-.currency-select:before,
-.currency-select:after {
-    content: none;
-    display: none;
-}
-
-/* Ensure parent container handles overflow properly */
-.currency-select {
-    contain: layout; /* Contain layout changes */
-    isolation: isolate; /* Create new stacking context */
-}
-
-/* Fix background image positioning to prevent overflow */
-.currency-select {
-    background-clip: padding-box !important; /* Ensure background doesn't overflow */
-    background-origin: padding-box !important; /* Position background within padding */
-    contain: layout !important; /* Contain layout changes */
-    isolation: isolate !important; /* Create new stacking context */
-    overflow: hidden !important; /* Prevent any overflow */
-    clip-path: inset(0) !important; /* Force clipping */
-}
-
-/* Style the dropdown list container - COMPLETE OVERRIDE */
-.currency-select option {
-    @apply bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100;
-    padding: 0.5rem !important;
-    white-space: nowrap !important;
-    min-width: 60px !important;
-    text-align: center !important;
-    background-color: #f9fafb !important; /* Force light gray background */
-    color: #374151 !important; /* Force dark gray text */
-    border-radius: 0.375rem !important; /* Rounded corners */
-    margin: 0.125rem !important; /* Small margin between options */
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background-image: none !important;
-}
-
-.currency-select option {
-    @apply bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100;
-    padding: 0.5rem;
-    white-space: nowrap;
-    min-width: 60px;
-    text-align: center;
-    background-color: #f9fafb; /* Light gray background */
-    color: #374151; /* Dark gray text */
-    border-radius: 0.375rem; /* Rounded corners */
-    margin: 0.125rem; /* Small margin between options */
-}
-
-/* Dark mode option styles */
-.dark .currency-select option {
-    background-color: #374151; /* Dark gray background */
-    color: #f9fafb; /* Light gray text */
-}
-
-/* Selection/hover styles using project gray palette - Force override */
-.currency-select option:checked,
-.currency-select option:hover,
-.currency-select option:focus,
-.currency-select option:active,
-.currency-select option[selected] {
-    background-color: #6b7280 !important; /* Medium gray selection */
-    color: #ffffff !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Dark mode selection styles - Force override */
-.dark .currency-select option:checked,
-.dark .currency-select option:hover,
-.dark .currency-select option:focus,
-.dark .currency-select option:active,
-.dark .currency-select option[selected] {
-    background-color: #4b5563 !important; /* Darker gray selection */
-    color: #ffffff !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Override any browser default blue colors */
-.currency-select option::-webkit-option {
-    background-color: #6b7280 !important;
-    color: #ffffff !important;
-}
-
-.dark .currency-select option::-webkit-option {
-    background-color: #4b5563 !important;
-    color: #ffffff !important;
-}
-
-/* Ensure currency selector text is fully visible */
-.currency-select {
-    white-space: nowrap;
-    overflow: visible;
-    text-overflow: unset;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: inherit;
-}
-
-/* Additional dropdown styling for better appearance */
+/* Focus state */
 .currency-select:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #6b7280; /* Gray focus ring */
-    border-radius: 0.375rem; /* Match other elements - less rounded */
-}
-
-/* Dropdown list container styling */
-.currency-select {
-    border-radius: 0.375rem; /* Match other elements - less rounded */
-}
-
-/* Style the dropdown when open */
-.currency-select:focus,
-.currency-select:active {
-    border-radius: 0.375rem; /* Match other elements - less rounded */
-}
-
-/* Ensure dropdown options container has rounded corners */
-.currency-select option:first-child {
-    border-top-left-radius: 0.125rem;
-    border-top-right-radius: 0.125rem;
-}
-
-.currency-select option:last-child {
-    border-bottom-left-radius: 0.125rem;
-    border-bottom-right-radius: 0.125rem;
-}
-
-/* Ensure dropdown options are properly styled */
-.currency-select option {
-    text-align: center;
-    padding: 0.75rem 1rem;
-    border: none;
-    outline: none;
-    border-radius: 0.375rem; /* Less rounded corners for individual options */
-    margin: 0.125rem; /* Small margin between options */
-}
-
-/* Dropdown container background and styling */
-.currency-select {
-    background-color: transparent;
-    border: none;
-    outline: none;
-}
-
-/* Style the dropdown list when open */
-.currency-select:focus {
-    background-color: transparent;
-    border: none;
     outline: none;
     box-shadow: 0 0 0 2px #6b7280;
-    border-radius: 0.375rem;
 }
 
-/* Ensure the dropdown container has proper styling */
-.currency-select option {
+/* Dropdown options styling - DIV BASED */
+.dropdown-options {
     background-color: #f9fafb;
     color: #374151;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
     border: none;
-    outline: none;
-    border-radius: 0.375rem;
-}
-
-.dark .currency-select option {
-    background-color: #374151;
-    color: #f9fafb;
-    border: none;
-    outline: none;
-    border-radius: 0.375rem;
-}
-
-/* Remove default browser styling */
-.currency-select option::-moz-focus-inner {
-    border: 0;
-}
-
-.currency-select option:active {
-    background-color: #6b7280 !important; /* Gray active state */
-    color: white !important;
-}
-
-/* Force gray colors and remove any blue */
-.currency-select option {
-    background-color: #f9fafb !important; /* Force light gray */
-    color: #374151 !important; /* Force dark gray text */
-}
-
-.dark .currency-select option {
-    background-color: #374151 !important; /* Force dark gray */
-    color: #f9fafb !important; /* Force light gray text */
-}
-
-/* Completely override any blue colors with gray */
-.currency-select option:checked,
-.currency-select option:hover,
-.currency-select option:focus,
-.currency-select option:active,
-.currency-select option[selected] {
-    background-color: #6b7280 !important; /* Force gray selection */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.dark .currency-select option:checked,
-.dark .currency-select option:hover,
-.dark .currency-select option:focus,
-.dark .currency-select option:active,
-.dark .currency-select option[selected] {
-    background-color: #4b5563 !important; /* Force darker gray selection */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* FINAL SOLUTION - COMPLETE BLUE ELIMINATION */
-.currency-select option:checked,
-.currency-select option:hover,
-.currency-select option:focus,
-.currency-select option:active,
-.currency-select option[selected],
-.currency-select option:checked:focus,
-.currency-select option:checked:hover {
-    background-color: #6b7280 !important; /* FORCE GRAY - NO BLUE */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-.dark .currency-select option:checked,
-.dark .currency-select option:hover,
-.dark .currency-select option:focus,
-.dark .currency-select option:active,
-.dark .currency-select option[selected],
-.dark .currency-select option:checked:focus,
-.dark .currency-select option:checked:hover {
-    background-color: #4b5563 !important; /* FORCE DARKER GRAY - NO BLUE */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-/* NUCLEAR OPTION - Override ALL browser defaults */
-.currency-select option::-webkit-option,
-.currency-select option::-moz-option,
-.currency-select option::-ms-option {
-    background-color: #6b7280 !important; /* FORCE GRAY */
-    color: #ffffff !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-.dark .currency-select option::-webkit-option,
-.dark .currency-select option::-moz-option,
-.dark .currency-select option::-ms-option {
-    background-color: #4b5563 !important; /* FORCE DARKER GRAY */
-    color: #ffffff !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-/* SPECIFIC OVERRIDE FOR SELECTED OPTION */
-.currency-select option:checked,
-.currency-select option[selected="selected"],
-.currency-select option[selected],
-.currency-select option[value]:checked {
-    background-color: #6b7280 !important; /* Medium gray - matches project colors */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-.dark .currency-select option:checked,
-.dark .currency-select option[selected="selected"],
-.dark .currency-select option[selected],
-.dark .currency-select option[value]:checked {
-    background-color: #4b5563 !important; /* Darker gray - matches project colors */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-/* EXTREME OVERRIDE - Force gray on selected option in all states */
-.currency-select option:checked:focus,
-.currency-select option:checked:hover,
-.currency-select option:checked:active,
-.currency-select option[selected]:focus,
-.currency-select option[selected]:hover,
-.currency-select option[selected]:active {
-    background-color: #6b7280 !important; /* Medium gray */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.dark .currency-select option:checked:focus,
-.dark .currency-select option:checked:hover,
-.dark .currency-select option:checked:active,
-.dark .currency-select option[selected]:focus,
-.dark .currency-select option[selected]:hover,
-.dark .currency-select option[selected]:active {
-    background-color: #4b5563 !important; /* Darker gray */
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* MAXIMUM SPECIFICITY OVERRIDE - Nuclear option */
-select.currency-select option:checked,
-select.currency-select option[selected="selected"],
-select.currency-select option[selected],
-select.currency-select option[selected]:focus,
-select.currency-select option[selected]:hover,
-select.currency-select option[selected]:active {
-    background-color: #6b7280 !important;
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-.dark select.currency-select option:checked,
-.dark select.currency-select option[selected="selected"],
-.dark select.currency-select option[selected],
-.dark select.currency-select option[selected]:focus,
-.dark select.currency-select option[selected]:hover,
-.dark select.currency-select option[selected]:active {
-    background-color: #4b5563 !important;
-    color: #ffffff !important;
-    background-image: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-/* Remove margin from relative div containing currency selector */
-.currency-input-group .relative {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-/* CUSTOM CURRENCY SELECTOR - DIV BASED */
-.currency-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important; /* Arrow down by default */
-    background-position: right 1rem center !important; /* Arrow back to original position */
-    background-repeat: no-repeat !important;
-    background-size: 1.5em 1.5em !important;
-    padding-right: 2.75rem !important; /* Bring USD closer to arrow */
-    padding-left: 0.75rem !important; /* Add left spacing to select */
-    cursor: pointer !important; /* Pointer cursor for the selector */
-    transition: background-image 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Even smoother transition */
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 85px !important; /* Width to fit USD + arrow + padding properly */
-    width: auto !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    font-size: 0.875rem !important; /* Smaller font for all screen sizes */
-    font-weight: 500 !important; /* font-medium to match header-button-text */
-}
-
-/* Arrow up when dropdown is open */
-.currency-select.dropdown-open {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m14 12-4-4-4 4'/%3e%3c/svg%3e") !important; /* Arrow up */
-    transition: background-image 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important; /* Even smoother transition */
-}
-
-/* Simple hover effect - no movement */
-.currency-select:hover {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important; /* Darker arrow on hover */
-}
-
-.currency-select.dropdown-open:hover {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m14 12-4-4-4 4'/%3e%3c/svg%3e") !important; /* Darker arrow up on hover */
-}
-
-/* CUSTOM DROPDOWN OPTIONS - DIV BASED */
-.dropdown-options {
-    background-color: #f9fafb !important; /* Light gray background */
-    color: #374151 !important; /* Dark gray text */
-    border-radius: 0.5rem !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-    overflow: hidden !important; /* Ensure rounded corners are maintained */
-    border: none !important; /* Remove any borders */
-    width: auto !important; /* Auto width to match select */
-    right: 1rem !important; /* Align right edge with arrow */
-    left: auto !important; /* Remove left positioning */
+    width: auto;
+    right: 1rem;
+    left: auto;
 }
 
 .dark .dropdown-options {
-    background-color: #374151 !important; /* Dark gray background */
-    color: #f9fafb !important; /* Light gray text */
+    background-color: #374151;
+    color: #f9fafb;
 }
 
 .dropdown-options > div {
-    cursor: pointer !important; /* Pointer cursor for options */
-    font-weight: 400 !important; /* Lighter weight for options */
-    font-size: 0.875rem !important; /* Smaller font for options */
-    transition: background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-    text-align: left !important; /* Left align to match select */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important; /* Start from left */
-    border-radius: 0.375rem !important; /* Rounded hover effect */
-    margin: 0 !important; /* Remove margin to eliminate gaps */
-    border: none !important; /* Remove any borders */
-    outline: none !important; /* Remove focus outline */
-    padding-left: 0.75rem !important; /* Match select left padding */
-    padding-top: 0.5rem !important; /* Reduced vertical padding */
-    padding-bottom: 0.5rem !important; /* Reduced vertical padding */
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 0.375rem;
+    margin: 0;
+    border: none;
+    outline: none;
+    padding-left: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .dropdown-options > div:hover {
-    background-color: #f3f4f6 !important; /* Light gray hover */
-    border-radius: 0.375rem !important; /* Rounded hover effect */
+    background-color: #f3f4f6;
+    border-radius: 0.375rem;
 }
 
 .dark .dropdown-options > div:hover {
-    background-color: #4b5563 !important; /* Darker gray hover */
-    border-radius: 0.375rem !important; /* Rounded hover effect */
+    background-color: #4b5563;
+    border-radius: 0.375rem;
 }
 
-/* Selected option styling - distinct from hover */
+/* Selected option styling */
 .dropdown-options > div.selected {
-    background-color: #d1d5db !important; /* Darker gray than hover for selected */
-    border-radius: 0.375rem !important; /* Rounded selected effect */
-    font-weight: 500 !important; /* Slightly bolder for selected */
+    background-color: #d1d5db;
+    border-radius: 0.375rem;
+    font-weight: 500;
 }
 
 .dark .dropdown-options > div.selected {
-    background-color: #6b7280 !important; /* Lighter gray than hover for dark mode selected */
-    border-radius: 0.375rem !important; /* Rounded selected effect */
-    font-weight: 500 !important; /* Slightly bolder for selected */
+    background-color: #6b7280;
+    border-radius: 0.375rem;
+    font-weight: 500;
 }
 
-/* Mobile-specific optimizations for currency selector */
+/* Arrow states for dropdown */
+.currency-select.dropdown-open {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m14 12-4-4-4 4'/%3e%3c/svg%3e");
+    transition: background-image 0.4s ease;
+}
+
+.currency-select:hover {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+}
+
+.currency-select.dropdown-open:hover {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m14 12-4-4-4 4'/%3e%3c/svg%3e");
+}
+
+/* Mobile optimizations */
 @media (max-width: 768px) {
     .currency-select {
-        padding-right: 2.5rem !important; /* Optimized padding for tablet */
-        padding-left: 0.75rem !important; /* Match desktop padding exactly */
-        background-position: right 0.875rem center !important; /* Better arrow positioning */
-        min-width: 75px !important; /* Smaller width for mobile */
-        font-size: 1rem !important; /* Back to original size */
+        padding-right: 2.5rem;
+        padding-left: 0.75rem;
+        background-position: right 0.875rem center;
+        min-width: 75px;
+        font-size: 14px;
     }
 }
 
 @media (max-width: 480px) {
     .currency-select {
-        padding-right: 2.25rem !important; /* Optimized padding for small mobile */
-        padding-left: 0.75rem !important; /* Match desktop padding exactly */
-        background-position: right 0.75rem center !important; /* Optimized arrow positioning */
-        min-width: 70px !important; /* Smaller width for small mobile */
-        font-size: 1rem !important; /* Back to original size */
+        padding-right: 2.25rem;
+        padding-left: 0.75rem;
+        background-position: right 0.75rem center;
+        min-width: 70px;
+        font-size: 14px;
     }
     
-    /* Ensure dropdown options match select padding on mobile */
     .dropdown-options > div {
-        padding-left: 0.75rem !important; /* Match select padding on mobile */
-        padding-top: 0.375rem !important; /* Reduced vertical padding for mobile */
-        padding-bottom: 0.375rem !important; /* Reduced vertical padding for mobile */
-        font-size: 0.8125rem !important; /* Smaller font for mobile options */
+        padding-left: 0.75rem;
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+        font-size: 0.8125rem;
     }
 }
-

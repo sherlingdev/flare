@@ -17,6 +17,8 @@ export default function CurrencyConverter() {
     const [toDropdownOpen, setToDropdownOpen] = useState(false);
     const fromAmountRef = useRef<HTMLInputElement>(null);
     const toAmountRef = useRef<HTMLInputElement>(null);
+    const fromDropdownRef = useRef<HTMLDivElement>(null);
+    const toDropdownRef = useRef<HTMLDivElement>(null);
 
     // Simple function to get rate from global rates
     const getRate = (from: string, to: string): number => {
@@ -195,71 +197,102 @@ export default function CurrencyConverter() {
         setToAmountDisplay(calculatedAmount);
     }, [fromCurrency, toCurrency, fromAmountDisplay]);
 
+    // Handle clicks outside dropdowns to close them
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Node;
+
+            // Check if click is outside from dropdown
+            if (fromDropdownRef.current && !fromDropdownRef.current.contains(target)) {
+                setFromDropdownOpen(false);
+            }
+
+            // Check if click is outside to dropdown
+            if (toDropdownRef.current && !toDropdownRef.current.contains(target)) {
+                setToDropdownOpen(false);
+            }
+        };
+
+        // Add event listener when any dropdown is open
+        if (fromDropdownOpen || toDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        // Cleanup event listener
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [fromDropdownOpen, toDropdownOpen]);
+
     return (
         <>
             <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative">
                 {/* From Currency Section */}
                 <div className="w-full lg:flex-1 lg:max-w-xs order-1 lg:order-1">
-                    <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <input
-                            ref={fromAmountRef}
-                            type="text"
-                            value={fromAmountDisplay}
-                            onChange={(e) => {
-                                const sanitizedValue = sanitizeInputValue(e.target.value);
-                                setFromAmountDisplay(sanitizedValue);
-                            }}
-                            onBlur={(e) => {
-                                const value = e.target.value;
-                                if (value === "") {
-                                    setFromAmountDisplay("1.00");
-                                } else {
-                                    const formattedValue = formatCurrencyValue(value);
-                                    setFromAmountDisplay(formattedValue);
-                                }
-                            }}
-                            onClick={(e) => e.currentTarget.select()}
-                            onFocus={(e) => e.currentTarget.select()}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') e.currentTarget.blur();
-                                // Allow backspace, delete, tab, escape, enter
-                                if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                                // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                                if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                                // Allow numbers, decimal point, and comma
-                                if (!/^[0-9.,]$/.test(e.key)) {
-                                    e.preventDefault();
-                                }
-                            }}
-                            className="currency-input flex-1 border-none outline-none bg-transparent"
-                            placeholder={t.enterAmount}
-                            aria-label={t.fromCurrency}
-                        />
-                        <div className="relative">
-                            <div
-                                onClick={handleFromDropdownClick}
-                                className={`currency-label currency-select ${fromDropdownOpen ? 'dropdown-open' : ''}`}
-                                aria-label="From Currency"
-                            >
-                                {fromCurrency}
-                            </div>
-                            {fromDropdownOpen && (
-                                <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
-                                    {getAvailableCurrencies(toCurrency).map((currency) => (
-                                        <div
-                                            key={currency.code}
-                                            onClick={() => {
-                                                handleFromCurrencyChange(currency.code);
-                                                setFromDropdownOpen(false);
-                                            }}
-                                            className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === fromCurrency ? 'selected' : ''
-                                                }`}
-                                        >
-                                            {currency.code}
-                                        </div>
-                                    ))}
+                    <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
+                        <div className="flex-1 pr-2">
+                            <input
+                                ref={fromAmountRef}
+                                type="text"
+                                value={fromAmountDisplay}
+                                onChange={(e) => {
+                                    const sanitizedValue = sanitizeInputValue(e.target.value);
+                                    setFromAmountDisplay(sanitizedValue);
+                                }}
+                                onBlur={(e) => {
+                                    const value = e.target.value;
+                                    if (value === "") {
+                                        setFromAmountDisplay("1.00");
+                                    } else {
+                                        const formattedValue = formatCurrencyValue(value);
+                                        setFromAmountDisplay(formattedValue);
+                                    }
+                                }}
+                                onClick={(e) => e.currentTarget.select()}
+                                onFocus={(e) => e.currentTarget.select()}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') e.currentTarget.blur();
+                                    // Allow backspace, delete, tab, escape, enter
+                                    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
+                                    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                                    if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+                                    // Allow numbers, decimal point, and comma
+                                    if (!/^[0-9.,]$/.test(e.key)) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                className="currency-input w-full border-none outline-none bg-transparent"
+                                placeholder={t.enterAmount}
+                                aria-label={t.fromCurrency}
+                            />
+                        </div>
+                        <div className="flex-1 pl-2">
+                            <div className="relative" ref={fromDropdownRef}>
+                                <div
+                                    onClick={handleFromDropdownClick}
+                                    className={`currency-label currency-select ${fromDropdownOpen ? 'dropdown-open' : ''}`}
+                                    aria-label="From Currency"
+                                >
+                                    {fromCurrency}
                                 </div>
-                            )}
+                                {fromDropdownOpen && (
+                                    <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
+                                        {getAvailableCurrencies(toCurrency).map((currency) => (
+                                            <div
+                                                key={currency.code}
+                                                onClick={() => {
+                                                    handleFromCurrencyChange(currency.code);
+                                                    setFromDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === fromCurrency ? 'selected' : ''
+                                                    }`}
+                                            >
+                                                {currency.code}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -275,66 +308,70 @@ export default function CurrencyConverter() {
 
                 {/* To Currency Section */}
                 <div className="w-full lg:flex-1 lg:max-w-xs order-3 lg:order-3">
-                    <div className="flex items-center space-x-2 sm:space-x-4 bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <input
-                            ref={toAmountRef}
-                            type="text"
-                            value={toAmountDisplay}
-                            onChange={(e) => {
-                                const sanitizedValue = sanitizeInputValue(e.target.value);
-                                setToAmountDisplay(sanitizedValue);
-                            }}
-                            onBlur={(e) => {
-                                const value = e.target.value;
-                                if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
-                                    setToAmountDisplay("0.00");
-                                } else {
-                                    const formattedValue = formatCurrencyValue(value);
-                                    setToAmountDisplay(formattedValue);
-                                }
-                            }}
-                            onClick={(e) => e.currentTarget.select()}
-                            onFocus={(e) => e.currentTarget.select()}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') e.currentTarget.blur();
-                                // Allow backspace, delete, tab, escape, enter
-                                if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                                // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                                if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                                // Allow numbers, decimal point, and comma
-                                if (!/^[0-9.,]$/.test(e.key)) {
-                                    e.preventDefault();
-                                }
-                            }}
-                            className="currency-input flex-1 border-none outline-none bg-transparent"
-                            placeholder={t.enterAmount}
-                            aria-label={t.toCurrency}
-                        />
-                        <div className="relative">
-                            <div
-                                onClick={handleToDropdownClick}
-                                className={`currency-label currency-select ${toDropdownOpen ? 'dropdown-open' : ''}`}
-                                aria-label="To Currency"
-                            >
-                                {toCurrency}
-                            </div>
-                            {toDropdownOpen && (
-                                <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
-                                    {getAvailableCurrencies(fromCurrency).map((currency) => (
-                                        <div
-                                            key={currency.code}
-                                            onClick={() => {
-                                                handleToCurrencyChange(currency.code);
-                                                setToDropdownOpen(false);
-                                            }}
-                                            className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === toCurrency ? 'selected' : ''
-                                                }`}
-                                        >
-                                            {currency.code}
-                                        </div>
-                                    ))}
+                    <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
+                        <div className="flex-1 pr-2">
+                            <input
+                                ref={toAmountRef}
+                                type="text"
+                                value={toAmountDisplay}
+                                onChange={(e) => {
+                                    const sanitizedValue = sanitizeInputValue(e.target.value);
+                                    setToAmountDisplay(sanitizedValue);
+                                }}
+                                onBlur={(e) => {
+                                    const value = e.target.value;
+                                    if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
+                                        setToAmountDisplay("0.00");
+                                    } else {
+                                        const formattedValue = formatCurrencyValue(value);
+                                        setToAmountDisplay(formattedValue);
+                                    }
+                                }}
+                                onClick={(e) => e.currentTarget.select()}
+                                onFocus={(e) => e.currentTarget.select()}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') e.currentTarget.blur();
+                                    // Allow backspace, delete, tab, escape, enter
+                                    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
+                                    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                                    if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+                                    // Allow numbers, decimal point, and comma
+                                    if (!/^[0-9.,]$/.test(e.key)) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                className="currency-input w-full border-none outline-none bg-transparent"
+                                placeholder={t.enterAmount}
+                                aria-label={t.toCurrency}
+                            />
+                        </div>
+                        <div className="flex-1 pl-2">
+                            <div className="relative" ref={toDropdownRef}>
+                                <div
+                                    onClick={handleToDropdownClick}
+                                    className={`currency-label currency-select ${toDropdownOpen ? 'dropdown-open' : ''}`}
+                                    aria-label="To Currency"
+                                >
+                                    {toCurrency}
                                 </div>
-                            )}
+                                {toDropdownOpen && (
+                                    <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
+                                        {getAvailableCurrencies(fromCurrency).map((currency) => (
+                                            <div
+                                                key={currency.code}
+                                                onClick={() => {
+                                                    handleToCurrencyChange(currency.code);
+                                                    setToDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === toCurrency ? 'selected' : ''
+                                                    }`}
+                                            >
+                                                {currency.code}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
