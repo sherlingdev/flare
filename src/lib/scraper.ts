@@ -21,12 +21,40 @@ const rateConfig: RateConfig = {
 
     // Local base exchange rates (using BUY prices for currency conversion)
     localRates: {
-        'USD-DOP': 62.67,
-        'EUR-DOP': 72.03,
-        'USD-EUR': 0.87,
-        'EUR-USD': 1.15,
-        'DOP-USD': 0.016,
-        'DOP-EUR': 0.014
+        'USD-DOP': 63.38,
+        'EUR-DOP': 73.94,
+        'USD-EUR': 0.857,
+        'EUR-USD': 1.167,
+        'DOP-USD': 0.0158,
+        'DOP-EUR': 0.0135,
+        // CAD rates
+        'CAD-DOP': 45.24,
+        'DOP-CAD': 0.022,
+        'CAD-USD': 0.72,
+        'USD-CAD': 1.39,
+        'CAD-EUR': 0.61,
+        'EUR-CAD': 1.63,
+        // GBP rates
+        'GBP-DOP': 85.15,
+        'DOP-GBP': 0.0117,
+        'GBP-USD': 1.34,
+        'USD-GBP': 0.74,
+        'GBP-EUR': 1.15,
+        'EUR-GBP': 0.87,
+        // MXN rates
+        'MXN-DOP': 3.45,
+        'DOP-MXN': 0.29,
+        'MXN-USD': 0.054,
+        'USD-MXN': 18.37,
+        'MXN-EUR': 0.047,
+        'EUR-MXN': 21.43,
+        // Cross rates between new currencies
+        'GBP-CAD': 1.88,
+        'CAD-GBP': 0.53,
+        'GBP-MXN': 24.68,
+        'MXN-GBP': 0.041,
+        'CAD-MXN': 13.11,
+        'MXN-CAD': 0.076
     },
 
     // Rate update configuration
@@ -71,25 +99,71 @@ interface CachedExchangeRates extends ScrapedData {
 // Single global structure that stores everything
 const globalRates = {
     usd: {
-        buy: 62.67,
-        sell: 63.86,
+        buy: 63.38,
+        sell: 64.50,
         variation: 0.02,
-        spread: 1.19
+        spread: 1.12
     },
     eur: {
-        buy: 72.03,
-        sell: 76.03,
+        buy: 73.94,
+        sell: 77.50,
         variation: 0.06,
-        spread: 4.00
+        spread: 3.56
+    },
+    cad: {
+        buy: 45.24,
+        sell: 46.00,
+        variation: 0.02,
+        spread: 0.76
+    },
+    gbp: {
+        buy: 85.15,
+        sell: 87.00,
+        variation: 0.03,
+        spread: 1.85
+    },
+    mxn: {
+        buy: 3.45,
+        sell: 3.55,
+        variation: 0.01,
+        spread: 0.10
     },
     lastUpdated: new Date().toISOString(),
     // Derived rates for currency conversion
-    'USD-DOP': 62.67,
-    'EUR-DOP': 72.03,
-    'USD-EUR': 0.87,
-    'EUR-USD': 1.15,
-    'DOP-USD': 0.016,
-    'DOP-EUR': 0.014
+    'USD-DOP': 63.38,
+    'EUR-DOP': 73.94,
+    'USD-EUR': 0.857,
+    'EUR-USD': 1.167,
+    'DOP-USD': 0.0158,
+    'DOP-EUR': 0.0135,
+    // CAD rates
+    'CAD-DOP': 45.24,
+    'DOP-CAD': 0.022,
+    'CAD-USD': 0.72,
+    'USD-CAD': 1.39,
+    'CAD-EUR': 0.61,
+    'EUR-CAD': 1.63,
+    // GBP rates
+    'GBP-DOP': 85.15,
+    'DOP-GBP': 0.0117,
+    'GBP-USD': 1.34,
+    'USD-GBP': 0.74,
+    'GBP-EUR': 1.15,
+    'EUR-GBP': 0.87,
+    // MXN rates
+    'MXN-DOP': 3.45,
+    'DOP-MXN': 0.29,
+    'MXN-USD': 0.054,
+    'USD-MXN': 18.37,
+    'MXN-EUR': 0.047,
+    'EUR-MXN': 21.43,
+    // Cross rates between new currencies
+    'GBP-CAD': 1.88,
+    'CAD-GBP': 0.53,
+    'GBP-MXN': 24.68,
+    'MXN-GBP': 0.041,
+    'CAD-MXN': 13.11,
+    'MXN-CAD': 0.076
 };
 
 /**

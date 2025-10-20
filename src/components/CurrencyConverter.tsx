@@ -6,6 +6,7 @@ import { getCurrentLocalRates } from "../lib/scraper";
 import { translations } from "../lib/translations";
 import SwapButton from "./SwapButton";
 import LastUpdated from "./LastUpdated";
+import CurrencyInput from "./CurrencyInput";
 
 export default function CurrencyConverter() {
     const { language, mounted } = useLanguage();
@@ -43,12 +44,105 @@ export default function CurrencyConverter() {
 
         // If no rate found, return a default rate based on currency
         let defaultRate = 1;
-        if (from === 'USD' && to === 'DOP') defaultRate = 62.67;
-        else if (from === 'DOP' && to === 'USD') defaultRate = 0.016;
-        else if (from === 'USD' && to === 'EUR') defaultRate = 0.87;
-        else if (from === 'EUR' && to === 'USD') defaultRate = 1.15;
-        else if (from === 'EUR' && to === 'DOP') defaultRate = 72.03;
-        else if (from === 'DOP' && to === 'EUR') defaultRate = 0.014;
+        if (from === 'USD' && to === 'DOP') defaultRate = 63.38;
+        else if (from === 'DOP' && to === 'USD') defaultRate = 0.0158;
+        else if (from === 'USD' && to === 'EUR') defaultRate = 0.857;
+        else if (from === 'EUR' && to === 'USD') defaultRate = 1.167;
+        else if (from === 'EUR' && to === 'DOP') defaultRate = 73.94;
+        else if (from === 'DOP' && to === 'EUR') defaultRate = 0.0135;
+        // CAD rates
+        else if (from === 'CAD' && to === 'DOP') defaultRate = 45.24;
+        else if (from === 'DOP' && to === 'CAD') defaultRate = 0.022;
+        else if (from === 'CAD' && to === 'USD') defaultRate = 0.72;
+        else if (from === 'USD' && to === 'CAD') defaultRate = 1.39;
+        else if (from === 'CAD' && to === 'EUR') defaultRate = 0.61;
+        else if (from === 'EUR' && to === 'CAD') defaultRate = 1.63;
+        // GBP rates
+        else if (from === 'GBP' && to === 'DOP') defaultRate = 85.15;
+        else if (from === 'DOP' && to === 'GBP') defaultRate = 0.0117;
+        else if (from === 'GBP' && to === 'USD') defaultRate = 1.34;
+        else if (from === 'USD' && to === 'GBP') defaultRate = 0.74;
+        else if (from === 'GBP' && to === 'EUR') defaultRate = 1.15;
+        else if (from === 'EUR' && to === 'GBP') defaultRate = 0.87;
+        // MXN rates
+        else if (from === 'MXN' && to === 'DOP') defaultRate = 3.45;
+        else if (from === 'DOP' && to === 'MXN') defaultRate = 0.29;
+        else if (from === 'MXN' && to === 'USD') defaultRate = 0.054;
+        else if (from === 'USD' && to === 'MXN') defaultRate = 18.37;
+        else if (from === 'MXN' && to === 'EUR') defaultRate = 0.047;
+        else if (from === 'EUR' && to === 'MXN') defaultRate = 21.43;
+        // Cross rates between existing currencies
+        else if (from === 'GBP' && to === 'CAD') defaultRate = 1.88;
+        else if (from === 'CAD' && to === 'GBP') defaultRate = 0.53;
+        else if (from === 'GBP' && to === 'MXN') defaultRate = 24.68;
+        else if (from === 'MXN' && to === 'GBP') defaultRate = 0.041;
+        else if (from === 'CAD' && to === 'MXN') defaultRate = 13.11;
+        else if (from === 'MXN' && to === 'CAD') defaultRate = 0.076;
+        // JPY rates
+        else if (from === 'JPY' && to === 'DOP') defaultRate = 0.42;
+        else if (from === 'DOP' && to === 'JPY') defaultRate = 2.37;
+        else if (from === 'JPY' && to === 'USD') defaultRate = 0.0067;
+        else if (from === 'USD' && to === 'JPY') defaultRate = 149.25;
+        else if (from === 'JPY' && to === 'EUR') defaultRate = 0.0057;
+        else if (from === 'EUR' && to === 'JPY') defaultRate = 175.44;
+        // AUD rates
+        else if (from === 'AUD' && to === 'DOP') defaultRate = 41.28;
+        else if (from === 'DOP' && to === 'AUD') defaultRate = 0.024;
+        else if (from === 'AUD' && to === 'USD') defaultRate = 0.65;
+        else if (from === 'USD' && to === 'AUD') defaultRate = 1.54;
+        else if (from === 'AUD' && to === 'EUR') defaultRate = 0.56;
+        else if (from === 'EUR' && to === 'AUD') defaultRate = 1.79;
+        // CHF rates
+        else if (from === 'CHF' && to === 'DOP') defaultRate = 80.12;
+        else if (from === 'DOP' && to === 'CHF') defaultRate = 0.012;
+        else if (from === 'CHF' && to === 'USD') defaultRate = 1.26;
+        else if (from === 'USD' && to === 'CHF') defaultRate = 0.79;
+        else if (from === 'CHF' && to === 'EUR') defaultRate = 1.08;
+        else if (from === 'EUR' && to === 'CHF') defaultRate = 0.93;
+        // CNY rates
+        else if (from === 'CNY' && to === 'DOP') defaultRate = 8.90;
+        else if (from === 'DOP' && to === 'CNY') defaultRate = 0.11;
+        else if (from === 'CNY' && to === 'USD') defaultRate = 0.14;
+        else if (from === 'USD' && to === 'CNY') defaultRate = 7.14;
+        else if (from === 'CNY' && to === 'EUR') defaultRate = 0.12;
+        else if (from === 'EUR' && to === 'CNY') defaultRate = 8.33;
+        // Cross rates between new currencies
+        else if (from === 'JPY' && to === 'CAD') defaultRate = 0.009;
+        else if (from === 'CAD' && to === 'JPY') defaultRate = 111.11;
+        else if (from === 'JPY' && to === 'GBP') defaultRate = 0.004;
+        else if (from === 'GBP' && to === 'JPY') defaultRate = 250.00;
+        else if (from === 'JPY' && to === 'MXN') defaultRate = 0.12;
+        else if (from === 'MXN' && to === 'JPY') defaultRate = 8.33;
+        else if (from === 'AUD' && to === 'CAD') defaultRate = 0.90;
+        else if (from === 'CAD' && to === 'AUD') defaultRate = 1.11;
+        else if (from === 'AUD' && to === 'GBP') defaultRate = 0.52;
+        else if (from === 'GBP' && to === 'AUD') defaultRate = 1.92;
+        else if (from === 'AUD' && to === 'MXN') defaultRate = 11.95;
+        else if (from === 'MXN' && to === 'AUD') defaultRate = 0.084;
+        else if (from === 'CHF' && to === 'CAD') defaultRate = 1.55;
+        else if (from === 'CAD' && to === 'CHF') defaultRate = 0.65;
+        else if (from === 'CHF' && to === 'GBP') defaultRate = 0.89;
+        else if (from === 'GBP' && to === 'CHF') defaultRate = 1.12;
+        else if (from === 'CHF' && to === 'MXN') defaultRate = 22.22;
+        else if (from === 'MXN' && to === 'CHF') defaultRate = 0.045;
+        else if (from === 'CNY' && to === 'CAD') defaultRate = 0.19;
+        else if (from === 'CAD' && to === 'CNY') defaultRate = 5.26;
+        else if (from === 'CNY' && to === 'GBP') defaultRate = 0.11;
+        else if (from === 'GBP' && to === 'CNY') defaultRate = 9.09;
+        else if (from === 'CNY' && to === 'MXN') defaultRate = 2.58;
+        else if (from === 'MXN' && to === 'CNY') defaultRate = 0.39;
+        else if (from === 'JPY' && to === 'AUD') defaultRate = 0.010;
+        else if (from === 'AUD' && to === 'JPY') defaultRate = 100.00;
+        else if (from === 'JPY' && to === 'CHF') defaultRate = 0.008;
+        else if (from === 'CHF' && to === 'JPY') defaultRate = 125.00;
+        else if (from === 'JPY' && to === 'CNY') defaultRate = 0.045;
+        else if (from === 'CNY' && to === 'JPY') defaultRate = 22.22;
+        else if (from === 'AUD' && to === 'CHF') defaultRate = 0.78;
+        else if (from === 'CHF' && to === 'AUD') defaultRate = 1.28;
+        else if (from === 'AUD' && to === 'CNY') defaultRate = 4.55;
+        else if (from === 'CNY' && to === 'AUD') defaultRate = 0.22;
+        else if (from === 'CHF' && to === 'CNY') defaultRate = 7.14;
+        else if (from === 'CNY' && to === 'CHF') defaultRate = 0.14;
 
         return defaultRate;
     };
@@ -173,14 +267,34 @@ export default function CurrencyConverter() {
 
     // Currency configuration
     const currencies = useMemo(() => [
-        { code: 'USD', name: 'US Dollar', symbol: '$' },
-        { code: 'EUR', name: 'Euro', symbol: '€' },
-        { code: 'DOP', name: 'Dominican Peso', symbol: 'RD$' }
+        { code: 'USD', name: 'US Dollar', symbol: '$', flag: 'https://www.xe.com/svgs/flags/usd.static.svg' },
+        { code: 'EUR', name: 'Euro', symbol: '€', flag: 'https://www.xe.com/svgs/flags/eur.static.svg' },
+        { code: 'DOP', name: 'Dominican Peso', symbol: 'RD$', flag: 'https://www.xe.com/svgs/flags/dop.static.svg' },
+        { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: 'https://www.xe.com/svgs/flags/cad.static.svg' },
+        { code: 'GBP', name: 'British Pound', symbol: '£', flag: 'https://www.xe.com/svgs/flags/gbp.static.svg' },
+        { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: 'https://www.xe.com/svgs/flags/mxn.static.svg' },
+        { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: 'https://www.xe.com/svgs/flags/jpy.static.svg' },
+        { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: 'https://www.xe.com/svgs/flags/aud.static.svg' },
+        { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', flag: 'https://www.xe.com/svgs/flags/chf.static.svg' },
+        { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: 'https://www.xe.com/svgs/flags/cny.static.svg' }
     ], []);
 
     // Get available currencies for dropdown (exclude the other currency to prevent same selection)
-    const getAvailableCurrencies = useCallback((excludeCurrency: string) => {
-        return currencies.filter(c => c.code !== excludeCurrency);
+    // Put the currently selected currency at the top of the list
+    const getAvailableCurrencies = useCallback((excludeCurrency: string, selectedCurrency?: string) => {
+        const availableCurrencies = currencies.filter(c => c.code !== excludeCurrency);
+
+        if (selectedCurrency) {
+            // Find the selected currency and move it to the top
+            const selectedIndex = availableCurrencies.findIndex(c => c.code === selectedCurrency);
+            if (selectedIndex > 0) {
+                const selected = availableCurrencies[selectedIndex];
+                const others = availableCurrencies.filter(c => c.code !== selectedCurrency);
+                return [selected, ...others];
+            }
+        }
+
+        return availableCurrencies;
     }, [currencies]);
 
     // Handle currency swap
@@ -211,6 +325,14 @@ export default function CurrencyConverter() {
             }
         }, 100);
     }, [fromCurrency, toCurrency, toAmountDisplay, fromAmountDisplay]);
+
+    // Auto-focus and select all text on left input when component mounts
+    useEffect(() => {
+        if (mounted && fromAmountRef.current) {
+            fromAmountRef.current.focus();
+            fromAmountRef.current.select();
+        }
+    }, [mounted]);
 
     // Cleanup timeouts on unmount
     useEffect(() => {
@@ -289,83 +411,50 @@ export default function CurrencyConverter() {
         <>
             <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative">
                 {/* From Currency Section */}
-                <div className="w-full lg:flex-1 lg:max-w-xs order-1 lg:order-1">
-                    <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <div className="flex-1 pr-2">
-                            <input
-                                ref={fromAmountRef}
-                                type="text"
-                                value={fromAmountDisplay}
-                                onChange={(e) => {
-                                    const sanitizedValue = sanitizeInputValue(e.target.value);
-                                    setFromAmountDisplay(sanitizedValue);
-
-                                    // Debounced conversion
-                                    debouncedFromConversion(sanitizedValue);
-                                }}
-                                onBlur={(e) => {
-                                    const value = e.target.value;
-                                    if (value === "") {
-                                        setFromAmountDisplay("1.00");
-                                        // Trigger conversion with default value
-                                        const toValue = performConversion(1, fromCurrency, toCurrency);
-                                        setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
-                                    } else {
-                                        const formattedValue = formatCurrencyValue(value);
-                                        setFromAmountDisplay(formattedValue);
-                                    }
-                                }}
-                                onClick={(e) => e.currentTarget.select()}
-                                onFocus={(e) => e.currentTarget.select()}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') e.currentTarget.blur();
-                                    // Allow backspace, delete, tab, escape, enter
-                                    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                                    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                                    if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                                    // Allow numbers, decimal point, and comma
-                                    if (!/^[0-9.,]$/.test(e.key)) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                className="currency-input w-full border-none outline-none bg-transparent"
-                                placeholder={t.enterAmount}
-                                aria-label={t.fromCurrency}
-                            />
-                        </div>
-                        <div className="flex-1 pl-2">
-                            <div className="relative" ref={fromDropdownRef}>
-                                <div
-                                    onClick={handleFromDropdownClick}
-                                    className={`currency-label currency-select ${fromDropdownOpen ? 'dropdown-open' : ''}`}
-                                    aria-label="From Currency"
-                                >
-                                    {fromCurrency}
-                                </div>
-                                {fromDropdownOpen && (
-                                    <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
-                                        {getAvailableCurrencies(toCurrency).map((currency) => (
-                                            <div
-                                                key={currency.code}
-                                                onClick={() => {
-                                                    handleFromCurrencyChange(currency.code);
-                                                    setFromDropdownOpen(false);
-                                                }}
-                                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === fromCurrency ? 'selected' : ''
-                                                    }`}
-                                            >
-                                                {currency.code}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                <div className="w-full lg:flex-1 order-1 lg:order-1">
+                    <CurrencyInput
+                        value={fromAmountDisplay}
+                        onChange={(value) => {
+                            const sanitizedValue = sanitizeInputValue(value);
+                            setFromAmountDisplay(sanitizedValue);
+                            debouncedFromConversion(sanitizedValue);
+                        }}
+                        onFocus={() => { }}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                                setFromAmountDisplay("1.00");
+                                const toValue = performConversion(1, fromCurrency, toCurrency);
+                                setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+                            } else {
+                                const formattedValue = formatCurrencyValue(value);
+                                setFromAmountDisplay(formattedValue);
+                            }
+                        }}
+                        placeholder={t.enterAmount}
+                        currency={fromCurrency}
+                        onCurrencyChange={handleFromCurrencyChange}
+                        availableCurrencies={getAvailableCurrencies(toCurrency, fromCurrency)}
+                        isDropdownOpen={fromDropdownOpen}
+                        onDropdownToggle={handleFromDropdownClick}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') e.currentTarget.blur();
+                            if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
+                            if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+                            if (!/^[0-9.,]$/.test(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
+                        onClick={(e) => e.currentTarget.select()}
+                        currencyNames={t.currencyNames}
+                        ariaLabel={t.fromCurrency}
+                        inputRef={fromAmountRef}
+                        dropdownRef={fromDropdownRef}
+                    />
                 </div>
 
                 {/* Swap Button - Centered on Mobile, Between inputs on Desktop */}
-                <div className="flex-shrink-0 order-2 lg:order-2 flex justify-center lg:justify-center">
+                <div className="flex-shrink-0 order-2 lg:order-2 flex justify-center lg:justify-center my-2 lg:my-0">
                     <SwapButton
                         onClick={handleSwapCurrencies}
                         size="md"
@@ -374,79 +463,46 @@ export default function CurrencyConverter() {
                 </div>
 
                 {/* To Currency Section */}
-                <div className="w-full lg:flex-1 lg:max-w-xs order-3 lg:order-3">
-                    <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <div className="flex-1 pr-2">
-                            <input
-                                ref={toAmountRef}
-                                type="text"
-                                value={toAmountDisplay}
-                                onChange={(e) => {
-                                    const sanitizedValue = sanitizeInputValue(e.target.value);
-                                    setToAmountDisplay(sanitizedValue);
-
-                                    // Debounced conversion
-                                    debouncedToConversion(sanitizedValue);
-                                }}
-                                onBlur={(e) => {
-                                    const value = e.target.value;
-                                    if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
-                                        setToAmountDisplay("1.00");
-                                        // Trigger reverse conversion with default value
-                                        const fromValue = performReverseConversion(1, fromCurrency, toCurrency);
-                                        setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
-                                    } else {
-                                        const formattedValue = formatCurrencyValue(value);
-                                        setToAmountDisplay(formattedValue);
-                                    }
-                                }}
-                                onClick={(e) => e.currentTarget.select()}
-                                onFocus={(e) => e.currentTarget.select()}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') e.currentTarget.blur();
-                                    // Allow backspace, delete, tab, escape, enter
-                                    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                                    // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                                    if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                                    // Allow numbers, decimal point, and comma
-                                    if (!/^[0-9.,]$/.test(e.key)) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                                className="currency-input w-full border-none outline-none bg-transparent"
-                                placeholder={t.enterAmount}
-                                aria-label={t.toCurrency}
-                            />
-                        </div>
-                        <div className="flex-1 pl-2">
-                            <div className="relative" ref={toDropdownRef}>
-                                <div
-                                    onClick={handleToDropdownClick}
-                                    className={`currency-label currency-select ${toDropdownOpen ? 'dropdown-open' : ''}`}
-                                    aria-label="To Currency"
-                                >
-                                    {toCurrency}
-                                </div>
-                                {toDropdownOpen && (
-                                    <div className="dropdown-options absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
-                                        {getAvailableCurrencies(fromCurrency).map((currency) => (
-                                            <div
-                                                key={currency.code}
-                                                onClick={() => {
-                                                    handleToCurrencyChange(currency.code);
-                                                    setToDropdownOpen(false);
-                                                }}
-                                                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal ${currency.code === toCurrency ? 'selected' : ''
-                                                    }`}
-                                            >
-                                                {currency.code}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                <div className="w-full lg:flex-1 order-3 lg:order-3">
+                    <CurrencyInput
+                        value={toAmountDisplay}
+                        onChange={(value) => {
+                            const sanitizedValue = sanitizeInputValue(value);
+                            setToAmountDisplay(sanitizedValue);
+                            debouncedToConversion(sanitizedValue);
+                        }}
+                        onFocus={() => { }}
+                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                            const value = e.target.value;
+                            if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
+                                setToAmountDisplay("1.00");
+                                const fromValue = performReverseConversion(1, fromCurrency, toCurrency);
+                                setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
+                            } else {
+                                const formattedValue = formatCurrencyValue(value);
+                                setToAmountDisplay(formattedValue);
+                            }
+                        }}
+                        placeholder={t.enterAmount}
+                        currency={toCurrency}
+                        onCurrencyChange={handleToCurrencyChange}
+                        availableCurrencies={getAvailableCurrencies(fromCurrency, toCurrency)}
+                        isDropdownOpen={toDropdownOpen}
+                        onDropdownToggle={handleToDropdownClick}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') e.currentTarget.blur();
+                            if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
+                            if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+                            if (!/^[0-9.,]$/.test(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
+                        onClick={(e) => e.currentTarget.select()}
+                        currencyNames={t.currencyNames}
+                        ariaLabel={t.toCurrency}
+                        inputRef={toAmountRef}
+                        dropdownRef={toDropdownRef}
+                    />
                 </div>
             </div>
 

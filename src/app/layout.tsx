@@ -19,11 +19,11 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  description: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+  description: "Convert currencies instantly. Quick, safe, and always accurate.",
   keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex",
   authors: [{ name: "Flare exchange rate" }],
   openGraph: {
-    description: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+    description: "Convert currencies instantly. Quick, safe, and always accurate.",
     type: "website",
     locale: "en_US",
     url: "https://flarexrate.com",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    description: "Convert between USD, EUR, and DOP with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
+    description: "Convert between currencies with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
     creator: "@flarexrate",
   },
   robots: {
@@ -71,6 +71,20 @@ export default function RootLayout({
     <html suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* Adsterra Popunder Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '//pl27886264.effectivegatecpm.com/96/1b/2b/961b2b5a2de24961cf4b10cacdca0ae4.js';
+                script.async = true;
+                document.head.appendChild(script);
+              })();
+            `,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

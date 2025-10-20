@@ -5,11 +5,26 @@ export const translations = {
         fromCurrency: "From currency",
         toCurrency: "To currency",
         swap: "Swap currencies",
+        searchCurrency: "Search currency...",
         login: "Login",
         loginButton: "Log In",
 
         // Site description
-        siteDescription: "Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
+        siteDescription: "Convert currencies instantly. Quick, safe, and always accurate",
+
+        // Currency names
+        currencyNames: {
+            USD: "US Dollar",
+            EUR: "Euro",
+            DOP: "Dominican Peso",
+            CAD: "Canadian Dollar",
+            GBP: "British Pound",
+            MXN: "Mexican Peso",
+            JPY: "Japanese Yen",
+            AUD: "Australian Dollar",
+            CHF: "Swiss Franc",
+            CNY: "Chinese Yuan"
+        },
 
         // Authentication
         register: "Register",
@@ -243,10 +258,10 @@ export const translations = {
         contactAboutText: "If you have any questions about our platform, please contact us at:",
 
         // Page titles
-        pageTitle: "Flare Exchange Rate | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
-        privacyTitle: "Privacy policy | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
-        termsTitle: "Terms and conditions | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate.",
-        aboutTitle: "About us | Convert USD, EUR, and DOP instantly. Quick, safe, and always accurate."
+        pageTitle: "Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.",
+        privacyTitle: "Privacy policy | Convert currencies instantly. Quick, safe, and always accurate.",
+        termsTitle: "Terms and conditions | Convert currencies instantly. Quick, safe, and always accurate.",
+        aboutTitle: "About us | Convert currencies instantly. Quick, safe, and always accurate."
     },
     es: {
         // Main converter
@@ -254,11 +269,26 @@ export const translations = {
         fromCurrency: "Moneda de origen",
         toCurrency: "Moneda de destino",
         swap: "Intercambiar monedas",
+        searchCurrency: "Buscar moneda...",
         login: "Iniciar sesión",
         loginButton: "Acceder",
 
         // Site description
-        siteDescription: "Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
+        siteDescription: "Convierte monedas al instante. Rápido, seguro y siempre preciso",
+
+        // Currency names
+        currencyNames: {
+            USD: "Dólar estadounidense",
+            EUR: "Euro",
+            DOP: "Peso dominicano",
+            CAD: "Dólar canadiense",
+            GBP: "Libra esterlina",
+            MXN: "Peso mexicano",
+            JPY: "Yen japonés",
+            AUD: "Dólar australiano",
+            CHF: "Franco suizo",
+            CNY: "Yuan renminbi chino"
+        },
 
         // Authentication
         register: "Registrarse",
@@ -492,9 +522,9 @@ export const translations = {
         contactAboutText: "Si tienes alguna pregunta sobre nuestra plataforma, por favor contáctanos en:",
 
         // Page titles
-        pageTitle: "Flare Exchange Rate | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
-        privacyTitle: "Política de privacidad | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
-        termsTitle: "Términos y condiciones | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso.",
-        aboutTitle: "Acerca de nosotros | Convierte USD, EUR y DOP al instante. Rápido, seguro y siempre preciso."
+        pageTitle: "Flare Exchange Rate | Convierte monedas al instante. Rápido, seguro y siempre preciso.",
+        privacyTitle: "Política de privacidad | Convierte monedas al instante. Rápido, seguro y siempre preciso.",
+        termsTitle: "Términos y condiciones | Convierte monedas al instante. Rápido, seguro y siempre preciso.",
+        aboutTitle: "Acerca de nosotros | Convierte monedas al instante. Rápido, seguro y siempre preciso."
     }
 };

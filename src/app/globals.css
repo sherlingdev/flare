@@ -336,6 +336,7 @@ svg {
         flex-direction: column;
         gap: 0.75rem;
         align-items: center;
+        overflow: visible !important;
     }
 
     .currency-input-group>div {
@@ -362,6 +363,7 @@ svg {
 @media (max-width: 480px) {
     .currency-input-group {
         gap: 0.5rem;
+        overflow: visible !important;
     }
     
     .currency-input-group>div:nth-child(2) {
@@ -388,6 +390,17 @@ svg {
     button:active {
         transform: scale(0.98);
         transition: transform 0.1s ease;
+    }
+    
+    /* Dropdown touch device optimizations */
+    .dropdown-options > div:hover {
+        @apply bg-transparent;
+    }
+    
+    .dropdown-options > div:active {
+        @apply bg-gray-100 dark:bg-gray-600;
+        transform: scale(0.98);
+        transition: all 0.1s ease;
     }
 }
 
@@ -503,63 +516,37 @@ html {
     box-shadow: 0 0 0 2px #6b7280;
 }
 
-/* Dropdown options styling - DIV BASED */
+/* ===========================================
+   DROPDOWN OPTIONS - COMPLETE STYLING SYSTEM
+   =========================================== 
+
+/* Base dropdown container */
 .dropdown-options {
-    background-color: #f9fafb;
-    color: #374151;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
-    border: none;
-    width: auto;
+    @apply bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600;
+    position: absolute;
+    top: 100%;
     right: 1rem;
     left: auto;
+    width: 280px;
+    z-index: 50;
+    margin-top: 0.25rem;
+    overflow-x: hidden;
 }
 
-.dark .dropdown-options {
-    background-color: #374151;
-    color: #f9fafb;
-}
-
+/* Dropdown option items */
 .dropdown-options > div {
-    cursor: pointer;
-    font-weight: 400;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-    text-align: left;
+    @apply px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    border-radius: 0.375rem;
-    margin: 0;
-    border: none;
-    outline: none;
-    padding-left: 0.75rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    min-height: 44px;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.dropdown-options > div:hover {
-    background-color: #f3f4f6;
-    border-radius: 0.375rem;
-}
-
-.dark .dropdown-options > div:hover {
-    background-color: #4b5563;
-    border-radius: 0.375rem;
-}
-
-/* Selected option styling */
+/* Selected option state */
 .dropdown-options > div.selected {
-    background-color: #d1d5db;
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-.dark .dropdown-options > div.selected {
-    background-color: #6b7280;
-    border-radius: 0.375rem;
-    font-weight: 500;
+    @apply bg-gray-200 dark:bg-gray-600;
 }
 
 /* Arrow states for dropdown */
@@ -576,7 +563,11 @@ html {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m14 12-4-4-4 4'/%3e%3c/svg%3e");
 }
 
-/* Mobile optimizations */
+/* ===========================================
+   DROPDOWN RESPONSIVE BREAKPOINTS
+   =========================================== */
+
+/* Tablet styles (≤768px) */
 @media (max-width: 768px) {
     .currency-select {
         padding-right: 2.5rem;
@@ -585,8 +576,14 @@ html {
         min-width: 75px;
         font-size: 14px;
     }
+    
+    .dropdown-options {
+        width: 260px;
+        overflow-x: hidden;
+    }
 }
 
+/* Mobile styles (≤480px) */
 @media (max-width: 480px) {
     .currency-select {
         padding-right: 2.25rem;
@@ -596,10 +593,20 @@ html {
         font-size: 14px;
     }
     
+    .dropdown-options {
+        width: 280px;
+        overflow-x: hidden;
+        right: 0.5rem;
+        max-width: calc(100vw - 2rem);
+    }
+    
     .dropdown-options > div {
-        padding-left: 0.75rem;
-        padding-top: 0.375rem;
-        padding-bottom: 0.375rem;
-        font-size: 0.8125rem;
+        min-height: 48px;
+    }
+    
+    /* Remove padding from flex container on mobile */
+    .dropdown-options > div .flex.items-center.space-x-2.min-w-0 {
+        padding: 0;
+        margin: 0;
     }
 }

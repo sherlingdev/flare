@@ -10,7 +10,7 @@ export default function StructuredData() {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Flare",
-      "description": "Fast and reliable currency converter with real-time exchange rates for USD, EUR, and DOP",
+      "description": "Fast and reliable currency converter with real-time exchange rates for multiple currencies",
       "url": "https://flarexrate.com",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web Browser",
