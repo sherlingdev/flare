@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../lib/translations";
 import { measurePerformance, measureWebVitals } from "../lib/performance";
@@ -14,6 +14,7 @@ import CurrencyCard from "../components/CurrencyCard";
 export default function Home() {
   const { language, mounted } = useLanguage();
   const t = translations[mounted ? language : "en"];
+  const [dynamicTitle, setDynamicTitle] = useState("Flare Exchange Rate");
 
   // Update page title dynamically - useLayoutEffect to prevent static title flash
   useLayoutEffect(() => {
@@ -37,7 +38,7 @@ export default function Home() {
       <div className="w-full max-w-6xl mb-6">
         <div className="text-center">
           <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-slate-800 dark:text-slate-200 mb-4">
-            {t.siteName}
+            {dynamicTitle}
           </h1>
           <p className="text-base sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             {t.siteDescription}
@@ -54,7 +55,7 @@ export default function Home() {
 
         <div className="w-full max-w-none">
           <CurrencyCard>
-            <CurrencyConverter />
+            <CurrencyConverter onTitleChange={setDynamicTitle} />
           </CurrencyCard>
         </div>
 
