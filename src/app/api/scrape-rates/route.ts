@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { scrapeBaseRatesAndCalculateAll } from '../../../lib/scraper';
 
 // Netlify function configuration
@@ -6,7 +6,7 @@ export const config = {
     maxDuration: 60, // 60 seconds timeout for Netlify
 };
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         console.log('🚀 Starting complete XE.com rates scraping...');
 
