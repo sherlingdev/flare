@@ -1,4 +1,3 @@
-// import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../contexts/ThemeContext";

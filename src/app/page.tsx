@@ -4,12 +4,8 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { translations } from "../lib/translations";
 import { measurePerformance, measureWebVitals } from "../lib/performance";
-// import AdBanner from "../components/AdBanner";
-// import AdSidebar from "../components/AdSidebar";
 import CurrencyConverter from "../components/CurrencyConverter";
 import CurrencyCard from "../components/CurrencyCard";
-// import CurrencyVariations from "../components/CurrencyVariations";
-// import LastUpdated from "../components/LastUpdated";
 
 export default function Home() {
   const { language, mounted } = useLanguage();

@@ -2,15 +2,12 @@
 
 import { useCallback, lazy, Suspense } from "react";
 import Link from "next/link";
-// import Image from "next/image";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "../contexts/ThemeContext";
-// import { translations } from "../lib/translations";
 
 // Lazy load icons for better performance
 const Sun = lazy(() => import("lucide-react").then(module => ({ default: module.Sun })));
 const Moon = lazy(() => import("lucide-react").then(module => ({ default: module.Moon })));
-// const BookOpen = lazy(() => import("lucide-react").then(module => ({ default: module.BookOpen })));
 
 interface HeaderProps {
     showBackButton?: boolean;

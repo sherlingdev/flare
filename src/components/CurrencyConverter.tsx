@@ -343,10 +343,13 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
             const rate = currencyRates[fromCurr] || 1;
             return fromValue * rate;
         } else {
-            // Cross-currency conversion: USD -> fromCurr -> toCurr
+            // Cross-currency conversion: fromCurr -> USD -> toCurr
+            // Step 1: Convert fromCurr to USD
             const fromRate = currencyRates[fromCurr] || 1;
+            const usdValue = fromValue * fromRate;
+            // Step 2: Convert USD to toCurr
             const toRate = currencyRates[toCurr] || 1;
-            return fromValue * (toRate / fromRate);
+            return usdValue / toRate;
         }
     }, []);
 
