@@ -15,53 +15,53 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-              - name: Get rates from ExchangeRate-API
-                run: |
-                  echo "🔄 Getting rates from ExchangeRate-API..."
-                  curl -X GET "https://open.er-api.com/v6/latest/USD" \
-                    -H "Content-Type: application/json" \
-                    -o exchange-rates.json \
-                    --max-time 30 \
-                    --connect-timeout 10 \
-                    --retry 3 \
-                    --retry-delay 2
-                  
-                  echo "✅ ExchangeRate-API response saved to exchange-rates.json"
-                  echo "📊 Response size: $(wc -c < exchange-rates.json) bytes"
-                  
-                  # Convert rates to our format (1/rate for each currency)
-                  echo "🔄 Converting rates to our format..."
-                  node -e "
-                    const fs = require('fs');
-                    const data = JSON.parse(fs.readFileSync('exchange-rates.json', 'utf8'));
-                    
-                    // Convert rates: 1/rate for each currency
-                    const convertedRates = {};
-                    Object.keys(data.rates).forEach(currency => {
-                      if (currency !== 'USD') {
-                        convertedRates[currency] = 1 / data.rates[currency];
-                      } else {
-                        convertedRates[currency] = 1;
-                      }
-                    });
-                    
-                    // Create our format
-                    const result = {
-                      success: true,
-                      rates: convertedRates,
-                      currencies: Object.keys(convertedRates).map(code => ({
-                        code: code,
-                        name: code,
-                        symbol: code,
-                        flag: \`https://www.xe.com/svgs/flags/\${code.toLowerCase()}.static.svg\`
-                      })),
-                      timestamp: new Date().toISOString(),
-                      source: 'exchange-rate-api'
-                    };
-                    
-                    fs.writeFileSync('rates.json', JSON.stringify(result, null, 2));
-                    console.log('✅ Converted rates saved to rates.json');
-                  "
+      - name: Get rates from ExchangeRate-API
+        run: |
+          echo "🔄 Getting rates from ExchangeRate-API..."
+          curl -X GET "https://open.er-api.com/v6/latest/USD" \
+            -H "Content-Type: application/json" \
+            -o exchange-rates.json \
+            --max-time 30 \
+            --connect-timeout 10 \
+            --retry 3 \
+            --retry-delay 2
+          
+          echo "✅ ExchangeRate-API response saved to exchange-rates.json"
+          echo "📊 Response size: $(wc -c < exchange-rates.json) bytes"
+          
+          # Convert rates to our format (1/rate for each currency)
+          echo "🔄 Converting rates to our format..."
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('exchange-rates.json', 'utf8'));
+            
+            // Convert rates: 1/rate for each currency
+            const convertedRates = {};
+            Object.keys(data.rates).forEach(currency => {
+              if (currency !== 'USD') {
+                convertedRates[currency] = 1 / data.rates[currency];
+              } else {
+                convertedRates[currency] = 1;
+              }
+            });
+            
+            // Create our format
+            const result = {
+              success: true,
+              rates: convertedRates,
+              currencies: Object.keys(convertedRates).map(code => ({
+                code: code,
+                name: code,
+                symbol: code,
+                flag: \`https://www.xe.com/svgs/flags/\${code.toLowerCase()}.static.svg\`
+              })),
+              timestamp: new Date().toISOString(),
+              source: 'exchange-rate-api'
+            };
+            
+            fs.writeFileSync('rates.json', JSON.stringify(result, null, 2));
+            console.log('✅ Converted rates saved to rates.json');
+          "
 
       - name: Save to Netlify Blobs
         run: |

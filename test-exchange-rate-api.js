@@ -14,11 +14,11 @@ async function testExchangeRateAPI() {
         // 1. Call ExchangeRate-API
         console.log('📡 Calling ExchangeRate-API...');
         const response = await fetch('https://open.er-api.com/v6/latest/USD');
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         console.log('✅ API Response received');
         console.log(`📊 Base currency: ${data.base_code}`);
