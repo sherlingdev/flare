@@ -3,7 +3,7 @@ import { scrapeSpecificXERates } from '../../../lib/scraper';
 
 // Netlify function configuration
 export const config = {
-    maxDuration: 120, // 120 seconds timeout for Netlify (increased for all currencies)
+    maxDuration: 600, // 600 seconds (10 minutes) timeout for complete scraping
 };
 
 export async function GET() {
