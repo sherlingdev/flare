@@ -77,8 +77,8 @@ jobs:
           }
           EOF
           
-          # Save to Netlify Blobs using our API endpoint
-          curl -X PUT "${{ secrets.SITE_URL }}/api/netlify-blobs/currency-rates" \
+          # Save to Netlify Blobs using Netlify Function
+          curl -X PUT "${{ secrets.SITE_URL }}/.netlify/functions/currency-rates" \
             -H "Content-Type: application/json" \
             -d @blob-data.json
           
@@ -87,7 +87,7 @@ jobs:
       - name: Verify storage
         run: |
           echo "🔍 Verifying stored data..."
-          curl -X GET "${{ secrets.SITE_URL }}/api/netlify-blobs/currency-rates" \
+          curl -X GET "${{ secrets.SITE_URL }}/.netlify/functions/currency-rates" \
             -o verify.json
           
           echo "📋 Verification response:"

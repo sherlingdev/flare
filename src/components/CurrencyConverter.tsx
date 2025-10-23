@@ -40,8 +40,8 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
     useEffect(() => {
         const loadRates = async () => {
             try {
-                // Try to get data from Netlify Blobs first
-                const response = await fetch('/api/netlify-blobs/currency-rates');
+                // Try to get data from Netlify Function first
+                const response = await fetch('/.netlify/functions/currency-rates');
                 const data = await response.json();
 
                 if (data.success && data.data && isRecent(data.data.timestamp)) {
@@ -49,7 +49,7 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                     setCurrencyRates(data.data.rates);
                     setCurrencies(data.data.currencies);
                     setIsLoadingCurrencies(false);
-                    console.log(`✅ Tasas y monedas cargadas desde Netlify Blobs: ${data.data.timestamp}`);
+                    console.log(`✅ Tasas y monedas cargadas desde Netlify Function: ${data.data.timestamp}`);
                 } else {
                     // Use hardcoded rates and currencies (fallback)
                     setCurrencyRates(getHardcodedRates());
