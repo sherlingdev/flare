@@ -4,15 +4,15 @@ import { getStore } from '@netlify/blobs';
 export async function PUT(request: NextRequest) {
     try {
         const body = await request.json();
-        
+
         // Check if we're in production with Netlify Blobs configured
         if (process.env.NETLIFY && process.env.NETLIFY_BLOBS_STORE_ID) {
             // Get Netlify Blobs store
             const store = getStore('currency-rates');
-            
+
             // Store the data
             await store.set('latest', JSON.stringify(body));
-            
+
             return NextResponse.json({
                 success: true,
                 message: 'Data stored in Netlify Blobs successfully',
@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
             // Development mode - simulate success
             console.log('🔧 Development mode: Simulating Netlify Blobs storage');
             console.log('📊 Data that would be stored:', JSON.stringify(body, null, 2));
-            
+
             return NextResponse.json({
                 success: true,
                 message: 'Data would be stored in Netlify Blobs (development mode)',
@@ -45,10 +45,10 @@ export async function GET() {
         if (process.env.NETLIFY && process.env.NETLIFY_BLOBS_STORE_ID) {
             // Get Netlify Blobs store
             const store = getStore('currency-rates');
-            
+
             // Try to get the latest data
             const data = await store.get('latest');
-            
+
             if (data) {
                 // Convert ArrayBuffer to string
                 const dataString = new TextDecoder().decode(data);
