@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Netlify Blobs configuration
+[blobs]
+  stores = ["currency-rates"]

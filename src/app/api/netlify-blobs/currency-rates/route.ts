@@ -1,13 +1,34 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { getStore } from '@netlify/blobs';
 
-export async function PUT() {
+export async function PUT(request: NextRequest) {
     try {
-        // For now, just return success (Netlify Blobs integration will be added later)
-        return NextResponse.json({
-            success: true,
-            message: 'Data would be stored in Netlify Blobs (integration pending)',
-            timestamp: new Date().toISOString()
-        });
+        const body = await request.json();
+        
+        // Check if we're in production with Netlify Blobs configured
+        if (process.env.NETLIFY && process.env.NETLIFY_BLOBS_STORE_ID) {
+            // Get Netlify Blobs store
+            const store = getStore('currency-rates');
+            
+            // Store the data
+            await store.set('latest', JSON.stringify(body));
+            
+            return NextResponse.json({
+                success: true,
+                message: 'Data stored in Netlify Blobs successfully',
+                timestamp: new Date().toISOString()
+            });
+        } else {
+            // Development mode - simulate success
+            console.log('🔧 Development mode: Simulating Netlify Blobs storage');
+            console.log('📊 Data that would be stored:', JSON.stringify(body, null, 2));
+            
+            return NextResponse.json({
+                success: true,
+                message: 'Data would be stored in Netlify Blobs (development mode)',
+                timestamp: new Date().toISOString()
+            });
+        }
     } catch (error) {
         console.error('Error storing data in Netlify Blobs:', error);
         return NextResponse.json({
@@ -20,23 +41,36 @@ export async function PUT() {
 
 export async function GET() {
     try {
-        // For now, return mock data to make the workflow pass
-        return NextResponse.json({
-            success: true,
-            data: {
-                rates: {
-                    "USD": 1,
-                    "EUR": 1.16169,
-                    "DOP": 0.0157237
-                },
-                currencies: [
-                    { code: 'USD', name: 'US Dollar', symbol: '$', flag: 'https://www.xe.com/svgs/flags/usd.static.svg' },
-                    { code: 'DOP', name: 'Dominican Peso', symbol: 'RD$', flag: 'https://www.xe.com/svgs/flags/dop.static.svg' }
-                ],
-                timestamp: new Date().toISOString(),
-                source: 'mock-data'
+        // Check if we're in production with Netlify Blobs configured
+        if (process.env.NETLIFY && process.env.NETLIFY_BLOBS_STORE_ID) {
+            // Get Netlify Blobs store
+            const store = getStore('currency-rates');
+            
+            // Try to get the latest data
+            const data = await store.get('latest');
+            
+            if (data) {
+                // Convert ArrayBuffer to string
+                const dataString = new TextDecoder().decode(data);
+                const parsedData = JSON.parse(dataString);
+                return NextResponse.json({
+                    success: true,
+                    data: parsedData
+                });
+            } else {
+                return NextResponse.json({
+                    success: false,
+                    message: 'No data found in Netlify Blobs'
+                }, { status: 404 });
             }
-        });
+        } else {
+            // Development mode - return mock data
+            console.log('🔧 Development mode: Using mock data for Netlify Blobs');
+            return NextResponse.json({
+                success: false,
+                message: 'Netlify Blobs not configured (development mode)'
+            }, { status: 404 });
+        }
     } catch (error) {
         console.error('Error retrieving data from Netlify Blobs:', error);
         return NextResponse.json({
