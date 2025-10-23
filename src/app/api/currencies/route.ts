@@ -779,9 +779,43 @@ export async function GET() {
             .filter(code => code !== 'USD')
             .map(code => `USD-${code}`);
 
-        console.log(`🔄 Scraping ${usdPairs.length} USD pairs from XE.com...`);
-        const scrapedRates = await scrapeSpecificXERates(usdPairs);
-        console.log('📊 Scraped rates:', scrapedRates);
+        console.log(`🔄 Scraping ${usdPairs.length} USD pairs from XE.com in batches...`);
+
+        // Process in batches to avoid timeout
+        const batchSize = 10; // Process 10 pairs at a time
+        const batches = [];
+        for (let i = 0; i < usdPairs.length; i += batchSize) {
+            batches.push(usdPairs.slice(i, i + batchSize));
+        }
+
+        console.log(`📦 Processing ${batches.length} batches of ${batchSize} pairs each...`);
+
+        const scrapedRates: Record<string, number> = {};
+
+        for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+            const batch = batches[batchIndex];
+            console.log(`🔄 Processing batch ${batchIndex + 1}/${batches.length}: ${batch.join(', ')}`);
+
+            try {
+                // Add delay between batches
+                if (batchIndex > 0) {
+                    console.log('⏳ Waiting 3 seconds between batches...');
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+
+                const batchRates = await scrapeSpecificXERates(batch);
+                console.log(`✅ Batch ${batchIndex + 1} completed:`, batchRates);
+
+                // Merge batch results
+                Object.assign(scrapedRates, batchRates);
+
+            } catch (error) {
+                console.error(`❌ Error in batch ${batchIndex + 1}:`, error);
+                // Continue with next batch even if this one fails
+            }
+        }
+
+        console.log('📊 Final scraped rates:', scrapedRates);
 
         // Generate currency rates from scraped data
         const currencyRates: Record<string, number> = {};
