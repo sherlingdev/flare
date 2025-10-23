@@ -42,3 +42,7 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# GitHub Actions temporary files
+rates.json
+blob-data.json
