@@ -27,6 +27,7 @@ interface CurrencyInputProps {
     ariaLabel: string;
     inputRef?: React.RefObject<HTMLInputElement | null>;
     dropdownRef?: React.RefObject<HTMLDivElement | null>;
+    isLoadingCurrencies?: boolean;
     t: {
         searchCurrency: string;
         noCurrenciesFound: string;
@@ -50,6 +51,7 @@ export default function CurrencyInput({
     ariaLabel,
     inputRef,
     dropdownRef,
+    isLoadingCurrencies = false,
     t
 }: CurrencyInputProps) {
     const [searchTerm, setSearchTerm] = useState('');
@@ -170,16 +172,18 @@ export default function CurrencyInput({
                     >
                         <div className="flex items-center space-x-2 ml-auto">
                             <div className="flex-shrink-0 w-5 h-3.5 rounded-sm overflow-hidden shadow-sm border border-gray-200 dark:border-gray-600">
-                                <Image
-                                    src={availableCurrencies.find(c => c.code === currency)?.flag || ''}
-                                    alt={`${currency} flag`}
-                                    width={20}
-                                    height={14}
-                                    className="object-cover w-full h-full"
-                                    onError={(e) => {
-                                        e.currentTarget.style.display = 'none';
-                                    }}
-                                />
+                                {!isLoadingCurrencies && availableCurrencies.find(c => c.code === currency)?.flag && (
+                                    <Image
+                                        src={availableCurrencies.find(c => c.code === currency)?.flag || ''}
+                                        alt={`${currency} flag`}
+                                        width={20}
+                                        height={14}
+                                        className="object-cover w-full h-full"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                        }}
+                                    />
+                                )}
                             </div>
                             <span>{currency}</span>
                         </div>

@@ -1,0 +1,56 @@
+name: Update Currency Rates
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ master, main ]
+
+jobs:
+  update-rates:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Call currencies API
+        run: |
+          echo "🔄 Calling /api/currencies endpoint..."
+          curl -X GET "${{ secrets.SITE_URL }}/api/currencies" \
+            -H "Content-Type: application/json" \
+            -o rates.json
+          
+          echo "✅ API response saved to rates.json"
+          echo "📊 Response size: $(wc -c < rates.json) bytes"
+
+      - name: Save to Netlify Blobs
+        run: |
+          echo "💾 Saving rates to Netlify Blobs..."
+          
+          # Create the data structure for Blobs
+          cat > blob-data.json << EOF
+          {
+            "rates": $(cat rates.json | jq '.rates'),
+            "currencies": $(cat rates.json | jq '.currencies'),
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "source": "github-actions"
+          }
+          EOF
+          
+          # Save to Netlify Blobs using our API endpoint
+          curl -X PUT "${{ secrets.SITE_URL }}/api/netlify-blobs/currency-rates" \
+            -H "Content-Type: application/json" \
+            -d @blob-data.json
+          
+          echo "✅ Rates saved to Netlify Blobs"
+
+      - name: Verify storage
+        run: |
+          echo "🔍 Verifying stored data..."
+          curl -X GET "${{ secrets.SITE_URL }}/api/netlify-blobs/currency-rates" \
+            -o verify.json
+          
+          echo "📋 Verification response:"
+          cat verify.json | jq '.'
