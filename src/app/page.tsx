@@ -33,10 +33,10 @@ export default function Home() {
       {/* Header */}
       <div className="w-full max-w-6xl mb-6">
         <div className="text-center">
-          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-slate-800 dark:text-slate-200 mb-4">
+          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary mb-4">
             {dynamicTitle}
           </h1>
-          <p className="text-base sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-flare-primary max-w-2xl mx-auto">
             {t.siteDescription}
           </p>
         </div>

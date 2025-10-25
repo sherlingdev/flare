@@ -67,7 +67,7 @@ export default function SwapButton({
             <Suspense fallback={
                 <div className={`${iconSizes[size]} bg-gray-300 dark:bg-gray-500 rounded animate-pulse`} />
             }>
-                <ArrowUpDown className={`${iconSizes[size]} text-gray-600 dark:text-gray-300 rotate-90`} />
+                <ArrowUpDown className={`${iconSizes[size]} text-flare-primary rotate-90`} />
             </Suspense>
         </button>
     );

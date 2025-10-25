@@ -13,14 +13,14 @@ export default function ApiGuide() {
                 <div className="w-full max-w-6xl">
                     <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
 
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center">
                             {t.apiGuideTitle}
                         </h1>
 
                         <div className="prose prose-slate dark:prose-invert max-w-none text-base">
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.exchangeRateApis}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -29,7 +29,7 @@ export default function ApiGuide() {
 
                                 {/* Complete Data - Exchange Rates */}
                                 <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                    <h3 className="text-lg font-medium text-flare-primary mb-2">
                                         {t.completeDataInfo}
                                     </h3>
                                     <div className="bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
@@ -83,7 +83,7 @@ export default function ApiGuide() {
 
                                 {/* Only Global Rates */}
                                 <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                    <h3 className="text-lg font-medium text-flare-primary mb-2">
                                         2. {t.onlyGlobalRates}
                                     </h3>
                                     <div className="bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
@@ -121,7 +121,7 @@ export default function ApiGuide() {
 
                                 {/* Only USD Data */}
                                 <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                    <h3 className="text-lg font-medium text-flare-primary mb-2">
                                         3. {t.onlyUsdData}
                                     </h3>
                                     <div className="bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
@@ -162,7 +162,7 @@ export default function ApiGuide() {
                             {/* Only EUR Data */}
                             <section className="mb-8">
                                 <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-600">
-                                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                    <h3 className="text-lg font-medium text-flare-primary mb-2">
                                         4. {t.onlyEurData}
                                     </h3>
                                     <div className="bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
@@ -201,7 +201,7 @@ export default function ApiGuide() {
 
                                 {/* Convert Currency */}
                                 <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                    <h3 className="text-lg font-medium text-flare-primary mb-2">
                                         5. {t.convertCurrency}
                                     </h3>
                                     <div className="bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
@@ -257,7 +257,7 @@ export default function ApiGuide() {
 
                             {/* Rate Limits */}
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.rateLimits}
                                 </h2>
                                 <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 rounded-lg p-4 shadow-sm dark:shadow-blue-900/10">
@@ -271,7 +271,7 @@ export default function ApiGuide() {
 
                             {/* Error Handling */}
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.errorHandling}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -296,13 +296,13 @@ export default function ApiGuide() {
 
                             {/* SDK Examples */}
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.sdkExamples}
                                 </h2>
 
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                                        <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                        <h3 className="text-lg font-medium text-flare-primary mb-2">
                                             JavaScript/TypeScript
                                         </h3>
                                         <div className="bg-slate-900 rounded p-3 overflow-x-auto">
@@ -336,7 +336,7 @@ const convertResponse = await fetch('/api/convert-currency', {
                                     </div>
 
                                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                                        <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-2">
+                                        <h3 className="text-lg font-medium text-flare-primary mb-2">
                                             cURL
                                         </h3>
                                         <div className="bg-slate-900 rounded p-3 overflow-x-auto">
@@ -364,7 +364,7 @@ curl -X POST https://your-domain.com/api/convert-currency \\
 
                             {/* Support */}
                             <section className="text-center">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.needHelp}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">

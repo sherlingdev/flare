@@ -35,13 +35,19 @@ jobs:
             const fs = require('fs');
             const data = JSON.parse(fs.readFileSync('exchange-rates.json', 'utf8'));
             
-            // Convert rates: 1/rate for each currency
+            // Excluded currencies that cause 404 errors in production
+            const excludedCurrencies = ['CLF', 'CNH', 'FOK', 'KID', 'SSP'];
+            
+            // Convert rates: 1/rate for each currency (excluding problem currencies)
             const convertedRates = {};
             Object.keys(data.rates).forEach(currency => {
-              if (currency !== 'USD') {
-                convertedRates[currency] = 1 / data.rates[currency];
-              } else {
-                convertedRates[currency] = 1;
+              // Skip excluded currencies
+              if (!excludedCurrencies.includes(currency)) {
+                if (currency !== 'USD') {
+                  convertedRates[currency] = 1 / data.rates[currency];
+                } else {
+                  convertedRates[currency] = 1;
+                }
               }
             });
             
@@ -61,6 +67,7 @@ jobs:
             
             fs.writeFileSync('rates.json', JSON.stringify(result, null, 2));
             console.log('✅ Converted rates saved to rates.json');
+            console.log('⚠️  Excluded currencies:', excludedCurrencies.join(', '));
           "
 
       - name: Save to Netlify Blobs

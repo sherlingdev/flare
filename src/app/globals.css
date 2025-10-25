@@ -405,6 +405,25 @@ svg {
 }
 
 /* ===========================================
+   UNIFIED COLOR SYSTEM - FLARE EXCHANGE 2025
+   =========================================== */
+
+/* Primary unified color - matches Flare Exchange 2025 footer */
+:root {
+    --flare-primary: #475569; /* slate-600 */
+    --flare-primary-dark: #cbd5e1; /* slate-300 */
+}
+
+/* Unified color classes */
+.text-flare-primary {
+    @apply text-slate-600 dark:text-slate-300;
+}
+
+.text-flare-primary-hover {
+    @apply text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100;
+}
+
+/* ===========================================
    TYPOGRAPHY SYSTEM - BEST PRACTICES
    =========================================== */
 
@@ -428,24 +447,24 @@ html {
 /* Header Typography */
 .header-logo {
     @apply text-xl sm:text-2xl font-bold tracking-tight;
-    @apply text-slate-800 dark:text-slate-100;
+    @apply text-flare-primary;
 }
 
 .header-button-text {
     @apply text-xs sm:text-sm font-medium;
-    @apply text-slate-700 dark:text-slate-200;
+    @apply text-flare-primary;
 }
 
 /* Currency Converter Typography */
 .currency-input {
     @apply text-base font-medium;
-    @apply text-gray-900 dark:text-slate-200;
+    @apply text-gray-900 text-flare-primary;
     font-size: 14px; /* Prevents zoom on iOS */
 }
 
 .currency-label {
     @apply text-base font-semibold;
-    @apply text-gray-900 dark:text-slate-200;
+    @apply text-gray-900 text-flare-primary;
 }
 
 /* Footer Typography */

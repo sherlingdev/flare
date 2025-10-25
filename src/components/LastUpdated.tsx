@@ -56,7 +56,7 @@ export default function LastUpdated() {
     if (!isHydrated) {
         return (
             <div className="flex justify-center">
-                <div className="text-sm font-medium text-slate-800 dark:text-slate-200 text-center">
+                <div className="text-sm font-medium text-flare-primary text-center">
                     {t.loading}
                 </div>
             </div>
@@ -65,7 +65,7 @@ export default function LastUpdated() {
 
     return (
         <div className="flex justify-center">
-            <div className="text-sm font-medium text-slate-800 dark:text-slate-200 text-center">
+            <div className="text-sm font-medium text-flare-primary text-center">
                 {formattedTimestamp ? formatMixedDate(formattedTimestamp) : t.loading}
             </div>
         </div>

@@ -49,14 +49,14 @@ export default function TermsOfService() {
             <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full max-w-6xl">
                     <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center">
                             {t.termsOfService}
                         </h1>
 
                         <div className="prose prose-slate dark:prose-invert max-w-none text-base">
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.acceptanceOfTerms}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -65,7 +65,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.descriptionOfService}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -79,7 +79,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.useLicense}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -94,7 +94,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.disclaimer}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -106,7 +106,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.limitations}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -115,7 +115,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.accuracyOfMaterials}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -124,7 +124,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.links}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -133,7 +133,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.modifications}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -142,7 +142,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.governingLaw}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -151,7 +151,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.userConduct}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -166,7 +166,7 @@ export default function TermsOfService() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.contactUs}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">

@@ -90,7 +90,7 @@ export default function Loader() {
                 {/* Loading text - smooth fade in when localStorage is ready */}
                 {showText && (
                     <div className="mt-6 animate-fade-in">
-                        <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                        <p className="text-xs sm:text-sm font-medium text-flare-primary">
                             {t.loading}
                         </p>
                     </div>

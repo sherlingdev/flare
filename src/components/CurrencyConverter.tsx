@@ -39,8 +39,19 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
     // Load dynamic rates and currencies on component mount
     useEffect(() => {
         const loadRates = async () => {
+            // Only use Netlify Function in production
+            const isProduction = process.env.NODE_ENV === 'production';
+
+            if (!isProduction) {
+                // Development: Use hardcoded rates
+                setCurrencyRates(getHardcodedRates());
+                setCurrencies(getHardcodedCurrencies());
+                setIsLoadingCurrencies(false);
+                return;
+            }
+
             try {
-                // Try to get data from Netlify Function first
+                // Production: Try to get data from Netlify Function first
                 const response = await fetch('/.netlify/functions/currency-rates');
                 const data = await response.json();
 

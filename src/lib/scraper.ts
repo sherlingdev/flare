@@ -437,14 +437,18 @@ export async function getAllAvailableCurrencies(): Promise<CurrencyInfo[]> {
 
             // Skip empty or invalid entries
             if (code && code.length === 3 && name && !name.includes('Select')) {
-                // Avoid duplicates
-                if (!currencies.find(c => c.code === code)) {
-                    currencies.push({
-                        code,
-                        name,
-                        symbol: getCurrencySymbol(code),
-                        flag: `https://www.xe.com/svgs/flags/${code.toLowerCase()}.static.svg`
-                    });
+                // Excluded currencies that cause 404 errors in production
+                const excludedCurrencies = ['CLF', 'CNH', 'FOK', 'KID', 'SSP'];
+                if (!excludedCurrencies.includes(code)) {
+                    // Avoid duplicates
+                    if (!currencies.find(c => c.code === code)) {
+                        currencies.push({
+                            code,
+                            name,
+                            symbol: getCurrencySymbol(code),
+                            flag: `https://www.xe.com/svgs/flags/${code.toLowerCase()}.static.svg`
+                        });
+                    }
                 }
             }
         }
@@ -458,7 +462,9 @@ export async function getAllAvailableCurrencies(): Promise<CurrencyInfo[]> {
                 const code = altMatch[1];
                 const name = altMatch[2].trim();
 
-                if (!currencies.find(c => c.code === code)) {
+                // Excluded currencies that cause 404 errors in production
+                const excludedCurrencies = ['CLF', 'CNH', 'FOK', 'KID', 'SSP'];
+                if (!excludedCurrencies.includes(code) && !currencies.find(c => c.code === code)) {
                     currencies.push({
                         code,
                         name,

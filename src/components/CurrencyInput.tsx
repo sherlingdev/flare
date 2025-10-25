@@ -187,7 +187,7 @@ export default function CurrencyInput({
                             </div>
                             <span
                                 onClick={onDropdownToggle}
-                                className="cursor-pointer whitespace-nowrap"
+                                className="cursor-pointer whitespace-nowrap text-flare-primary"
                             >
                                 {currency}
                             </span>
@@ -195,7 +195,7 @@ export default function CurrencyInput({
                                 onClick={onDropdownToggle}
                                 className="cursor-pointer"
                             >
-                                <svg className={`w-4 h-4 text-gray-600 dark:text-gray-300 transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className={`w-4 h-4 text-flare-primary transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>

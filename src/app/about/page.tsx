@@ -48,13 +48,13 @@ export default function AboutUs() {
             <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full max-w-6xl">
                     <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center">
                             {t.aboutUs}
                         </h1>
 
                         <div className="prose prose-slate dark:prose-invert max-w-none text-base">
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.ourMission}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -63,12 +63,12 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.whatWeOffer}
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
                                     <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
-                                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                                        <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.realTimeExchangeRatesTitle}
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-400 text-base">
@@ -76,7 +76,7 @@ export default function AboutUs() {
                                         </p>
                                     </div>
                                     <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
-                                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                                        <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.multiLanguageSupport}
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-400 text-base">
@@ -84,7 +84,7 @@ export default function AboutUs() {
                                         </p>
                                     </div>
                                     <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
-                                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                                        <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.responsiveDesignTitle}
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-400 text-base">
@@ -92,7 +92,7 @@ export default function AboutUs() {
                                         </p>
                                     </div>
                                     <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
-                                        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">
+                                        <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.darkModeSupport}
                                         </h3>
                                         <p className="text-slate-600 dark:text-slate-400 text-base">
@@ -103,23 +103,23 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.ourTechnology}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
                                     {t.ourTechnologyText}
                                 </p>
                                 <ul className="list-disc list-inside text-slate-600 dark:text-slate-400 mb-4 space-y-2 text-base">
-                                    <li><strong>Next.js:</strong> Para aplicaciones web rápidas con renderizado del lado del servidor</li>
-                                    <li><strong>React:</strong> Para interfaces de usuario responsivas e interactivas</li>
-                                    <li><strong>TypeScript:</strong> Para código seguro en tipos y mantenible</li>
-                                    <li><strong>Tailwind CSS:</strong> Para diseños hermosos y responsivos</li>
-                                    <li><strong>APIs en tiempo real:</strong> Para tipos de cambio precisos y actualizados</li>
+                                    <li><strong>Next.js:</strong> {t.nextjsDescription}</li>
+                                    <li><strong>React:</strong> {t.reactDescription}</li>
+                                    <li><strong>TypeScript:</strong> {t.typescriptDescription}</li>
+                                    <li><strong>Tailwind CSS:</strong> {t.tailwindDescription}</li>
+                                    <li><strong>{t.realTimeApis}:</strong> {t.realTimeApisDescription}</li>
                                 </ul>
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.privacySecurity}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -130,7 +130,7 @@ export default function AboutUs() {
 
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.futurePlans}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
@@ -146,7 +146,7 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
                                     {t.contactUs}
                                 </h2>
                                 <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">

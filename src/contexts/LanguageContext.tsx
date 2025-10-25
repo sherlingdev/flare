@@ -2,17 +2,27 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
-type Language = "en" | "es";
+type Language = "en" | "es" | "fr" | "pt";
 
 interface LanguageContextType {
     language: Language;
-    toggleLanguage: () => void;
+    changeLanguage: (lang: Language) => void;
     mounted: boolean;
     isEnglish: boolean;
     isSpanish: boolean;
+    isFrench: boolean;
+    isPortuguese: boolean;
+    languageName: string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+const languageNames: Record<Language, string> = {
+    en: "English",
+    es: "Español",
+    fr: "Français",
+    pt: "Português"
+};
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Always start with "en" to match server rendering
@@ -22,8 +32,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Load language from localStorage after mount
     useEffect(() => {
         const savedLanguage = localStorage.getItem("language");
-        if (savedLanguage === "es" || savedLanguage === "en") {
-            setLanguage(savedLanguage);
+        if (savedLanguage === "es" || savedLanguage === "en" || savedLanguage === "fr" || savedLanguage === "pt") {
+            setLanguage(savedLanguage as Language);
         }
         setMounted(true);
     }, []);
@@ -35,16 +45,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         }
     }, [language, mounted]);
 
-    const toggleLanguage = useCallback(() => {
-        setLanguage((prev) => (prev === "en" ? "es" : "en"));
+    const changeLanguage = useCallback((lang: Language) => {
+        setLanguage(lang);
     }, []);
 
     const value = {
         language,
-        toggleLanguage,
+        changeLanguage,
         mounted,
         isEnglish: language === "en",
-        isSpanish: language === "es"
+        isSpanish: language === "es",
+        isFrench: language === "fr",
+        isPortuguese: language === "pt",
+        languageName: languageNames[language]
     };
 
     return (

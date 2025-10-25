@@ -29,10 +29,10 @@ export default function CurrencyVariations() {
                 {/* From Currency Section */}
                 <div className="w-full lg:flex-1 lg:max-w-xs order-1 lg:order-1">
                     <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <div className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                        <div className="text-sm font-medium text-flare-primary">
                             {isSwapped ? 'DOP → USD' : 'USD → DOP'}
                         </div>
-                        <div className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                        <div className="text-sm font-medium text-flare-primary">
                             {isSwapped ? `$${dopToUsd}` : `RD$${usdToDop}`}
                         </div>
                     </div>
@@ -50,10 +50,10 @@ export default function CurrencyVariations() {
                 {/* To Currency Section */}
                 <div className="w-full lg:flex-1 lg:max-w-xs order-3 lg:order-3">
                     <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <div className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                        <div className="text-sm font-medium text-flare-primary">
                             {isSwapped ? 'DOP → EUR' : 'EUR → DOP'}
                         </div>
-                        <div className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                        <div className="text-sm font-medium text-flare-primary">
                             {isSwapped ? `€${dopToEur}` : `RD$${eurToDop}`}
                         </div>
                     </div>
