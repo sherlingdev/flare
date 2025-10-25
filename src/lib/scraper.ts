@@ -674,7 +674,7 @@ export async function scrapeSpecificXERates(currencyPairs: string[]): Promise<Re
                 rates[pair] = result.rate;
             } else {
             }
-        } catch (error) {
+        } catch {
             // Continue with next pair instead of stopping
         }
 
