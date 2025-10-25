@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { scrapeSpecificXERates } from '../../../lib/scraper';
+import { scrapeSpecificXERates } from '@/lib/scraper';
 
 // Netlify function configuration
 export const config = {
@@ -8,7 +8,6 @@ export const config = {
 
 export async function GET() {
     try {
-        console.log('📋 Getting currencies with automatic pair generation...');
 
         // Complete currencies array - all currencies hardcoded
         const currencies = [
@@ -772,14 +771,12 @@ export async function GET() {
 
         // Get currency codes for scraping
         const allCurrencyCodes = currencies.map(c => c.code);
-        console.log(`📊 Found ${allCurrencyCodes.length} currencies:`, allCurrencyCodes);
 
         // Generate USD-{CURRENCY} pairs for scraping (all currencies)
         const usdPairs = allCurrencyCodes
             .filter(code => code !== 'USD')
             .map(code => `USD-${code}`);
 
-        console.log(`🔄 Scraping ${usdPairs.length} USD pairs from XE.com in batches...`);
 
         // Process in batches to avoid timeout
         const batchSize = 10; // Process 10 pairs at a time
@@ -788,23 +785,19 @@ export async function GET() {
             batches.push(usdPairs.slice(i, i + batchSize));
         }
 
-        console.log(`📦 Processing ${batches.length} batches of ${batchSize} pairs each...`);
 
         const scrapedRates: Record<string, number> = {};
 
         for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
             const batch = batches[batchIndex];
-            console.log(`🔄 Processing batch ${batchIndex + 1}/${batches.length}: ${batch.join(', ')}`);
 
             try {
                 // Add delay between batches
                 if (batchIndex > 0) {
-                    console.log('⏳ Waiting 3 seconds between batches...');
                     await new Promise(resolve => setTimeout(resolve, 3000));
                 }
 
                 const batchRates = await scrapeSpecificXERates(batch);
-                console.log(`✅ Batch ${batchIndex + 1} completed:`, batchRates);
 
                 // Merge batch results
                 Object.assign(scrapedRates, batchRates);
@@ -815,7 +808,6 @@ export async function GET() {
             }
         }
 
-        console.log('📊 Final scraped rates:', scrapedRates);
 
         // Generate currency rates from scraped data
         const currencyRates: Record<string, number> = {};
@@ -825,21 +817,17 @@ export async function GET() {
             } else {
                 // Get USD-{CURRENCY} rate from scraped data
                 const usdToCurrencyRate = scrapedRates[`USD-${code}`];
-                console.log(`🔍 ${code}: USD-${code} = ${usdToCurrencyRate}`);
                 if (usdToCurrencyRate) {
                     // The scraped rate is already the inverse (how many USD = 1 unit of target currency)
                     // Use it directly without additional division
                     currencyRates[code] = usdToCurrencyRate;
-                    console.log(`✅ ${code}: Using scraped rate directly = ${usdToCurrencyRate}`);
                 } else {
                     // Fallback to 1 if rate not found
                     currencyRates[code] = 1.0;
-                    console.log(`❌ ${code}: Rate not found, using fallback 1.0`);
                 }
             }
         });
 
-        console.log('📈 Final currency rates:', currencyRates);
 
         return NextResponse.json({
             success: true,

@@ -376,7 +376,7 @@ export const translations = {
         enhancedAnalytics: "Enhanced analytics and insights",
 
         // Footer
-        copyright: "Copyright <span class=\"text-indigo-600\">©</span> 2025 Flare Exchange. All rights reserved.",
+        copyright: `<span class="text-indigo-600">©</span> ${new Date().getFullYear()} Flare Exchange. All rights reserved.`,
         terms: "Terms and conditions",
         privacy: "Privacy policy",
 
@@ -770,7 +770,7 @@ export const translations = {
         enhancedAnalytics: "Análisis y perspectivas mejoradas",
 
         // Footer
-        copyright: "Copyright <span class=\"text-indigo-600\">©</span> 2025 Flare Exchange. Todos los derechos reservados.",
+        copyright: `<span class="text-indigo-600">©</span> ${new Date().getFullYear()} Flare Exchange. Todos los derechos reservados.`,
         terms: "Términos y condiciones",
         privacy: "Política de privacidad",
 

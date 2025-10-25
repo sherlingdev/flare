@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useLanguage } from "../contexts/LanguageContext";
-import { translations } from "../lib/translations";
-import { measurePerformance, measureWebVitals } from "../lib/performance";
-import CurrencyConverter from "../components/CurrencyConverter";
-import CurrencyCard from "../components/CurrencyCard";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/translations";
+import { measurePerformance, measureWebVitals } from "@/lib/performance";
+import CurrencyConverter from "@/components/CurrencyConverter";
+import CurrencyCard from "@/components/CurrencyCard";
 
 export default function Home() {
   const { language, mounted } = useLanguage();
@@ -29,7 +29,7 @@ export default function Home() {
   }, [mounted, language]);
 
   return (
-    <main className="relative z-10 w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-4">
+    <main className="relative z-10 w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 homepage-vertical-center">
       {/* Header */}
       <div className="w-full max-w-6xl mb-6">
         <div className="text-center">

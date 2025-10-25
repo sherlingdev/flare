@@ -469,7 +469,6 @@ export async function getAllAvailableCurrencies(): Promise<CurrencyInfo[]> {
             }
         }
 
-        console.log(`✅ Found ${currencies.length} currencies from XE.com selector`);
         return currencies;
     } catch (error) {
         console.error('Error getting currencies from XE.com selector:', error);
@@ -551,7 +550,6 @@ export async function scrapeXERate(url: string): Promise<{ from: string; to: str
 
         if (!response.ok) {
             // Log the error but don't throw to avoid stopping the entire process
-            console.log(`⚠️ HTTP error for ${url}: status ${response.status}`);
             return null;
         }
 
@@ -600,7 +598,6 @@ export async function scrapeXERate(url: string): Promise<{ from: string; to: str
             };
         }
 
-        console.log(`❌ Could not extract rate from ${url}`);
         return null;
     } catch (error) {
         console.error(`Error scraping XE.com rate from ${url}:`, error);
@@ -614,34 +611,26 @@ export async function scrapeXERate(url: string): Promise<{ from: string; to: str
  */
 export async function scrapeAllXERates(): Promise<Record<string, number>> {
     try {
-        console.log('🚀 Starting XE.com scraping process...');
 
         // Step 1: Get all available currencies
-        console.log('📋 Step 1: Getting all available currencies...');
         const currencies = await getAllAvailableCurrencies();
-        console.log(`✅ Found ${currencies.length} currencies:`, currencies.map(c => c.code).join(', '));
 
         // Step 2: Generate URLs for all currency pairs
-        console.log('🔗 Step 2: Generating URLs for all currency pairs...');
         const urls = generateXEUrls(currencies);
-        console.log(`✅ Generated ${urls.length} URLs`);
 
         // Step 3: Scrape rates with rate limiting
-        console.log('⏳ Step 3: Scraping rates (this may take a while)...');
         const rates: Record<string, number> = {};
         const batchSize = 5; // Process 5 URLs at a time
         const delay = 1000; // 1 second delay between batches
 
         for (let i = 0; i < urls.length; i += batchSize) {
             const batch = urls.slice(i, i + batchSize);
-            console.log(`📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(urls.length / batchSize)}`);
 
             const batchPromises = batch.map(async (url) => {
                 const result = await scrapeXERate(url);
                 if (result) {
                     const key = `${result.from}-${result.to}`;
                     rates[key] = result.rate;
-                    console.log(`✅ ${key}: ${result.rate}`);
                 }
                 return result;
             });
@@ -650,12 +639,10 @@ export async function scrapeAllXERates(): Promise<Record<string, number>> {
 
             // Add delay between batches to avoid rate limiting
             if (i + batchSize < urls.length) {
-                console.log(`⏸️ Waiting ${delay}ms before next batch...`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
 
-        console.log(`🎉 Scraping completed! Found ${Object.keys(rates).length} rates`);
         return rates;
 
     } catch (error) {
@@ -674,18 +661,14 @@ export async function scrapeSpecificXERates(currencyPairs: string[]): Promise<Re
         const [from, to] = pair.split('-');
         const url = `https://www.xe.com/currencyconverter/convert/?Amount=1&From=${from}&To=${to}`;
 
-        console.log(`🔍 Scraping ${pair}...`);
         try {
             const result = await scrapeXERate(url);
 
             if (result) {
                 rates[pair] = result.rate;
-                console.log(`✅ ${pair}: ${result.rate}`);
             } else {
-                console.log(`❌ Failed to get rate for ${pair}`);
             }
         } catch (error) {
-            console.log(`❌ Error scraping ${pair}: ${error instanceof Error ? error.message : 'Unknown error'}`);
             // Continue with next pair instead of stopping
         }
 
@@ -702,7 +685,6 @@ export async function scrapeSpecificXERates(currencyPairs: string[]): Promise<Re
  */
 export async function getAllCurrencyCodes(): Promise<string[]> {
     try {
-        console.log('🔍 Getting all currency codes from XE.com...');
 
         const response = await fetch('https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=EUR', {
             headers: {
@@ -788,7 +770,6 @@ export async function getAllCurrencyCodes(): Promise<string[]> {
             /^[A-Z]{3}$/.test(code)
         );
 
-        console.log(`✅ Found ${filteredCodes.length} currency codes:`, filteredCodes.join(', '));
         return filteredCodes;
 
     } catch (error) {
@@ -813,7 +794,6 @@ export function generateAllCurrencyPairs(currencyCodes: string[]): string[] {
         }
     }
 
-    console.log(`✅ Generated ${pairs.length} currency pairs from ${currencyCodes.length} currencies`);
     return pairs;
 }
 
@@ -825,21 +805,16 @@ export function generateAllCurrencyPairs(currencyCodes: string[]): string[] {
  */
 export async function scrapeAllXERatesComplete(): Promise<Record<string, number>> {
     try {
-        console.log('🚀 Starting complete XE.com scraping process...');
 
         // Step 1: Get all currency codes
-        console.log('📋 Step 1: Getting all currency codes...');
         const currencyCodes = await getAllCurrencyCodes();
 
         // Step 2: Generate all currency pairs
-        console.log('🔗 Step 2: Generating all currency pairs...');
         const allPairs = generateAllCurrencyPairs(currencyCodes);
 
         // Step 3: Scrape all rates
-        console.log('⏳ Step 3: Scraping all rates...');
         const rates = await scrapeSpecificXERates(allPairs);
 
-        console.log(`🎉 Complete scraping finished! Found ${Object.keys(rates).length} rates`);
         return rates;
 
     } catch (error) {
@@ -853,12 +828,10 @@ export async function scrapeAllXERatesComplete(): Promise<Record<string, number>
  * Only scrapes major currencies to avoid timeouts
  */
 export async function scrapeLimitedXERates(): Promise<Record<string, number>> {
-    console.log('🎯 Scraping limited XE.com rates (major currencies only)...');
 
     const majorCurrencies = ['USD', 'EUR', 'DOP', 'CAD', 'GBP', 'MXN', 'JPY', 'AUD', 'CHF', 'CNY'];
     const pairs = generateAllCurrencyPairs(majorCurrencies);
 
-    console.log(`📊 Scraping ${pairs.length} pairs from ${majorCurrencies.length} major currencies`);
     return await scrapeSpecificXERates(pairs);
 }
 
@@ -867,7 +840,6 @@ export async function scrapeLimitedXERates(): Promise<Record<string, number>> {
  * Perfect for production use
  */
 export async function scrapeEssentialXERates(): Promise<Record<string, number>> {
-    console.log('⚡ Scraping essential XE.com rates (fastest option)...');
 
     const essentialPairs = [
         'USD-DOP', 'DOP-USD',
@@ -882,7 +854,6 @@ export async function scrapeEssentialXERates(): Promise<Record<string, number>> 
         'CNY-DOP', 'DOP-CNY'
     ];
 
-    console.log(`📊 Scraping ${essentialPairs.length} essential pairs`);
     return await scrapeSpecificXERates(essentialPairs);
 }
 
@@ -891,7 +862,6 @@ export async function scrapeEssentialXERates(): Promise<Record<string, number>> 
  * Perfect for testing the scraper before running full batch
  */
 export async function testXEScraper(): Promise<Record<string, number>> {
-    console.log('🧪 Testing XE.com scraper with specific pairs...');
 
     const testPairs = [
         'USD-DOP',
@@ -967,7 +937,6 @@ export function generateAllRatesFromBase(baseRates: Record<string, number>): Rec
  */
 export async function scrapeBaseRatesAndCalculateAll(): Promise<Record<string, number>> {
     try {
-        console.log('🎯 Scraping base rates and calculating all combinations...');
 
         // Only scrape essential base pairs
         const basePairs = [
@@ -977,13 +946,10 @@ export async function scrapeBaseRatesAndCalculateAll(): Promise<Record<string, n
             'NOK-DOP', 'SEK-DOP', 'TRY-DOP', 'ZAR-DOP'
         ];
 
-        console.log(`🔍 Scraping ${basePairs.length} base pairs...`);
         const baseRates = await scrapeSpecificXERates(basePairs);
 
-        console.log(`🧮 Calculating all combinations from ${Object.keys(baseRates).length} base rates...`);
         const allRates = generateAllRatesFromBase(baseRates);
 
-        console.log(`✅ Generated ${Object.keys(allRates).length} total rates`);
         return allRates;
 
     } catch (error) {

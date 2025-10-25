@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect } from "react";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { translations } from "../../lib/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/translations";
 
 export default function AboutUs() {
     const { language, mounted } = useLanguage();

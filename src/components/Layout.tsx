@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useLanguage } from "../contexts/LanguageContext";
-import { translations } from "../lib/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/translations";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -45,8 +45,8 @@ export default function Layout({ children }: LayoutProps) {
             <div className={`flex-1 flex justify-center ${isHomePage
                 ? "items-center"
                 : isLegalPage
-                    ? "items-start overflow-y-auto pt-20 sm:pt-24 pb-20"
-                    : "items-center pt-20 sm:pt-24 pb-20"
+                    ? "items-start overflow-y-auto pt-20 sm:pt-24"
+                    : "items-center pt-20 sm:pt-24"
                 }`}>
                 {children}
             </div>

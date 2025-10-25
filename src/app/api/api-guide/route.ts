@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getGlobalRates } from '../../../lib/scraper';
+import { getGlobalRates } from '@/lib/scraper';
 
 /**
  * Round a number to 2 decimal places

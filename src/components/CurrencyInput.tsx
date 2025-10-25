@@ -144,10 +144,7 @@ export default function CurrencyInput({
     return (
         <div className="flex items-center bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
             <div className="flex-1 pr-2 sm:pr-3">
-                <div className="flex">
-                    <span className="mr-2 text-sm self-center">
-                        {availableCurrencies.find(c => c.code === currency)?.symbol}
-                    </span>
+                <div className="relative">
                     <input
                         ref={inputRef}
                         type="text"
@@ -166,12 +163,15 @@ export default function CurrencyInput({
             <div className="flex-1 pl-2 sm:pl-3">
                 <div className="relative" ref={dropdownRef}>
                     <div
-                        onClick={onDropdownToggle}
                         className={`currency-label currency-select text-sm sm:text-base ${isDropdownOpen ? 'dropdown-open' : ''}`}
                         aria-label={ariaLabel}
+                        style={{ cursor: 'default' }}
                     >
-                        <div className="flex items-center space-x-2 ml-auto">
-                            <div className="flex-shrink-0 w-5 h-3.5 rounded-sm overflow-hidden shadow-sm border border-gray-200 dark:border-gray-600">
+                        <div className="flex items-center space-x-2">
+                            <div
+                                onClick={onDropdownToggle}
+                                className="flex-shrink-0 w-5 h-3.5 rounded-sm overflow-hidden shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer"
+                            >
                                 {!isLoadingCurrencies && availableCurrencies.find(c => c.code === currency)?.flag && (
                                     <Image
                                         src={availableCurrencies.find(c => c.code === currency)?.flag || ''}
@@ -185,7 +185,20 @@ export default function CurrencyInput({
                                     />
                                 )}
                             </div>
-                            <span>{currency}</span>
+                            <span
+                                onClick={onDropdownToggle}
+                                className="cursor-pointer"
+                            >
+                                {currency} <span className="text-gray-600 dark:text-gray-300 font-normal">({availableCurrencies.find(c => c.code === currency)?.symbol || '$'})</span>
+                            </span>
+                            <div
+                                onClick={onDropdownToggle}
+                                className="cursor-pointer"
+                            >
+                                <svg className={`w-4 h-4 text-gray-600 dark:text-gray-300 transition-transform duration-300 ease-in-out ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                     {isDropdownOpen && (

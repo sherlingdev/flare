@@ -1,9 +1,9 @@
 "use client";
 
-import { useLanguage } from "../contexts/LanguageContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
-import { translations } from "../lib/translations";
+import { translations } from "@/lib/translations";
 
 export default function Loader() {
     const { mounted: langMounted, language } = useLanguage();

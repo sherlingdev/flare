@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLanguage } from "../contexts/LanguageContext";
-import { translations } from "../lib/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/translations";
 import SwapButton from "./SwapButton";
 import LastUpdated from "./LastUpdated";
 import CurrencyInput from "./CurrencyInput";
@@ -49,13 +49,11 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                     setCurrencyRates(data.data.rates);
                     setCurrencies(data.data.currencies);
                     setIsLoadingCurrencies(false);
-                    console.log(`✅ Tasas y monedas cargadas desde Netlify Function: ${data.data.timestamp}`);
                 } else {
                     // Use hardcoded rates and currencies (fallback)
                     setCurrencyRates(getHardcodedRates());
                     setCurrencies(getHardcodedCurrencies());
                     setIsLoadingCurrencies(false);
-                    console.log('⚠️ Usando tasas hardcodeadas (fallback)');
                 }
             } catch (error) {
                 console.error('Error loading rates:', error);
@@ -63,7 +61,6 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                 setCurrencyRates(getHardcodedRates());
                 setCurrencies(getHardcodedCurrencies());
                 setIsLoadingCurrencies(false);
-                console.log('⚠️ Error cargando tasas, usando fallback hardcodeado');
             }
         };
 
@@ -348,8 +345,6 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
     const toAmountRef = useRef<HTMLInputElement>(null);
     const fromDropdownRef = useRef<HTMLDivElement>(null);
     const toDropdownRef = useRef<HTMLDivElement>(null);
-
-
 
     const [fromAmountDisplay, setFromAmountDisplay] = useState("1.00");
 

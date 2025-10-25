@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "../contexts/LanguageContext";
-import { translations } from "../lib/translations";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/translations";
 
 export default function Footer() {
     const { language } = useLanguage();
     const t = translations[language];
 
     return (
-        <footer className="fixed bottom-0 left-0 right-0 z-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50">
+        <footer className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 mt-20 sm:mt-24">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                 <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
                     <div className="footer-text text-center md:text-left" dangerouslySetInnerHTML={{ __html: t.copyright }} />

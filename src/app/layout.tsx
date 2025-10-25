@@ -1,12 +1,12 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "../contexts/ThemeContext";
-import Layout from "../components/Layout";
-import Schema from "../components/Schema";
-import AdSenseScript from "../components/AdSenseScript";
-import GoogleAnalytics from "../components/GoogleAnalytics";
-import { LanguageProvider } from "../contexts/LanguageContext";
-import Loader from "../components/Loader";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import Layout from "@/components/Layout";
+import Schema from "@/components/Schema";
+import AdSenseScript from "@/components/AdSenseScript";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import Loader from "@/components/Loader";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
