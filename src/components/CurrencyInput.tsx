@@ -167,7 +167,7 @@ export default function CurrencyInput({
                         aria-label={ariaLabel}
                         style={{ cursor: 'default' }}
                     >
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 flex-nowrap">
                             <div
                                 onClick={onDropdownToggle}
                                 className="flex-shrink-0 w-5 h-3.5 rounded-sm overflow-hidden shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer"
@@ -187,9 +187,9 @@ export default function CurrencyInput({
                             </div>
                             <span
                                 onClick={onDropdownToggle}
-                                className="cursor-pointer"
+                                className="cursor-pointer whitespace-nowrap"
                             >
-                                {currency} <span className="text-gray-600 dark:text-gray-300 font-normal">({availableCurrencies.find(c => c.code === currency)?.symbol || '$'})</span>
+                                {currency}
                             </span>
                             <div
                                 onClick={onDropdownToggle}
