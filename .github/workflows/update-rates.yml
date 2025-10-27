@@ -11,6 +11,9 @@ jobs:
   update-rates:
     runs-on: ubuntu-latest
     
+    env:
+      SITE_URL: https://flarexrate.com
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -85,7 +88,7 @@ jobs:
           EOF
           
           # Save to Netlify Blobs using Netlify Function
-          curl -X PUT "${{ secrets.SITE_URL }}/.netlify/functions/currency-rates" \
+          curl -X PUT "${{ env.SITE_URL }}/.netlify/functions/currency-rates" \
             -H "Content-Type: application/json" \
             -d @blob-data.json
           
@@ -94,7 +97,7 @@ jobs:
       - name: Verify storage
         run: |
           echo "🔍 Verifying stored data..."
-          curl -X GET "${{ secrets.SITE_URL }}/.netlify/functions/currency-rates" \
+          curl -X GET "${{ env.SITE_URL }}/.netlify/functions/currency-rates" \
             -o verify.json
           
           echo "📋 Verification response:"

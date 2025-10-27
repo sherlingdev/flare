@@ -45,6 +45,22 @@ export default function LastUpdated() {
                 day: 'numeric'
             }).replace('Oct', 'Oct.').replace('Jan', 'Jan.').replace('Feb', 'Feb.').replace('Mar', 'Mar.').replace('Apr', 'Apr.').replace('May', 'May').replace('Jun', 'Jun.').replace('Jul', 'Jul.').replace('Aug', 'Aug.').replace('Sep', 'Sep.').replace('Nov', 'Nov.').replace('Dec', 'Dec.');
             return `${fullTime} • ${englishFormatDate}`;
+        } else if (mounted && language === 'pt') {
+            // Portuguese: same format as English with dots (month day, year)
+            const englishFormatDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }).replace('Oct', 'Out.').replace('Jan', 'Jan.').replace('Feb', 'Fev.').replace('Mar', 'Mar.').replace('Apr', 'Abr.').replace('May', 'Mai').replace('Jun', 'Jun.').replace('Jul', 'Jul.').replace('Aug', 'Ago.').replace('Sep', 'Set.').replace('Nov', 'Nov.').replace('Dec', 'Dez.');
+            return `${fullTime} • ${englishFormatDate}`;
+        } else if (mounted && language === 'fr') {
+            // French: same format as English with dots (month day, year)
+            const englishFormatDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }).replace('Oct', 'Oct.').replace('Jan', 'Janv.').replace('Feb', 'Févr.').replace('Mar', 'Mars').replace('Apr', 'Avr.').replace('May', 'Mai').replace('Jun', 'Juin').replace('Jul', 'Juil.').replace('Aug', 'Août').replace('Sep', 'Sept.').replace('Nov', 'Nov.').replace('Dec', 'Déc.');
+            return `${fullTime} • ${englishFormatDate}`;
         } else {
             // English: abbreviated month for consistency
             const abbreviatedDate = fullDate.replace('January', 'Jan.').replace('February', 'Feb.').replace('March', 'Mar.').replace('April', 'Apr.').replace('May', 'May').replace('June', 'Jun.').replace('July', 'Jul.').replace('August', 'Aug.').replace('September', 'Sep.').replace('October', 'Oct.').replace('November', 'Nov.').replace('December', 'Dec.');
