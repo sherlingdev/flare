@@ -7,6 +7,7 @@ import AdSenseScript from "@/components/AdSenseScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Loader from "@/components/Loader";
+import type { Metadata } from "next";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -17,49 +18,54 @@ const dmSans = DM_Sans({
   fallback: ['system-ui', 'arial'],
 });
 
-// export const metadata: Metadata = {
-//   description: "Convert currencies instantly. Quick, safe, and always accurate.",
-//   keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex",
-//   authors: [{ name: "Flare exchange rate" }],
-//   openGraph: {
-//     description: "Convert currencies instantly. Quick, safe, and always accurate.",
-//     type: "website",
-//     locale: "en_US",
-//     url: "https://flarexrate.com",
-//     siteName: "Flare exchange rate",
-//   },
-//   twitter: {
-//     card: "summary_large_image",
-//     description: "Convert between currencies with real-time exchange rates. Fast, secure, and reliable multi-currency converter with competitive rates.",
-//     creator: "@flarexrate",
-//   },
-//   robots: {
-//     index: true,
-//     follow: true,
-//     googleBot: {
-//       index: true,
-//       follow: true,
-//       "max-video-preview": -1,
-//       "max-image-preview": "large",
-//       "max-snippet": -1,
-//     },
-//   },
-//   alternates: {
-//     canonical: "https://flarexrate.com",
-//     languages: {
-//       'en-US': 'https://flarexrate.com',
-//       'es-ES': 'https://flarexrate.com/es',
-//     },
-//   },
-//   category: "Finance",
-//   classification: "Currency Exchange",
-//   referrer: "origin-when-cross-origin",
-//   formatDetection: {
-//     email: false,
-//     address: false,
-//     telephone: false,
-//   },
-// };
+export const metadata: Metadata = {
+  title: "Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.",
+  description: "Convert currencies instantly. Quick, safe, and always accurate.",
+  keywords: "currency converter, USD to DOP, EUR to DOP, USD to EUR, exchange rates, multi-currency, dollar to peso, euro to peso, real-time rates, money transfer, forex, currency exchange, peso dominicano, euro to dollar",
+  authors: [{ name: "Flare Exchange Rate" }],
+  openGraph: {
+    title: "Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.",
+    description: "Convert currencies instantly. Quick, safe, and always accurate.",
+    type: "website",
+    locale: "en_US",
+    url: "https://flarexrate.com",
+    siteName: "Flare Exchange Rate",
+  },
+  twitter: {
+    card: "summary",
+    title: "Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.",
+    description: "Convert currencies instantly. Quick, safe, and always accurate.",
+    creator: "@flarexrate",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://flarexrate.com",
+    languages: {
+      'en-US': 'https://flarexrate.com',
+      'es-ES': 'https://flarexrate.com',
+      'fr-FR': 'https://flarexrate.com',
+      'pt-BR': 'https://flarexrate.com',
+    },
+  },
+  category: "Finance",
+  classification: "Currency Exchange",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+};
 
 export default function RootLayout({
   children,

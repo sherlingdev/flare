@@ -2,8 +2,8 @@
 
 import { useCallback, lazy, Suspense, useRef, useEffect, useState } from "react";
 import Link from "next/link";
-import { useLanguage } from "../contexts/LanguageContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 // Lazy load icons for better performance
 const Sun = lazy(() => import("lucide-react").then(module => ({ default: module.Sun })));
@@ -68,6 +68,13 @@ export default function Header({
                     <Link href="/" className="header-logo cursor-pointer">Flare</Link>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-4">
+                    {/* API Link */}
+                    <Link
+                        href="/api-guide"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm"
+                    >
+                        <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 uppercase">API</span>
+                    </Link>
                     {/* Language Dropdown */}
                     <div className="relative" ref={languageDropdownRef}>
                         <button

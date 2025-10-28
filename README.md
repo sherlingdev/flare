@@ -1,13 +1,13 @@
 # Flare Exchange Rate - Currency Converter
 
-A modern, fast, and reliable currency converter built with Next.js, featuring real-time exchange rates for USD, EUR, and DOP currencies.
+A modern, fast, and reliable currency converter built with Next.js, featuring real-time exchange rates for 160+ currencies worldwide.
 
 **🌐 Live Site:** [flarexrate.com](https://flarexrate.com)
 
 ## Features
 
 - 🔄 **Real-time Exchange Rates** - Get up-to-date currency conversion rates
-- 🌍 **Multi-language Support** - Available in English and Spanish
+- 🌍 **Multi-language Support** - Available in English, Spanish, French, and Portuguese
 - 📱 **Responsive Design** - Optimized for desktop, tablet, and mobile devices
 - 🌙 **Dark Mode** - Toggle between light and dark themes
 - ⚡ **Fast Performance** - Built with Next.js 15 and React 19
@@ -15,9 +15,17 @@ A modern, fast, and reliable currency converter built with Next.js, featuring re
 
 ## Supported Currencies
 
-- **USD** - US Dollar
-- **EUR** - Euro  
-- **DOP** - Dominican Peso
+**160+ currencies worldwide** including:
+
+- **Major Currencies:** USD, EUR, GBP, JPY, CAD, AUD, CHF, CNY
+- **Latin American:** DOP, ARS, BRL, MXN, CLP, COP, PEN, UYU
+- **European:** EUR, GBP, CHF, SEK, NOK, DKK, PLN, CZK
+- **Asian:** JPY, CNY, KRW, INR, THB, SGD, HKD, TWD
+- **African:** ZAR, EGP, NGN, KES, MAD, TND, GHS
+- **Middle East:** AED, SAR, QAR, KWD, OMR, ILS, TRY
+- **And many more...**
+
+*Complete list available in the application interface*
 
 ## Tech Stack
 
@@ -55,7 +63,7 @@ A modern, fast, and reliable currency converter built with Next.js, featuring re
 
 ## Contact
 
-For questions or support, contact us at: [sherlingdev@gmail.com](mailto:sherlingdev@gmail.com)
+For questions or support, contact us at: [hello@flarexrate.com](mailto:hello@flarexrate.com)
 
 ## License
 

@@ -23,7 +23,8 @@ export default function Layout({ children }: LayoutProps) {
             "/": translations[language].pageTitle,
             "/privacy": translations[language].privacyTitle,
             "/terms": translations[language].termsTitle,
-            "/about": translations[language].aboutTitle
+            "/about": translations[language].aboutTitle,
+            "/api-guide": translations[language].apiGuideTitle
         };
 
         const newTitle = titles[pathname as keyof typeof titles] || translations[language].pageTitle;
@@ -37,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
 
     // Conditional layout based on route
     const isHomePage = pathname === "/";
-    const isLegalPage = ["/privacy", "/terms", "/about"].includes(pathname);
+    const isLegalPage = ["/privacy", "/terms", "/about", "/api-guide"].includes(pathname);
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">

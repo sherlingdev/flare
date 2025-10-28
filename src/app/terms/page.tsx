@@ -1,17 +1,12 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 
 export default function TermsOfService() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : "en"];
-
-    // Update page title dynamically - useLayoutEffect to prevent static title flash
-    useLayoutEffect(() => {
-        document.title = t.termsTitle;
-    }, [t.termsTitle]);
 
     // Scroll to top on mount and prevent scroll restoration
     useEffect(() => {
@@ -45,7 +40,7 @@ export default function TermsOfService() {
 
 
     return (
-        <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-16">
+        <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-16 pb-16">
             <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full max-w-6xl">
                     <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">

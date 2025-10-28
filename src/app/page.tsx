@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
+// import { useEffect, useLayoutEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { measurePerformance, measureWebVitals } from "@/lib/performance";
@@ -12,10 +13,10 @@ export default function Home() {
   const t = translations[mounted ? language : "en"];
   const [dynamicTitle, setDynamicTitle] = useState("Flare Exchange Rate");
 
-  // Update page title dynamically - useLayoutEffect to prevent static title flash
-  useLayoutEffect(() => {
-    document.title = t.pageTitle;
-  }, [t.pageTitle]);
+  // // Update page title dynamically - useLayoutEffect to prevent static title flash
+  // useLayoutEffect(() => {
+  //   document.title = t.pageTitle;
+  // }, [t.pageTitle]);
 
   useEffect(() => {
     if (mounted) {

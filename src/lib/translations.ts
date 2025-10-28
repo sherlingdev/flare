@@ -231,7 +231,8 @@ export const translations = {
         basedOnCurrentRates: "Based on current rates",
 
         // API Guide
-        apiGuideTitle: "API Usage Guide",
+        apiGuide: "API Usage Guide",
+        apiGuideTitle: "API Usage Guide | Convert currencies instantly. Quick, safe, and always accurate.",
         apiGuideSubtitle: "Complete documentation for Flare Exchange Rate APIs",
         authentication: "Authentication",
         authenticationText: "All API endpoints require authentication except for public exchange rate data. Use the authentication endpoints to get an access token.",
@@ -250,7 +251,7 @@ export const translations = {
         triggerManualScraperDesc: "Manually trigger the exchange rate scraper to get fresh data.",
 
         // API Guide specific content
-        completeDataInfo: "Complete data & information",
+        completeDataInfo: "Complete data",
         completeDataDesc: "Returns complete exchange rate data including USD, EUR details and global rates",
         onlyGlobalRates: "Only global rates",
         onlyGlobalRatesDesc: "Returns only the global cross-currency rates without detailed USD/EUR data",
@@ -272,8 +273,7 @@ export const translations = {
         cachedForOneHour: "Cached for 1 hour",
 
         errorHandling: "Error handling",
-        errorHandlingText: "All endpoints return standardized error responses with appropriate HTTP status codes.",
-        errorResponseExample: "Error response example",
+        errorResponse: "Error response",
         sdkExamples: "SDK examples",
         needHelp: "Need help?",
         needHelpText: "If you have questions about our API or need assistance with integration, please contact us.",
@@ -423,7 +423,7 @@ export const translations = {
         privacy: "Privacy policy",
 
         // Contact
-        contactEmail: "sherlingdev@gmail.com",
+        contactEmail: "hello@flarexrate.com",
         contactUs: "Contact us",
         contactTermsText: "If you have any questions about these terms and conditions, please contact us at:",
         contactPrivacyText: "If you have any questions about this privacy policy, please contact us at:",
@@ -667,7 +667,8 @@ export const translations = {
         basedOnCurrentRates: "Basado en tasas actuales",
 
         // API Guide
-        apiGuideTitle: "Guía de uso de API",
+        apiGuide: "Guía de uso de API",
+        apiGuideTitle: "Guía de uso de API | Convierte divisas al instante. Rápido, seguro y siempre preciso.",
         apiGuideSubtitle: "Documentación completa para APIs de Flare Exchange Rate",
         authentication: "Autenticación",
         authenticationText: "Todos los endpoints de API requieren autenticación excepto para datos públicos de tipos de cambio. Usa los endpoints de autenticación para obtener un token de acceso.",
@@ -686,7 +687,7 @@ export const translations = {
         triggerManualScraperDesc: "Activa manualmente el scraper de tipos de cambio para obtener datos frescos.",
 
         // API Guide specific content
-        completeDataInfo: "Datos completos e información",
+        completeDataInfo: "Datos completos",
         completeDataDesc: "Devuelve datos completos de tipos de cambio incluyendo detalles de USD, EUR y tasas globales",
         onlyGlobalRates: "Solo tasas globales",
         onlyGlobalRatesDesc: "Devuelve solo las tasas de cambio globales sin datos detallados de USD/EUR",
@@ -708,8 +709,7 @@ export const translations = {
         cachedForOneHour: "Almacenado en caché por 1 hora",
 
         errorHandling: "Manejo de errores",
-        errorHandlingText: "Todos los endpoints devuelven respuestas de error estandarizadas con códigos de estado HTTP apropiados.",
-        errorResponseExample: "Ejemplo de respuesta de error",
+        errorResponse: "Respuesta de error",
         sdkExamples: "Ejemplos de SDK",
         needHelp: "¿Necesitas ayuda?",
         needHelpText: "Si tienes preguntas sobre nuestra API o necesitas ayuda con la integración, por favor contáctanos.",
@@ -859,7 +859,7 @@ export const translations = {
         privacy: "Política de privacidad",
 
         // Contact
-        contactEmail: "sherlingdev@gmail.com",
+        contactEmail: "hello@flarexrate.com",
         contactUs: "Contáctanos",
         contactTermsText: "Si tienes alguna pregunta sobre estos términos y condiciones, por favor contáctanos en:",
         contactPrivacyText: "Si tienes alguna pregunta sobre esta política de privacidad, por favor contáctanos en:",
@@ -1079,7 +1079,8 @@ export const translations = {
         siteUrl: "flarexrate.com",
 
         // API Guide
-        apiGuideTitle: "Guide d'utilisation de l'API",
+        apiGuide: "Guide d'utilisation de l'API",
+        apiGuideTitle: "Guide d'utilisation de l'API | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
         apiGuideSubtitle: "Documentation complète pour les APIs Flare Exchange Rate",
         authentication: "Authentification",
         authenticationText: "Tous les endpoints API nécessitent une authentification sauf pour les données publiques de taux de change. Utilisez les endpoints d'authentification pour obtenir un token d'accès.",
@@ -1098,7 +1099,7 @@ export const translations = {
         triggerManualScraperDesc: "Déclenche manuellement le scraper de taux de change pour obtenir des données fraîches.",
 
         // API Guide specific content
-        completeDataInfo: "Données complètes et informations",
+        completeDataInfo: "Données complètes",
         completeDataDesc: "Retourne des données complètes de taux de change incluant les détails USD, EUR et les taux globaux",
         onlyGlobalRates: "Seulement les taux globaux",
         onlyGlobalRatesDesc: "Retourne uniquement les taux de change globaux sans données détaillées USD/EUR",
@@ -1118,8 +1119,7 @@ export const translations = {
         noRateLimiting: "Aucune limite de taux actuellement appliquée",
         cachedForOneHour: "Mis en cache pendant 1 heure",
         errorHandling: "Gestion des erreurs",
-        errorHandlingText: "Tous les endpoints retournent des réponses d'erreur standardisées avec les codes de statut HTTP appropriés.",
-        errorResponseExample: "Exemple de réponse d'erreur",
+        errorResponse: "Réponse d'erreur",
         sdkExamples: "Exemples de SDK",
         needHelp: "Besoin d'aide?",
         needHelpText: "Si vous avez des questions sur notre API ou besoin d'aide pour l'intégration, veuillez nous contacter.",
@@ -1228,7 +1228,7 @@ export const translations = {
         mobileApp: "Versions d'application mobile",
         enhancedAnalytics: "Analyses et informations améliorées",
         contactUs: "Contactez-nous",
-        contactEmail: "sherlingdev@gmail.com",
+        contactEmail: "hello@flarexrate.com",
         contactTermsText: "Si vous avez des questions sur ces termes et conditions, veuillez nous contacter à:",
         contactPrivacyText: "Si vous avez des questions sur cette politique de confidentialité, veuillez nous contacter à:",
         contactAboutText: "Si vous avez des questions sur notre plateforme, veuillez nous contacter à:",
@@ -1445,7 +1445,8 @@ export const translations = {
         siteUrl: "flarexrate.com",
 
         // API Guide
-        apiGuideTitle: "Guia de uso da API",
+        apiGuide: "Guia de uso da API",
+        apiGuideTitle: "Guia de uso da API | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
         apiGuideSubtitle: "Documentação completa para APIs Flare Exchange Rate",
         authentication: "Autenticação",
         authenticationText: "Todos os endpoints da API requerem autenticação exceto para dados públicos de taxas de câmbio. Use os endpoints de autenticação para obter um token de acesso.",
@@ -1464,7 +1465,7 @@ export const translations = {
         triggerManualScraperDesc: "Aciona manualmente o scraper de taxas de câmbio para obter dados atualizados.",
 
         // API Guide specific content
-        completeDataInfo: "Dados completos e informações",
+        completeDataInfo: "Dados completos",
         completeDataDesc: "Retorna dados completos de taxas de câmbio incluindo detalhes USD, EUR e taxas globais",
         onlyGlobalRates: "Apenas taxas globais",
         onlyGlobalRatesDesc: "Retorna apenas as taxas de câmbio globais sem dados detalhados USD/EUR",
@@ -1484,8 +1485,7 @@ export const translations = {
         noRateLimiting: "Nenhum limite de taxa aplicado atualmente",
         cachedForOneHour: "Armazenado em cache por 1 hora",
         errorHandling: "Tratamento de erros",
-        errorHandlingText: "Todos os endpoints retornam respostas de erro padronizadas com códigos de status HTTP apropriados.",
-        errorResponseExample: "Exemplo de resposta de erro",
+        errorResponse: "Resposta de erro",
         sdkExamples: "Exemplos de SDK",
         needHelp: "Precisa de ajuda?",
         needHelpText: "Se você tiver perguntas sobre nossa API ou precisar de assistência com integração, entre em contato conosco.",
@@ -1600,7 +1600,7 @@ export const translations = {
 
         // Contact translations
         contactUs: "Entre em contato",
-        contactEmail: "sherlingdev@gmail.com",
+        contactEmail: "hello@flarexrate.com",
         contactTermsText: "Se você tiver alguma dúvida sobre estes termos e condições, entre em contato conosco em:",
         contactPrivacyText: "Se você tiver alguma dúvida sobre esta política de privacidade, entre em contato conosco em:",
         contactAboutText: "Se você tiver alguma dúvida sobre nossa plataforma, entre em contato conosco em:",

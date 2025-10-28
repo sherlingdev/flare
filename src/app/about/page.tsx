@@ -1,17 +1,12 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 
 export default function AboutUs() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : "en"];
-
-    // Update page title dynamically - useLayoutEffect to prevent static title flash
-    useLayoutEffect(() => {
-        document.title = t.aboutTitle;
-    }, [t.aboutTitle]);
 
     // Scroll to top on mount and prevent scroll restoration
     useEffect(() => {
