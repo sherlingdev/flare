@@ -144,13 +144,28 @@ export async function POST(request: Request) {
 
         // Perform updates and inserts
         let ratesError = null;
+
+        // Update existing records using id (primary key)
+        // Since Supabase doesn't support bulk updates with different values,
+        // we'll update each record individually
         if (toUpdate.length > 0) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { error: updateError } = await (supabase as any)
-                .from('rates')
-                .upsert(toUpdate);
-            ratesError = updateError;
+            const updatePromises = toUpdate.map((record) =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (supabase as any)
+                    .from('rates')
+                    .update({ rate: record.rate, updated_at: record.updated_at })
+                    .eq('id', record.id)
+            );
+
+            const updateResults = await Promise.all(updatePromises);
+            const firstError = updateResults.find((result) => result.error);
+
+            if (firstError) {
+                ratesError = firstError.error;
+            }
         }
+
+        // Insert new records
         if (!ratesError && toInsert.length > 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { error: insertError } = await (supabase as any)
