@@ -1,6 +1,13 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization - only create Resend instance when actually needed
+function getResend() {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+        throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    return new Resend(apiKey);
+}
 
 type Language = 'en' | 'es' | 'fr' | 'pt';
 
@@ -244,6 +251,7 @@ https://flarexrate.com
     `;
 
     try {
+        const resend = getResend();
         const { data, error } = await resend.emails.send({
             from: fromEmail,
             to: email,
