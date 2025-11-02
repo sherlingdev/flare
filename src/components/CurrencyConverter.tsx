@@ -39,11 +39,11 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
     // Load dynamic rates and currencies on component mount
     useEffect(() => {
         const loadRates = async () => {
-            // Only use Netlify Function in production
+            // Only use Supabase/Netlify in production
             const isProduction = process.env.NODE_ENV === 'production';
 
             if (!isProduction) {
-                // Development: Use hardcoded rates
+                // Development: Use hardcoded rates (as before)
                 setCurrencyRates(getHardcodedRates());
                 setCurrencies(getHardcodedCurrencies());
                 setIsLoadingCurrencies(false);
@@ -51,7 +51,7 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
             }
 
             try {
-                // Production: Get data from Supabase via API endpoints
+                // Production: Try Supabase API first
                 const [ratesResponse, currenciesResponse] = await Promise.all([
                     fetch('/api/rates'),
                     fetch('/api/currencies')
@@ -92,16 +92,12 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                             const netlifyData = await netlifyResponse.json();
 
                             if (netlifyData.success && netlifyData.data) {
-                                // Netlify Blobs format: data contains rates and currencies
+                                // Netlify Blobs format: data contains rates (object) and currencies (array)
                                 const blobData = netlifyData.data;
 
-                                // Transform rates from Netlify Blobs format
-                                if (blobData.rates && Array.isArray(blobData.rates)) {
-                                    const ratesMap: Record<string, number> = {};
-                                    blobData.rates.forEach((item: { code: string; rate: number }) => {
-                                        ratesMap[item.code] = item.rate;
-                                    });
-                                    setCurrencyRates(ratesMap);
+                                // Transform rates from Netlify Blobs format (rates is already an object)
+                                if (blobData.rates && typeof blobData.rates === 'object' && !Array.isArray(blobData.rates)) {
+                                    setCurrencyRates(blobData.rates as Record<string, number>);
                                 }
 
                                 // Transform currencies from Netlify Blobs format
@@ -110,11 +106,12 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                                         code: string;
                                         name: string;
                                         symbol?: string | null;
+                                        flag?: string;
                                     }) => ({
                                         code: item.code,
                                         name: item.name,
                                         symbol: item.symbol || item.code,
-                                        flag: `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
+                                        flag: item.flag || `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
                                     }));
                                     setCurrencies(currenciesList);
                                     setIsLoadingCurrencies(false);
@@ -142,13 +139,9 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                         if (netlifyData.success && netlifyData.data) {
                             const blobData = netlifyData.data;
 
-                            // Transform rates from Netlify Blobs format
-                            if (blobData.rates && Array.isArray(blobData.rates)) {
-                                const ratesMap: Record<string, number> = {};
-                                blobData.rates.forEach((item: { code: string; rate: number }) => {
-                                    ratesMap[item.code] = item.rate;
-                                });
-                                setCurrencyRates(ratesMap);
+                            // Transform rates from Netlify Blobs format (rates is already an object)
+                            if (blobData.rates && typeof blobData.rates === 'object' && !Array.isArray(blobData.rates)) {
+                                setCurrencyRates(blobData.rates as Record<string, number>);
                             }
 
                             // Transform currencies from Netlify Blobs format
@@ -157,11 +150,12 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                                     code: string;
                                     name: string;
                                     symbol?: string | null;
+                                    flag?: string;
                                 }) => ({
                                     code: item.code,
                                     name: item.name,
                                     symbol: item.symbol || item.code,
-                                    flag: `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
+                                    flag: item.flag || `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
                                 }));
                                 setCurrencies(currenciesList);
                                 setIsLoadingCurrencies(false);
