@@ -24,7 +24,8 @@ export default function Layout({ children }: LayoutProps) {
             "/privacy": translations[language].privacyTitle,
             "/terms": translations[language].termsTitle,
             "/about": translations[language].aboutTitle,
-            "/api-guide": translations[language].apiGuideTitle
+            "/documentation": translations[language].documentationTitle,
+            "/key": translations[language].apiKeyTitle
         };
 
         const newTitle = titles[pathname as keyof typeof titles] || translations[language].pageTitle;
@@ -37,13 +38,13 @@ export default function Layout({ children }: LayoutProps) {
     }, [pathname, language, mounted]);
 
     // Conditional layout based on route
-    const isHomePage = pathname === "/";
-    const isLegalPage = ["/privacy", "/terms", "/about", "/api-guide"].includes(pathname);
+    const isHomeOrKey = pathname === "/" || pathname === "/key";
+    const isLegalPage = ["/privacy", "/terms", "/about", "/documentation"].includes(pathname);
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">
             <Header />
-            <div className={`flex-1 flex justify-center ${isHomePage
+            <div className={`flex-1 flex justify-center ${isHomeOrKey
                 ? "items-center pt-24 sm:pt-28 pb-16 sm:pb-20"
                 : isLegalPage
                     ? "items-start overflow-y-auto pt-20 sm:pt-24"

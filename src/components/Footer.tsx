@@ -5,8 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 
 export default function Footer() {
-    const { language } = useLanguage();
-    const t = translations[language];
+    const { language, mounted } = useLanguage();
+    const t = translations[mounted ? language : 'en'] as typeof translations['en'];
 
     return (
         <footer className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 mt-20 sm:mt-24">

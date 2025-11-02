@@ -459,7 +459,7 @@ html {
 .currency-input {
     @apply text-base font-medium;
     @apply text-gray-900 text-flare-primary;
-    font-size: 14px; /* Prevents zoom on iOS */
+    font-size: 16px;
 }
 
 .currency-label {
@@ -585,20 +585,27 @@ html {
     @apply transition-colors duration-200;
     @apply w-4 h-4 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600;
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #CBD5E1 !important;
+}
+
+.dropdown-options .search-container button:hover {
+    color: #CBD5E1 !important;
 }
 
 /* Search input field */
 .dropdown-options .search-input {
     @apply w-full text-sm bg-gray-50 dark:bg-gray-700 border-none outline-none;
-    @apply text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400;
+    @apply text-gray-900 dark:text-gray-100;
+    color: #CBD5E1 !important;
     padding: 12px 16px;
     padding-right: 2.5rem;
     width: 100%;
     margin: 0;
     box-sizing: border-box;
+}
+
+.dropdown-options .search-input::placeholder {
+    color: #CBD5E1 !important;
 }
 
 /* No hover effects for search input */
@@ -612,22 +619,24 @@ html {
 
 /* No results message */
 .dropdown-options .no-results {
-    @apply px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center;
+    @apply px-4 py-3 text-sm text-center;
     @apply font-medium;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #CBD5E1 !important;
 }
 
 /* Dropdown option items */
 .dropdown-options > div {
-    @apply px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-normal;
+    @apply px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 font-normal;
     display: flex;
     align-items: center;
     min-height: 44px;
     transition: background-color 0.2s ease;
     white-space: nowrap;
     overflow: hidden;
+    color: #CBD5E1 !important;
 }
 
 /* Selected option state */
@@ -675,7 +684,7 @@ html {
         padding-left: 0;
         background-position: right 0.75rem center;
         min-width: 120px; /* Ancho mínimo */
-        font-size: 14px;
+        font-size: 16px;
     }
     
     .currency-select .flex {

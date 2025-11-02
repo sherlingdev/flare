@@ -18,6 +18,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Get rates from ExchangeRate-API
         run: |
           echo "🔄 Getting rates from ExchangeRate-API..."
@@ -31,23 +40,25 @@ jobs:
           
           echo "✅ ExchangeRate-API response saved to exchange-rates.json"
           echo "📊 Response size: $(wc -c < exchange-rates.json) bytes"
-          
-          # Convert rates to our format (1/rate for each currency)
-          echo "🔄 Converting rates to our format..."
+
+      - name: Process rates using existing functions
+        run: |
+          echo "🔄 Processing rates using existing scraper functions..."
           node -e "
+            const { getHardcodedCurrencies } = require('./src/components/CurrencyConverter.tsx');
             const fs = require('fs');
             const data = JSON.parse(fs.readFileSync('exchange-rates.json', 'utf8'));
             
             // Excluded currencies that cause 404 errors in production
             const excludedCurrencies = ['CLF', 'CNH', 'FOK', 'KID', 'SSP'];
             
-            // Convert rates: 1/rate for each currency (excluding problem currencies)
+            // Use rates directly (no division) - frontend handles conversion logic
             const convertedRates = {};
             Object.keys(data.rates).forEach(currency => {
               // Skip excluded currencies
               if (!excludedCurrencies.includes(currency)) {
                 if (currency !== 'USD') {
-                  convertedRates[currency] = 1 / data.rates[currency];
+                  convertedRates[currency] = data.rates[currency];
                 } else {
                   convertedRates[currency] = 1;
                 }
@@ -58,12 +69,15 @@ jobs:
             const result = {
               success: true,
               rates: convertedRates,
-              currencies: Object.keys(convertedRates).map(code => ({
-                code: code,
-                name: code,
-                symbol: code,
-                flag: \`https://www.xe.com/svgs/flags/\${code.toLowerCase()}.static.svg\`
-              })),
+              currencies: Object.keys(convertedRates).map(code => {
+                const currency = getHardcodedCurrencies().find(c => c.code === code);
+                return {
+                  code: code,
+                  name: currency?.name || code,
+                  symbol: currency?.symbol || code,
+                  flag: \`https://www.xe.com/svgs/flags/\${code.toLowerCase()}.static.svg\`
+                };
+              }),
               timestamp: new Date().toISOString(),
               source: 'exchange-rate-api'
             };
@@ -93,6 +107,34 @@ jobs:
             -d @blob-data.json
           
           echo "✅ Rates saved to Netlify Blobs"
+
+      - name: Update Supabase Database
+        run: |
+          echo "🗄️ Updating Supabase database..."
+          
+          # Create the data structure for Supabase API
+          cat > supabase-data.json << EOF
+          {
+            "rates": $(cat rates.json | jq '.rates')
+          }
+          EOF
+          
+          # Update Supabase using our API endpoint
+          curl -X POST "${{ env.SITE_URL }}/api/rates/update" \
+            -H "Content-Type: application/json" \
+            -d @supabase-data.json \
+            -o supabase-response.json
+          
+          echo "📋 Supabase update response:"
+          cat supabase-response.json | jq '.'
+          
+          # Check if update was successful
+          if cat supabase-response.json | jq -e '.success' > /dev/null; then
+            echo "✅ Rates updated in Supabase successfully"
+          else
+            echo "❌ Failed to update Supabase"
+            exit 1
+          fi
 
       - name: Verify storage
         run: |

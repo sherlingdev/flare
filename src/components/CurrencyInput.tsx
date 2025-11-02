@@ -189,7 +189,7 @@ export default function CurrencyInput({
                                 onClick={onDropdownToggle}
                                 className="cursor-pointer whitespace-nowrap text-flare-primary"
                             >
-                                {currency}
+                                {currency} <span className="font-normal">({availableCurrencies.find(c => c.code === currency)?.symbol || currency})</span>
                             </span>
                             <div
                                 onClick={onDropdownToggle}
@@ -255,7 +255,7 @@ export default function CurrencyInput({
                                                 />
                                             </div>
                                             <div className="flex-1 min-w-0 overflow-hidden">
-                                                <span className="truncate uppercase text-sm block">{currencyOption.code} - {currencyNames[currencyOption.code as keyof typeof currencyNames]}</span>
+                                                <span className="truncate uppercase text-sm block">{currencyOption.code} <span className="font-normal">({currencyOption.symbol})</span> - {currencyNames[currencyOption.code as keyof typeof currencyNames]}</span>
                                             </div>
                                         </div>
                                     </div>

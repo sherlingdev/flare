@@ -15,8 +15,8 @@ export default function CurrencyVariations() {
 
     const usdToDop = usdRate.toFixed(2);
     const eurToDop = eurRate.toFixed(2);
-    const dopToUsd = (1 / usdRate).toFixed(4);
-    const dopToEur = (1 / eurRate).toFixed(4);
+    const dopToUsd = usdRate.toFixed(4); // Now rates are already inversa
+    const dopToEur = eurRate.toFixed(4); // Now rates are already inversa
 
     const handleSwap = () => {
         setIsSwapped(!isSwapped);

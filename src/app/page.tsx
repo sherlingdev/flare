@@ -8,15 +8,11 @@ import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
 
+
 export default function Home() {
   const { language, mounted } = useLanguage();
   const t = translations[mounted ? language : "en"];
   const [dynamicTitle, setDynamicTitle] = useState("Flare Exchange Rate");
-
-  // // Update page title dynamically - useLayoutEffect to prevent static title flash
-  // useLayoutEffect(() => {
-  //   document.title = t.pageTitle;
-  // }, [t.pageTitle]);
 
   useEffect(() => {
     if (mounted) {
@@ -43,21 +39,11 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-6">
-
-        {/* Left Sidebar Ad */}
-        <div className="hidden lg:block">
-          {/* <AdSidebar position="left" /> */}
-        </div>
-
+      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
         <div className="w-full max-w-none">
           <CurrencyCard>
             <CurrencyConverter onTitleChange={setDynamicTitle} />
           </CurrencyCard>
-        </div>
-
-        <div className="hidden lg:block">
-          {/* <AdSidebar position="right" /> */}
         </div>
       </div>
 
@@ -65,6 +51,8 @@ export default function Home() {
       <div className="mt-4 animate-fade-in">
         {/* <LastUpdated /> */}
       </div>
+
+
     </main>
   );
 }

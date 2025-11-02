@@ -42,11 +42,19 @@ A modern, fast, and reliable currency converter built with Next.js, featuring re
    ```bash
    npm install
    ```
-3. Run the development server:
+3. Configure environment variables:
+   - Create a `.env.local` file in the root directory
+   - See [ENV_SETUP.md](./ENV_SETUP.md) for detailed instructions
+   - Required variables:
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+     - `SUPABASE_SERVICE_ROLE_KEY` (for server-side operations)
+     - `RATES_UPDATE_SECRET` (for API authentication)
+4. Run the development server:
    ```bash
    npm run dev
    ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Scripts
 
