@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "🔄 Processing rates using existing scraper functions..."
           node -e "
-            const { getHardcodedCurrencies } = require('./scripts/currencies.js');
+            const { getHardcodedCurrencies } = require('./scripts/currencies.cjs');
             const fs = require('fs');
             const data = JSON.parse(fs.readFileSync('exchange-rates.json', 'utf8'));
             
