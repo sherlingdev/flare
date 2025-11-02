@@ -107,13 +107,57 @@ export async function POST(request: Request) {
         }
 
         // Update rates table (upsert based on currency_id)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error: ratesError } = await (supabase as any)
+        // First, get existing rates to determine if we need to update or insert
+        const { data: existingRates } = await supabase
             .from('rates')
-            .upsert(updates, {
-                onConflict: 'currency_id',
-                ignoreDuplicates: false
+            .select('id, currency_id');
+
+        const existingMap = new Map<number, number>();
+        if (existingRates) {
+            existingRates.forEach((rate: { id: number; currency_id: number }) => {
+                existingMap.set(rate.currency_id, rate.id);
             });
+        }
+
+        // Separate updates and inserts
+        const toUpdate: Array<{ id: number; currency_id: number; rate: number; updated_at: string }> = [];
+        const toInsert: Array<{ currency_id: number; rate: number; updated_at: string }> = [];
+        const now = new Date().toISOString();
+
+        updates.forEach((update: { currency_id: number; rate: number }) => {
+            const existingId = existingMap.get(update.currency_id);
+            if (existingId) {
+                toUpdate.push({
+                    id: existingId,
+                    currency_id: update.currency_id,
+                    rate: update.rate,
+                    updated_at: now
+                });
+            } else {
+                toInsert.push({
+                    currency_id: update.currency_id,
+                    rate: update.rate,
+                    updated_at: now
+                });
+            }
+        });
+
+        // Perform updates and inserts
+        let ratesError = null;
+        if (toUpdate.length > 0) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error: updateError } = await (supabase as any)
+                .from('rates')
+                .upsert(toUpdate);
+            ratesError = updateError;
+        }
+        if (!ratesError && toInsert.length > 0) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error: insertError } = await (supabase as any)
+                .from('rates')
+                .insert(toInsert);
+            ratesError = insertError;
+        }
 
         if (ratesError) {
             console.error('Error updating rates:', ratesError);
@@ -127,14 +171,33 @@ export async function POST(request: Request) {
             );
         }
 
-        // Insert into historicals (with conflict handling - don't insert duplicate date+currency)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error: historicalError } = await (supabase as any)
+        // Insert into historicals (only if not exists for today)
+        // Check existing historical records for today to avoid duplicates
+        const { data: existingHistoricals } = await supabase
             .from('historicals')
-            .upsert(historicalInserts, {
-                onConflict: 'currency_id,date',
-                ignoreDuplicates: true
+            .select('currency_id, date')
+            .eq('date', today);
+
+        const existingHistoricalSet = new Set<string>();
+        if (existingHistoricals) {
+            existingHistoricals.forEach((h: { currency_id: number; date: string }) => {
+                existingHistoricalSet.add(`${h.currency_id}-${h.date}`);
             });
+        }
+
+        // Filter out duplicates
+        const historicalToInsert = historicalInserts.filter((h: { currency_id: number; date: string }) => {
+            return !existingHistoricalSet.has(`${h.currency_id}-${h.date}`);
+        });
+
+        let historicalError = null;
+        if (historicalToInsert.length > 0) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error } = await (supabase as any)
+                .from('historicals')
+                .insert(historicalToInsert);
+            historicalError = error;
+        }
 
         if (historicalError) {
             console.error('Error inserting historical data:', historicalError);
@@ -147,7 +210,8 @@ export async function POST(request: Request) {
             message: 'Rates updated successfully',
             data: {
                 updated: updates.length,
-                historical_inserted: historicalInserts.length,
+                inserted: toInsert.length,
+                historical_inserted: historicalToInsert.length,
                 date: today
             },
             timestamp: new Date().toISOString()
