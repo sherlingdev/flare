@@ -84,14 +84,96 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
                     setCurrencies(currenciesList);
                     setIsLoadingCurrencies(false);
                 } else {
-                    // Use hardcoded rates and currencies (fallback)
+                    // Supabase API failed, try Netlify Blobs as fallback
+                    try {
+                        const netlifyResponse = await fetch('/.netlify/functions/currency-rates');
+
+                        if (netlifyResponse.ok) {
+                            const netlifyData = await netlifyResponse.json();
+
+                            if (netlifyData.success && netlifyData.data) {
+                                // Netlify Blobs format: data contains rates and currencies
+                                const blobData = netlifyData.data;
+
+                                // Transform rates from Netlify Blobs format
+                                if (blobData.rates && Array.isArray(blobData.rates)) {
+                                    const ratesMap: Record<string, number> = {};
+                                    blobData.rates.forEach((item: { code: string; rate: number }) => {
+                                        ratesMap[item.code] = item.rate;
+                                    });
+                                    setCurrencyRates(ratesMap);
+                                }
+
+                                // Transform currencies from Netlify Blobs format
+                                if (blobData.currencies && Array.isArray(blobData.currencies)) {
+                                    const currenciesList = blobData.currencies.map((item: {
+                                        code: string;
+                                        name: string;
+                                        symbol?: string | null;
+                                    }) => ({
+                                        code: item.code,
+                                        name: item.name,
+                                        symbol: item.symbol || item.code,
+                                        flag: `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
+                                    }));
+                                    setCurrencies(currenciesList);
+                                    setIsLoadingCurrencies(false);
+                                    return;
+                                }
+                            }
+                        }
+                    } catch {
+                        // Silent fallback to Netlify Blobs failed
+                    }
+
+                    // If Netlify Blobs also fails, use hardcoded rates and currencies
                     setCurrencyRates(getHardcodedRates());
                     setCurrencies(getHardcodedCurrencies());
                     setIsLoadingCurrencies(false);
                 }
-            } catch (error) {
-                console.error('Error loading rates from API:', error);
-                // Fallback to hardcoded rates and currencies
+            } catch {
+                // Try Netlify Blobs as fallback when Supabase API throws error
+                try {
+                    const netlifyResponse = await fetch('/.netlify/functions/currency-rates');
+
+                    if (netlifyResponse.ok) {
+                        const netlifyData = await netlifyResponse.json();
+
+                        if (netlifyData.success && netlifyData.data) {
+                            const blobData = netlifyData.data;
+
+                            // Transform rates from Netlify Blobs format
+                            if (blobData.rates && Array.isArray(blobData.rates)) {
+                                const ratesMap: Record<string, number> = {};
+                                blobData.rates.forEach((item: { code: string; rate: number }) => {
+                                    ratesMap[item.code] = item.rate;
+                                });
+                                setCurrencyRates(ratesMap);
+                            }
+
+                            // Transform currencies from Netlify Blobs format
+                            if (blobData.currencies && Array.isArray(blobData.currencies)) {
+                                const currenciesList = blobData.currencies.map((item: {
+                                    code: string;
+                                    name: string;
+                                    symbol?: string | null;
+                                }) => ({
+                                    code: item.code,
+                                    name: item.name,
+                                    symbol: item.symbol || item.code,
+                                    flag: `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
+                                }));
+                                setCurrencies(currenciesList);
+                                setIsLoadingCurrencies(false);
+                                return;
+                            }
+                        }
+                    }
+                } catch {
+                    // Silent fallback to Netlify Blobs failed
+                }
+
+                // Final fallback to hardcoded rates and currencies
                 setCurrencyRates(getHardcodedRates());
                 setCurrencies(getHardcodedCurrencies());
                 setIsLoadingCurrencies(false);
