@@ -29,11 +29,14 @@ export async function GET(
             );
         }
 
+        // Type assertion for currency
+        const currencyData = currency as { id: number; code: string; name: string; symbol: string | null };
+
         // Build query
         let query = supabase
             .from('historicals')
             .select('id, rate, date, created_at')
-            .eq('currency_id', currency.id)
+            .eq('currency_id', currencyData.id)
             .order('date', { ascending: false });
 
         // Apply filters
@@ -67,9 +70,9 @@ export async function GET(
             success: true,
             data: {
                 currency: {
-                    code: currency.code,
-                    name: currency.name,
-                    symbol: currency.symbol
+                    code: currencyData.code,
+                    name: currencyData.name,
+                    symbol: currencyData.symbol
                 },
                 rates: data || [],
                 count: count || data?.length || 0
@@ -83,8 +86,8 @@ export async function GET(
     } catch (error) {
         console.error('Error in GET /api/historical/[code]:', error);
         return NextResponse.json(
-            { 
-                success: false, 
+            {
+                success: false,
                 error: error instanceof Error ? error.message : 'Unknown error',
                 message: 'Unable to retrieve historical data. Please try again later.'
             },

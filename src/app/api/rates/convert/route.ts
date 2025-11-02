@@ -37,8 +37,11 @@ export async function GET(request: Request) {
             );
         }
 
-        const fromRate = rates.find(r => r.currencies.code === from)?.rate || 1;
-        const toRate = rates.find(r => r.currencies.code === to)?.rate || 1;
+        // Type assertion for rates
+        const ratesData = rates as Array<{ rate: number; currencies: { code: string } }>;
+
+        const fromRate = ratesData.find(r => r.currencies.code === from)?.rate || 1;
+        const toRate = ratesData.find(r => r.currencies.code === to)?.rate || 1;
 
         // Convert: amount in FROM currency -> USD -> TO currency
         const amountInUSD = amount / fromRate;
@@ -61,8 +64,8 @@ export async function GET(request: Request) {
     } catch (error) {
         console.error('Error in GET /api/rates/convert:', error);
         return NextResponse.json(
-            { 
-                success: false, 
+            {
+                success: false,
                 error: error instanceof Error ? error.message : 'Unknown error',
                 message: 'Unable to convert currency. Please try again later.'
             },
