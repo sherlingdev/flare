@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
-import ApiKeyRequest from "@/components/ApiKey";
+import ApiKey from "@/components/ApiKey";
 import CurrencyCard from "@/components/CurrencyCard";
 
 export default function KeyPage() {
@@ -23,7 +23,7 @@ export default function KeyPage() {
             <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
                 <div className="w-full max-w-none">
                     <CurrencyCard>
-                        <ApiKeyRequest />
+                        <ApiKey />
                     </CurrencyCard>
                 </div>
             </div>

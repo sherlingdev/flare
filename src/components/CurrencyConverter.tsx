@@ -7,11 +7,7 @@ import SwapButton from "./SwapButton";
 import LastUpdated from "./LastUpdated";
 import CurrencyInput from "./CurrencyInput";
 
-interface CurrencyConverterProps {
-    onTitleChange?: (title: string) => void;
-}
-
-export default function CurrencyConverter({ onTitleChange }: CurrencyConverterProps) {
+export default function CurrencyConverter() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : "en"];
 
@@ -28,13 +24,16 @@ export default function CurrencyConverter({ onTitleChange }: CurrencyConverterPr
         .replace('{fromName}', t.currencyNames[fromCurrency as keyof typeof t.currencyNames] || fromCurrency)
         .replace('{toName}', t.currencyNames[toCurrency as keyof typeof t.currencyNames] || toCurrency);
 
-
-    // Update dynamic title when currencies change
+    // Update dynamic title directly in the DOM when currencies change
     useEffect(() => {
-        if (onTitleChange) {
-            onTitleChange(dynamicTitle);
+        if (mounted) {
+            // Find and update the h1 element in the page
+            const h1Element = document.querySelector('h1.text-flare-primary');
+            if (h1Element) {
+                h1Element.textContent = dynamicTitle;
+            }
         }
-    }, [dynamicTitle, onTitleChange]);
+    }, [dynamicTitle, mounted]);
 
     // Load dynamic rates and currencies on component mount
     useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import { useEffect, useLayoutEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
@@ -12,7 +12,6 @@ import CurrencyCard from "@/components/CurrencyCard";
 export default function Home() {
   const { language, mounted } = useLanguage();
   const t = translations[mounted ? language : "en"];
-  const [dynamicTitle, setDynamicTitle] = useState("Flare Exchange Rate");
 
   useEffect(() => {
     if (mounted) {
@@ -31,7 +30,7 @@ export default function Home() {
       <div className="w-full max-w-6xl mb-6">
         <div className="text-center">
           <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary mb-4">
-            {dynamicTitle}
+            Flare Exchange Rate
           </h1>
           <p className="text-base sm:text-xl text-flare-primary max-w-2xl mx-auto">
             {t.siteDescription}
@@ -42,7 +41,7 @@ export default function Home() {
       <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
         <div className="w-full max-w-none">
           <CurrencyCard>
-            <CurrencyConverter onTitleChange={setDynamicTitle} />
+            <CurrencyConverter />
           </CurrencyCard>
         </div>
       </div>

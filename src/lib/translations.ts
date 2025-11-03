@@ -38,6 +38,12 @@ export const translations = {
         apiKeyRevealTitle: "Your API Key (save this!):",
         apiKeyRevealWarning: "⚠️ This key will only be shown once. Save it securely!",
 
+        // 404 Page section
+        notFoundTitle: "404",
+        notFoundSubtitle: "This page could not be found",
+        goHome: "Go home",
+        goBack: "Go back",
+
         // Currency names
         currencyNames: {
             USD: "US Dollar",
@@ -522,6 +528,12 @@ export const translations = {
         apiKeyRevealTitle: "Tu clave de API (¡guárdala!):",
         apiKeyRevealWarning: "⚠️ Esta clave solo se mostrará una vez. ¡Guárdala de forma segura!",
 
+        // 404 Page section
+        notFoundTitle: "404",
+        notFoundSubtitle: "Esta página no se pudo encontrar",
+        goHome: "Ir a inicio",
+        goBack: "Volver",
+
         // Currency names
         currencyNames: {
             USD: "Dólar Estadounidense",
@@ -976,6 +988,12 @@ export const translations = {
         apiKeyRevealTitle: "Votre clé API (à conserver !) :",
         apiKeyRevealWarning: "⚠️ Cette clé ne sera affichée qu'une seule fois. Conservez-la en lieu sûr !",
 
+        // 404 Page section
+        notFoundTitle: "404",
+        notFoundSubtitle: "Cette page est introuvable",
+        goHome: "Retour à l'accueil",
+        goBack: "Retour",
+
         // Currency names (same as English for now, you can translate later)
         currencyNames: {
             USD: "Dollar Américain",
@@ -1390,6 +1408,12 @@ export const translations = {
         apiKeyNetworkError: "Erro de rede. Tente novamente.",
         apiKeyRevealTitle: "Sua chave de API (salve isto!):",
         apiKeyRevealWarning: "⚠️ Esta chave será exibida apenas uma vez. Salve-a com segurança!",
+
+        // 404 Page section
+        notFoundTitle: "404",
+        notFoundSubtitle: "Esta página não foi encontrada",
+        goHome: "Ir para início",
+        goBack: "Voltar",
 
         // Currency names
         currencyNames: {

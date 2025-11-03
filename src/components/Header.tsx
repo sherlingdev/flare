@@ -85,7 +85,7 @@ export default function Header({
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                             aria-label="Open API menu"
                         >
-                            <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 uppercase">API</span>
+                            <span className="text-xs sm:text-sm font-medium text-[#475569] dark:text-[#CBD5E1] uppercase">API</span>
                         </button>
                         {isApiDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-800 shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden animate-slide-down">
