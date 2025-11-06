@@ -15,12 +15,9 @@
     "start": "next start",
     "lint": "eslint",
     "analyze": "ANALYZE=true npm run build",
-    "test:flow": "node test-complete-flow.js",
-    "test:manual": "node test-manual-flow.js",
-    "test:github": "node test-github-action.js",
-    "test:frontend": "node test-frontend-flow.js",
     "trigger:workflow": "node trigger-workflow.js",
-    "cron:change": "node change-cron-schedule.js"
+    "historical:import": "tsx scripts/historical-import.ts",
+    "scrape:currency-info": "tsx scripts/scrape-currency-info.ts"
   },
   "dependencies": {
     "@netlify/blobs": "^10.2.1",
@@ -41,11 +38,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "netlify-cli": "^17.0.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }

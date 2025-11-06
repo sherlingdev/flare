@@ -49,6 +49,29 @@ export interface RateLimit {
     updated_at?: string;
 }
 
+export interface Info {
+    id: number;
+    currency_id: number;
+    country_codes: string[] | null; // JSONB array
+    major_unit_name: string | null;
+    // major_unit_symbol removed - use currencies.symbol instead
+    minor_unit_name: string | null;
+    // minor_unit_symbol removed
+    minor_unit_value: number | null;
+    banknotes: {
+        frequently: number[];
+        rarely: number[];
+    } | null; // JSONB
+    coins: {
+        frequently: number[];
+        rarely: number[];
+    } | null; // JSONB
+    overview: string | null;
+    central_bank: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
 /**
  * Database types for Supabase client
  */
@@ -79,6 +102,11 @@ export interface Database {
                 Row: RateLimit;
                 Insert: Omit<RateLimit, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<RateLimit, 'id' | 'created_at'>>;
+            };
+            info: {
+                Row: Info;
+                Insert: Omit<Info, 'id' | 'created_at' | 'updated_at'>;
+                Update: Partial<Omit<Info, 'id' | 'created_at'>>;
             };
         };
     };

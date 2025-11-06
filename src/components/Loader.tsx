@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useLoading } from "@/contexts/LoadingContext";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { translations } from "@/lib/translations";
@@ -14,6 +15,9 @@ interface LoaderProps {
 export default function Loader({ show, blockScroll = true }: LoaderProps = {}) {
     const { mounted: langMounted, language } = useLanguage();
     const { mounted: themeMounted } = useTheme();
+    const { isLoading: hasActiveRequests } = useLoading();
+    // In controlled mode (show !== undefined), initialize with show value
+    // In auto mode (show === undefined), initialize with true
     const [showLoader, setShowLoader] = useState(show === undefined ? true : show);
     const [showText, setShowText] = useState(false);
 
@@ -68,8 +72,8 @@ export default function Loader({ show, blockScroll = true }: LoaderProps = {}) {
             document.body.style.overflow = 'auto';
         }, maxTime);
 
-        // When everything is ready, wait minimum time then hide
-        if (langMounted && themeMounted) {
+        // When everything is ready AND no active requests, wait minimum time then hide
+        if (langMounted && themeMounted && !hasActiveRequests) {
             const minTimer = setTimeout(() => {
                 setShowLoader(false);
                 // Restore scroll when loader hides
@@ -82,8 +86,13 @@ export default function Loader({ show, blockScroll = true }: LoaderProps = {}) {
             };
         }
 
+        // If there are active requests, keep loader visible
+        if (hasActiveRequests) {
+            setShowLoader(true);
+        }
+
         return () => clearTimeout(maxTimer);
-    }, [langMounted, themeMounted, show]);
+    }, [langMounted, themeMounted, hasActiveRequests, show]);
 
     const [mounted, setMounted] = useState(false);
     const isControlled = show !== undefined;

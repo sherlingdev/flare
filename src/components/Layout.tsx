@@ -28,7 +28,7 @@ export default function Layout({ children }: LayoutProps) {
             "/key": translations[language].apiKeyTitle
         };
 
-        const newTitle = titles[pathname as keyof typeof titles] || translations[language].pageTitle;
+        const newTitle = titles[pathname as keyof typeof titles] || translations[language].notFoundPageTitle || translations[language].pageTitle;
 
         // Only update if different from initial title
         if (document.title !== newTitle) {

@@ -6,6 +6,7 @@ import Schema from "@/components/Schema";
 import AdSenseScript from "@/components/AdSenseScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import Loader from "@/components/Loader";
 import type { Metadata } from "next";
 
@@ -145,15 +146,17 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <LanguageProvider>
-          <ThemeProvider>
-            <Loader />
-            <Schema />
-            <AdSenseScript />
-            <GoogleAnalytics />
-            <Layout>
-              {children}
-            </Layout>
-          </ThemeProvider>
+          <LoadingProvider>
+            <ThemeProvider>
+              <Loader />
+              <Schema />
+              <AdSenseScript />
+              <GoogleAnalytics />
+              <Layout>
+                {children}
+              </Layout>
+            </ThemeProvider>
+          </LoadingProvider>
         </LanguageProvider>
       </body>
     </html>

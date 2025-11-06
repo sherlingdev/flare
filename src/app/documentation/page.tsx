@@ -14,6 +14,7 @@ export default function Documentation() {
         'convertCurrency': false,
         'getAllCurrencies': false,
         'getHistoricalRates': false,
+        'getCurrencyInfo': false,
         'authentication': false,
         'rateLimitExceeded': false,
         'errorResponse': false,
@@ -75,7 +76,7 @@ export default function Documentation() {
         <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-16 pb-16">
             <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full max-w-6xl">
-                    <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
 
                         <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center">
                             {t.documentation}
@@ -163,222 +164,6 @@ export default function Documentation() {
       "symbol": "€",
       "rate": 71.95,
       "updated_at": "2025-10-16T17:32:34.661Z"
-    }
-  ],
-  "count": 150,
-  "timestamp": "2025-10-16T17:32:34.661Z"
-}`} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Get Rate by Code */}
-                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.getRateByCode ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('getRateByCode')}>
-                                        <h3 className="text-lg font-medium text-flare-primary">
-                                            {t.getRateByCode}
-                                        </h3>
-                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.getRateByCode ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.getRateByCode ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="pt-0">
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    GET /api/rates/USD
-                                                </code>
-                                                <CopyButton textToCopy="GET /api/rates/USD" />
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <div className="text-base text-gray-200">
-                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.getRateByCodeDesc}</span>
-                                                </div>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    {t.response}:
-                                                </code>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
-                                                    {`{
-  "success": true,
-  "data": {
-    "currency_id": 1,
-    "code": "USD",
-    "name": "US Dollar",
-    "symbol": "$",
-    "rate": 62.64,
-    "updated_at": "2025-10-16T17:32:34.661Z"
-  },
-  "timestamp": "2025-10-16T17:32:34.661Z"
-}`}
-                                                </pre>
-                                                <CopyButton textToCopy={`{
-  "success": true,
-  "data": {
-    "currency_id": 1,
-    "code": "USD",
-    "name": "US Dollar",
-    "symbol": "$",
-    "rate": 62.64,
-    "updated_at": "2025-10-16T17:32:34.661Z"
-  },
-  "timestamp": "2025-10-16T17:32:34.661Z"
-}`} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Convert Currency */}
-                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.convertCurrency ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('convertCurrency')}>
-                                        <h3 className="text-lg font-medium text-flare-primary">
-                                            {t.convertCurrency}
-                                        </h3>
-                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.convertCurrency ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.convertCurrency ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="pt-0">
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    GET /api/rates/convert?from=USD&to=EUR&amount=100
-                                                </code>
-                                                <CopyButton textToCopy="GET /api/rates/convert?from=USD&to=EUR&amount=100" />
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <div className="text-base text-gray-200">
-                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.convertCurrencyDesc}</span>
-                                                </div>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    {t.queryParams}:
-                                                </code>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <div className="text-base text-gray-200">
-                                                    <div className="mb-1">• <code>{t.queryParamFrom}</code></div>
-                                                    <div className="mb-1">• <code>{t.queryParamTo}</code></div>
-                                                    <div>• <code>{t.queryParamAmount}</code></div>
-                                                </div>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    {t.response}:
-                                                </code>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
-                                                    {`{
-  "success": true,
-  "data": {
-    "from": {
-      "code": "USD",
-      "amount": 100
-    },
-    "to": {
-      "code": "EUR",
-      "amount": 87.25
-    },
-    "rate": 0.8725,
-    "timestamp": "2025-10-16T17:32:34.661Z"
-  }
-}`}
-                                                </pre>
-                                                <CopyButton textToCopy={`{
-  "success": true,
-  "data": {
-    "from": {
-      "code": "USD",
-      "amount": 100
-    },
-    "to": {
-      "code": "EUR",
-      "amount": 87.25
-    },
-    "rate": 0.8725,
-    "timestamp": "2025-10-16T17:32:34.661Z"
-  }
-}`} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Get All Currencies */}
-                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
-                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.getAllCurrencies ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('getAllCurrencies')}>
-                                        <h3 className="text-lg font-medium text-flare-primary">
-                                            {t.getAllCurrencies}
-                                        </h3>
-                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.getAllCurrencies ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.getAllCurrencies ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="pt-0">
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    GET /api/currencies
-                                                </code>
-                                                <CopyButton textToCopy="GET /api/currencies" />
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <div className="text-base text-gray-200">
-                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.getAllCurrenciesDesc}</span>
-                                                </div>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <code className="text-gray-200 text-base font-mono">
-                                                    {t.response}:
-                                                </code>
-                                            </div>
-                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
-                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
-                                                    {`{
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "code": "USD",
-      "name": "US Dollar",
-      "symbol": "$",
-      "is_active": true
-    },
-    {
-      "id": 2,
-      "code": "EUR",
-      "name": "Euro",
-      "symbol": "€",
-      "is_active": true
-    }
-  ],
-  "count": 150,
-  "timestamp": "2025-10-16T17:32:34.661Z"
-}`}
-                                                </pre>
-                                                <CopyButton textToCopy={`{
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "code": "USD",
-      "name": "US Dollar",
-      "symbol": "$",
-      "is_active": true
-    },
-    {
-      "id": 2,
-      "code": "EUR",
-      "name": "Euro",
-      "symbol": "€",
-      "is_active": true
     }
   ],
   "count": 150,
@@ -482,6 +267,320 @@ export default function Documentation() {
     "count": 30
   },
   "timestamp": "2025-10-16T17:32:34.661Z"
+}`} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Get Rate by Code */}
+                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
+                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.getRateByCode ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('getRateByCode')}>
+                                        <h3 className="text-lg font-medium text-flare-primary">
+                                            {t.getRateByCode}
+                                        </h3>
+                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.getRateByCode ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.getRateByCode ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="pt-0">
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    GET /api/rates/USD
+                                                </code>
+                                                <CopyButton textToCopy="GET /api/rates/USD" />
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <div className="text-base text-gray-200">
+                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.getRateByCodeDesc}</span>
+                                                </div>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    {t.response}:
+                                                </code>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
+                                                    {`{
+  "success": true,
+  "data": {
+    "currency_id": 1,
+    "code": "USD",
+    "name": "US Dollar",
+    "symbol": "$",
+    "rate": 62.64,
+    "updated_at": "2025-10-16T17:32:34.661Z"
+  },
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`}
+                                                </pre>
+                                                <CopyButton textToCopy={`{
+  "success": true,
+  "data": {
+    "currency_id": 1,
+    "code": "USD",
+    "name": "US Dollar",
+    "symbol": "$",
+    "rate": 62.64,
+    "updated_at": "2025-10-16T17:32:34.661Z"
+  },
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Get All Currencies */}
+                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
+                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.getAllCurrencies ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('getAllCurrencies')}>
+                                        <h3 className="text-lg font-medium text-flare-primary">
+                                            {t.getAllCurrencies}
+                                        </h3>
+                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.getAllCurrencies ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.getAllCurrencies ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="pt-0">
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    GET /api/currencies
+                                                </code>
+                                                <CopyButton textToCopy="GET /api/currencies" />
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <div className="text-base text-gray-200">
+                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.getAllCurrenciesDesc}</span>
+                                                </div>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    {t.response}:
+                                                </code>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
+                                                    {`{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "code": "EUR",
+      "name": "Euro",
+      "symbol": "€",
+      "is_active": true
+    }
+  ],
+  "count": 150,
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`}
+                                                </pre>
+                                                <CopyButton textToCopy={`{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "code": "EUR",
+      "name": "Euro",
+      "symbol": "€",
+      "is_active": true
+    }
+  ],
+  "count": 150,
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Get Currency Info */}
+                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
+                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.getCurrencyInfo ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('getCurrencyInfo')}>
+                                        <h3 className="text-lg font-medium text-flare-primary">
+                                            {t.getCurrencyInfo}
+                                        </h3>
+                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.getCurrencyInfo ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.getCurrencyInfo ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="pt-0">
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    GET /api/currency/info/DOP
+                                                </code>
+                                                <CopyButton textToCopy="GET /api/currency/info/DOP" />
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <div className="text-base text-gray-200">
+                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.getCurrencyInfoDesc}</span>
+                                                </div>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    {t.response}:
+                                                </code>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
+                                                    {`{
+  "success": true,
+  "data": {
+    "currency": {
+      "code": "DOP",
+      "name": "Dominican Peso",
+      "symbol": "RD$"
+    },
+    "info": {
+      "country_codes": ["DO"],
+      "major_unit": {
+        "name": "peso"
+      },
+      "minor_unit": {
+        "name": "centavo",
+        "value": 0.01
+      },
+      "banknotes": {
+        "frequently": [20, 50, 100, 200, 500, 1000, 2000],
+        "rarely": []
+      },
+      "coins": {
+        "frequently": [1, 5, 10, 25],
+        "rarely": []
+      },
+      "overview": "the dominican peso is the currency of the dominican republic, managed by the central bank of the dominican republic. it has been free-floating since 1985 and serves the country's tourism and manufacturing economy in the caribbean.",
+      "central_bank": "central bank of the dominican republic"
+    }
+  },
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`}
+                                                </pre>
+                                                <CopyButton textToCopy={`{
+  "success": true,
+  "data": {
+    "currency": {
+      "code": "DOP",
+      "name": "Dominican Peso",
+      "symbol": "RD$"
+    },
+    "info": {
+      "country_codes": ["DO"],
+      "major_unit": {
+        "name": "peso"
+      },
+      "minor_unit": {
+        "name": "centavo",
+        "value": 0.01
+      },
+      "banknotes": {
+        "frequently": [20, 50, 100, 200, 500, 1000, 2000],
+        "rarely": []
+      },
+      "coins": {
+        "frequently": [1, 5, 10, 25],
+        "rarely": []
+      },
+      "overview": "the dominican peso is the currency of the dominican republic, managed by the central bank of the dominican republic. it has been free-floating since 1985 and serves the country's tourism and manufacturing economy in the caribbean.",
+      "central_bank": "central bank of the dominican republic"
+    }
+  },
+  "timestamp": "2025-10-16T17:32:34.661Z"
+}`} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Convert Currency */}
+                                <div className="bg-white dark:bg-gray-800/90 rounded-lg p-4 mb-4 border border-gray-200 dark:border-slate-600/50 shadow-sm dark:shadow-slate-900/20">
+                                    <div className={`flex items-center justify-between cursor-pointer transition-all duration-500 ${openSections.convertCurrency ? 'mb-2' : 'mb-0'}`} onClick={() => toggleSection('convertCurrency')}>
+                                        <h3 className="text-lg font-medium text-flare-primary">
+                                            {t.convertCurrency}
+                                        </h3>
+                                        <svg className={`w-5 h-5 text-flare-primary transition-transform duration-300 ease-in-out ${openSections.convertCurrency ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${openSections.convertCurrency ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="pt-0">
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    GET /api/rates/convert?from=USD&to=EUR&amount=100
+                                                </code>
+                                                <CopyButton textToCopy="GET /api/rates/convert?from=USD&to=EUR&amount=100" />
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <div className="text-base text-gray-200">
+                                                    <code className="text-gray-200 text-base font-mono">{t.description}:</code> <span className="text-gray-200">{t.convertCurrencyDesc}</span>
+                                                </div>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    {t.queryParams}:
+                                                </code>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <div className="text-base text-gray-200">
+                                                    <div className="mb-1">• <code>{t.queryParamFrom}</code></div>
+                                                    <div className="mb-1">• <code>{t.queryParamTo}</code></div>
+                                                    <div>• <code>{t.queryParamAmount}</code></div>
+                                                </div>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 mb-2 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <code className="text-gray-200 text-base font-mono">
+                                                    {t.response}:
+                                                </code>
+                                            </div>
+                                            <div className="relative bg-gray-900 dark:bg-slate-900 rounded p-3 overflow-x-auto border border-gray-700 dark:border-slate-700 shadow-inner">
+                                                <pre className="text-gray-200 text-base whitespace-pre-wrap break-words font-mono">
+                                                    {`{
+  "success": true,
+  "data": {
+    "from": {
+      "code": "USD",
+      "amount": 100
+    },
+    "to": {
+      "code": "EUR",
+      "amount": 87.25
+    },
+    "rate": 0.8725,
+    "timestamp": "2025-10-16T17:32:34.661Z"
+  }
+}`}
+                                                </pre>
+                                                <CopyButton textToCopy={`{
+  "success": true,
+  "data": {
+    "from": {
+      "code": "USD",
+      "amount": 100
+    },
+    "to": {
+      "code": "EUR",
+      "amount": 87.25
+    },
+    "rate": 0.8725,
+    "timestamp": "2025-10-16T17:32:34.661Z"
+  }
 }`} />
                                             </div>
                                         </div>
@@ -680,6 +779,14 @@ const response = await fetch('/api/rates/convert?from=USD&to=EUR&amount=100', {
 });
 const data = await response.json();
 
+// Get currency info
+const response = await fetch('/api/currency/info/DOP', {
+  headers: {
+    'X-API-Key': 'your-api-key-here'
+  }
+});
+const data = await response.json();
+
 `}
                                                 </pre>
                                                 <CopyButton textToCopy={`// Get all exchange rates (without API key)
@@ -704,6 +811,14 @@ const data = await response.json();
 
 // Convert currency
 const response = await fetch('/api/rates/convert?from=USD&to=EUR&amount=100', {
+  headers: {
+    'X-API-Key': 'your-api-key-here'
+  }
+});
+const data = await response.json();
+
+// Get currency info
+const response = await fetch('/api/currency/info/DOP', {
   headers: {
     'X-API-Key': 'your-api-key-here'
   }
@@ -776,6 +891,10 @@ curl -X GET https://your-domain.com/api/currencies \\
 
 # Get historical rates
 curl -X GET "https://your-domain.com/api/historical/USD?days=30" \\
+  -H "X-API-Key: your-api-key-here"
+
+# Get currency info
+curl -X GET https://your-domain.com/api/currency/info/DOP \\
   -H "X-API-Key: your-api-key-here"
 
 `} />
