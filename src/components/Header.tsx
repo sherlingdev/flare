@@ -2,7 +2,7 @@
 
 import { useCallback, lazy, Suspense, useRef, useEffect, useState } from "react";
 import Link from "next/link";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePathname } from "next/navigation";
 import { translations } from "@/lib/translations";
@@ -31,14 +31,16 @@ export default function Header({
     const apiDropdownRef = useRef<HTMLDivElement>(null);
 
     // Languages configuration
-    const languages = [
-        { code: "en" as const, name: "English" },
-        { code: "es" as const, name: "Español" },
-        { code: "fr" as const, name: "Français" },
-        { code: "pt" as const, name: "Português" },
+    const languages: { code: Language; name: string }[] = [
+        { code: "en", name: "English" },
+        { code: "es", name: "Español" },
+        { code: "fr", name: "Français" },
+        { code: "pt", name: "Português" },
+        { code: "de", name: "Deutsch" },
+        { code: "zh", name: "中文 (简体)" },
     ];
 
-    const handleLanguageChange = useCallback((lang: "en" | "es" | "fr" | "pt") => {
+    const handleLanguageChange = useCallback((lang: Language) => {
         changeLanguage(lang);
         setIsLanguageDropdownOpen(false);
     }, [changeLanguage]);
@@ -95,6 +97,13 @@ export default function Header({
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/documentation' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
                                     {t.documentation}
+                                </Link>
+                                <Link
+                                    href="/information"
+                                    onClick={() => setIsApiDropdownOpen(false)}
+                                    className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/information' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    {t.info}
                                 </Link>
                                 <Link
                                     href="/key"

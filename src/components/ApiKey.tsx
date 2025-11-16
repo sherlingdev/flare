@@ -1,9 +1,27 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, type Language } from '@/contexts/LanguageContext';
 import { translations } from '@/lib/translations';
 import Loader from '@/components/Loader';
+
+const invalidEmailMessages: Record<Language, string> = {
+    en: 'Invalid email address',
+    es: 'Dirección de correo electrónico inválida',
+    fr: 'Adresse e-mail invalide',
+    pt: 'Endereço de e-mail inválido',
+    de: 'Ungültige E-Mail-Adresse',
+    zh: '无效的电子邮件地址'
+};
+
+const rateLimitTemplates: Record<Language, string> = {
+    en: 'Please wait {time} before trying again',
+    es: 'Por favor espera {time} antes de intentar de nuevo',
+    fr: 'Veuillez attendre {time} avant de réessayer',
+    pt: 'Por favor, aguarde {time} antes de tentar novamente',
+    de: 'Bitte warten Sie {time}, bevor Sie es erneut versuchen',
+    zh: '请稍候 {time} 后再试'
+};
 
 export default function ApiKeyRequest() {
     const { language, mounted } = useLanguage();
@@ -26,13 +44,7 @@ export default function ApiKeyRequest() {
         } else if (messageKey === 'networkError') {
             return t.apiKeyNetworkError;
         } else if (messageKey === 'invalidEmail') {
-            return language === 'en'
-                ? 'Invalid email address'
-                : language === 'es'
-                    ? 'Dirección de correo electrónico inválida'
-                    : language === 'fr'
-                        ? 'Adresse e-mail invalide'
-                        : 'Endereço de e-mail inválido';
+            return invalidEmailMessages[language] || invalidEmailMessages.en;
         } else if (messageKey === 'serverError') {
             return serverMessage || t.apiKeyNetworkError;
         }
@@ -215,13 +227,7 @@ export default function ApiKeyRequest() {
                         {timeRemaining > 0 && (
                             <span className="inline">
                                 {' '}
-                                {language === 'en'
-                                    ? `Please wait ${formatTimeRemaining(timeRemaining)} before trying again`
-                                    : language === 'es'
-                                        ? `Por favor espera ${formatTimeRemaining(timeRemaining)} antes de intentar de nuevo`
-                                        : language === 'fr'
-                                            ? `Veuillez attendre ${formatTimeRemaining(timeRemaining)} avant de réessayer`
-                                            : `Por favor, aguarde ${formatTimeRemaining(timeRemaining)} antes de tentar novamente`}
+                                {(rateLimitTemplates[language] || rateLimitTemplates.en).replace('{time}', formatTimeRemaining(timeRemaining))}
                             </span>
                         )}
                     </div>

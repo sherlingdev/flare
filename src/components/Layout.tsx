@@ -15,6 +15,14 @@ export default function Layout({ children }: LayoutProps) {
     const pathname = usePathname();
     const { language, mounted } = useLanguage();
 
+    useEffect(() => {
+        if (!mounted) return;
+        const direction = translations[language].direction || "ltr";
+        document.documentElement.setAttribute("lang", language);
+        document.documentElement.setAttribute("dir", direction);
+        document.documentElement.dataset.language = language;
+    }, [language, mounted]);
+
     // Global title management - simple and reactive
     useEffect(() => {
         if (!mounted) return;
@@ -25,7 +33,8 @@ export default function Layout({ children }: LayoutProps) {
             "/terms": translations[language].termsTitle,
             "/about": translations[language].aboutTitle,
             "/documentation": translations[language].documentationTitle,
-            "/key": translations[language].apiKeyTitle
+            "/key": translations[language].apiKeyTitle,
+            "/information": translations[language].informationTitle,
         };
 
         const newTitle = titles[pathname as keyof typeof titles] || translations[language].notFoundPageTitle || translations[language].pageTitle;
@@ -39,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
 
     // Conditional layout based on route
     const isHomeOrKey = pathname === "/" || pathname === "/key";
-    const isLegalPage = ["/privacy", "/terms", "/about", "/documentation"].includes(pathname);
+    const isLegalPage = ["/privacy", "/terms", "/about", "/documentation", "/information"].includes(pathname);
 
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">

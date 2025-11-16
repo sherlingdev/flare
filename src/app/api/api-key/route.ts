@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/utils/supabase/service';
 import { randomBytes } from 'crypto';
 import { sendApiKeyEmail } from '@/lib/email';
+import { type SupportedLocale } from '@/lib/translations';
 
-type Language = 'en' | 'es' | 'fr' | 'pt';
+type Language = SupportedLocale;
 
 function detectLanguage(request: Request): Language {
     // Intentar obtener el idioma del header Accept-Language
@@ -12,6 +13,8 @@ function detectLanguage(request: Request): Language {
     if (acceptLanguage.includes('es')) return 'es';
     if (acceptLanguage.includes('fr')) return 'fr';
     if (acceptLanguage.includes('pt')) return 'pt';
+    if (acceptLanguage.includes('de')) return 'de';
+    if (acceptLanguage.includes('zh')) return 'zh';
 
     return 'en'; // Default
 }

@@ -595,8 +595,7 @@ html {
 /* Search input field */
 .dropdown-options .search-input {
     @apply w-full text-sm bg-gray-50 dark:bg-gray-700 border-none outline-none;
-    @apply text-gray-900 dark:text-gray-100;
-    color: #CBD5E1 !important;
+    color: #475569;
     padding: 12px 16px;
     padding-right: 2.5rem;
     width: 100%;
@@ -605,7 +604,15 @@ html {
 }
 
 .dropdown-options .search-input::placeholder {
-    color: #CBD5E1 !important;
+    color: #475569;
+}
+
+.dark .dropdown-options .search-input {
+    color: #CBD5E1;
+}
+
+.dark .dropdown-options .search-input::placeholder {
+    color: #CBD5E1;
 }
 
 /* No hover effects for search input */
@@ -636,7 +643,11 @@ html {
     transition: background-color 0.2s ease;
     white-space: nowrap;
     overflow: hidden;
-    color: #CBD5E1 !important;
+    color: #475569;
+}
+
+.dark .dropdown-options > div {
+    color: #CBD5E1;
 }
 
 /* Selected option state */

@@ -1,17 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { type SupportedLocale } from "@/lib/translations";
 
-type Language = "en" | "es" | "fr" | "pt";
+export type Language = SupportedLocale;
 
 interface LanguageContextType {
     language: Language;
     changeLanguage: (lang: Language) => void;
     mounted: boolean;
-    isEnglish: boolean;
-    isSpanish: boolean;
-    isFrench: boolean;
-    isPortuguese: boolean;
     languageName: string;
 }
 
@@ -21,8 +18,12 @@ const languageNames: Record<Language, string> = {
     en: "English",
     es: "Español",
     fr: "Français",
-    pt: "Português"
+    pt: "Português",
+    de: "Deutsch",
+    zh: "中文 (简体)"
 };
+
+const supportedLanguages = Object.keys(languageNames) as Language[];
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Always start with "en" to match server rendering
@@ -32,7 +33,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Load language from localStorage after mount
     useEffect(() => {
         const savedLanguage = localStorage.getItem("language");
-        if (savedLanguage === "es" || savedLanguage === "en" || savedLanguage === "fr" || savedLanguage === "pt") {
+        if (savedLanguage && supportedLanguages.includes(savedLanguage as Language)) {
             setLanguage(savedLanguage as Language);
         }
         setMounted(true);
@@ -53,10 +54,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         language,
         changeLanguage,
         mounted,
-        isEnglish: language === "en",
-        isSpanish: language === "es",
-        isFrench: language === "fr",
-        isPortuguese: language === "pt",
         languageName: languageNames[language]
     };
 

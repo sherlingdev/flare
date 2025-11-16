@@ -8,6 +8,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import Loader from "@/components/Loader";
+import { ConverterProvider } from "@/contexts/ConverterContext";
 import type { Metadata } from "next";
 
 const dmSans = DM_Sans({
@@ -147,15 +148,17 @@ export default function RootLayout({
       >
         <LanguageProvider>
           <LoadingProvider>
-            <ThemeProvider>
-              <Loader />
-              <Schema />
-              <AdSenseScript />
-              <GoogleAnalytics />
-              <Layout>
-                {children}
-              </Layout>
-            </ThemeProvider>
+            <ConverterProvider>
+              <ThemeProvider>
+                <Loader />
+                <Schema />
+                <AdSenseScript />
+                <GoogleAnalytics />
+                <Layout>
+                  {children}
+                </Layout>
+              </ThemeProvider>
+            </ConverterProvider>
           </LoadingProvider>
         </LanguageProvider>
       </body>

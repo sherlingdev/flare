@@ -2,6 +2,7 @@
 
 import { lazy, Suspense } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from "@/lib/translations";
 
 // Lazy load the icon for better performance
 const ArrowUpDown = lazy(() => import("lucide-react").then(module => ({ default: module.ArrowUpDown })));
@@ -21,7 +22,8 @@ export default function SwapButton({
     variant = 'default',
     disabled = false
 }: SwapButtonProps) {
-    const { mounted } = useLanguage();
+    const { language, mounted } = useLanguage();
+    const t = translations[mounted ? language : "en"];
 
     // Size configurations
     const sizeClasses = {
@@ -38,7 +40,7 @@ export default function SwapButton({
 
     // Variant configurations
     const variantClasses = {
-        default: 'bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 shadow-lg hover:shadow-xl',
+        default: 'bg-[#F9FAFB] dark:bg-[#374151] hover:bg-[#E2E8F0] dark:hover:bg-[#4B5563] shadow-lg hover:shadow-xl',
         minimal: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 shadow-none hover:shadow-md'
     };
 
@@ -61,8 +63,8 @@ export default function SwapButton({
             onClick={onClick}
             disabled={disabled}
             className={baseClasses}
-            aria-label={mounted ? "Swap currencies" : "Swap currencies"}
-            title={mounted ? "Swap currencies" : "Swap currencies"}
+            aria-label={t.swap}
+            title={t.swap}
         >
             <Suspense fallback={
                 <div className={`${iconSizes[size]} bg-gray-300 dark:bg-gray-500 rounded animate-pulse`} />

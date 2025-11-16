@@ -2,17 +2,24 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useConverter } from "@/contexts/ConverterContext";
 import { translations } from "@/lib/translations";
 import SwapButton from "./SwapButton";
 import LastUpdated from "./LastUpdated";
 import CurrencyInput from "./CurrencyInput";
+import { useRouter } from "next/navigation";
 
 export default function CurrencyConverter() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : "en"];
-
-    const [fromCurrency, setFromCurrency] = useState("USD");
-    const [toCurrency, setToCurrency] = useState("DOP");
+    const {
+        fromCurrency,
+        toCurrency,
+        setFromCurrency: setContextFromCurrency,
+        setToCurrency: setContextToCurrency,
+        setPair
+    } = useConverter();
+    const router = useRouter();
 
     // Dynamic currency rates and currencies state
     const [currencyRates, setCurrencyRates] = useState<Record<string, number>>({});
@@ -39,49 +46,38 @@ export default function CurrencyConverter() {
     useEffect(() => {
         const loadRates = async () => {
             // Only use Supabase/Netlify in production
-            const isProduction = process.env.NODE_ENV === 'production';
+            // const isProduction = process.env.NODE_ENV === 'production';
 
-            if (!isProduction) {
-                // Development: Use hardcoded rates (as before)
-                setCurrencyRates(getHardcodedRates());
-                setCurrencies(getHardcodedCurrencies());
-                setIsLoadingCurrencies(false);
-                return;
-            }
+            // if (!isProduction) {
+            //     // Development: Use hardcoded rates (as before)
+            //     setCurrencyRates(getHardcodedRates());
+            //     setCurrencies(getHardcodedCurrencies());
+            //     setIsLoadingCurrencies(false);
+            //     return;
+            // }
 
             try {
-                // Production: Try Supabase API first
-                const [ratesResponse, currenciesResponse] = await Promise.all([
-                    fetch('/api/rates'),
-                    fetch('/api/currencies')
-                ]);
+                // Production: Fetch cached payload first
+                const payloadResponse = await fetch('/api/payload');
+                const payloadData = await payloadResponse.json();
 
-                const ratesData = await ratesResponse.json();
-                const currenciesData = await currenciesResponse.json();
-
-                if (ratesData.success && currenciesData.success && ratesData.data && currenciesData.data) {
-                    // Transform rates array into Record<string, number>
-                    const ratesMap: Record<string, number> = {};
-                    ratesData.data.forEach((item: { code: string; rate: number }) => {
-                        ratesMap[item.code] = item.rate;
-                    });
-
-                    // Transform currencies array and build flag field automatically
-                    const currenciesList = currenciesData.data.map((item: {
+                if (payloadData.success && payloadData.data?.rates && payloadData.data?.currencies) {
+                    const currenciesList = payloadData.data.currencies.map((item: {
                         code: string;
                         name: string;
-                        symbol: string | null;
+                        symbol: string;
+                        flag?: string;
                     }) => ({
                         code: item.code,
                         name: item.name,
                         symbol: item.symbol || item.code,
-                        // Build flag URL from XE.com automatically
-                        flag: `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
+                        flag: item.flag || `https://www.xe.com/svgs/flags/${item.code.toLowerCase()}.static.svg`
                     }));
 
-                    setCurrencyRates(ratesMap);
+                    setCurrencyRates(payloadData.data.rates as Record<string, number>);
                     setCurrencies(currenciesList);
                     setIsLoadingCurrencies(false);
+                    return;
                 } else {
                     // Supabase API failed, try Netlify Blobs as fallback
                     try {
@@ -175,6 +171,31 @@ export default function CurrencyConverter() {
 
         loadRates();
     }, []);
+
+    useEffect(() => {
+        if (isLoadingCurrencies || typeof window === "undefined") {
+            return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const from = params.get('from');
+        const to = params.get('to');
+        let updated = false;
+
+        if (from && currencies.some(currency => currency.code === from.toUpperCase())) {
+            setContextFromCurrency(from);
+            updated = true;
+        }
+
+        if (to && currencies.some(currency => currency.code === to.toUpperCase())) {
+            setContextToCurrency(to);
+            updated = true;
+        }
+
+        if (updated && window.location.search) {
+            router.replace(window.location.pathname, { scroll: false });
+        }
+    }, [currencies, isLoadingCurrencies, router, setContextFromCurrency, setContextToCurrency]);
 
     // Function to get hardcoded rates as fallback
     const getHardcodedRates = (): Record<string, number> => {
@@ -654,26 +675,15 @@ export default function CurrencyConverter() {
             clearTimeout(toDebounceRef.current);
         }
 
-        // Swap currencies and values directly
-        setFromCurrency(newFromCurrency);
-        setToCurrency(newToCurrency);
+        setPair(newFromCurrency, newToCurrency);
         setFromAmountDisplay(newFromAmount);
         setToAmountDisplay(newToAmount);
 
-        // Trigger conversion after swap
-        setTimeout(() => {
-            const fromValue = parseFloat(newFromAmount.replace(/,/g, ''));
-            if (!isNaN(fromValue) && fromValue >= 0) {
-                const toValue = performConversion(fromValue, newFromCurrency, newToCurrency);
-                setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
-            }
-
-            if (fromAmountRef.current) {
-                fromAmountRef.current.focus();
-                fromAmountRef.current.select();
-            }
-        }, 100);
-    }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay, formatCurrencyValue, performConversion]);
+        if (fromAmountRef.current) {
+            fromAmountRef.current.focus();
+            fromAmountRef.current.select();
+        }
+    }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay, setPair]);
 
     // Auto-focus and select all text on left input when component mounts
     useEffect(() => {
@@ -697,7 +707,7 @@ export default function CurrencyConverter() {
 
     // Handle currency changes with unified conversion
     const handleFromCurrencyChange = useCallback((newCurrency: string) => {
-        setFromCurrency(newCurrency);
+        setContextFromCurrency(newCurrency);
 
         // Recalculate conversion when from currency changes
         const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
@@ -705,10 +715,10 @@ export default function CurrencyConverter() {
             const toValue = performConversion(fromValue, newCurrency, toCurrency);
             setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
         }
-    }, [fromAmountDisplay, toCurrency, performConversion, formatCurrencyValue]);
+    }, [fromAmountDisplay, toCurrency, performConversion, formatCurrencyValue, setContextFromCurrency]);
 
     const handleToCurrencyChange = useCallback((newCurrency: string) => {
-        setToCurrency(newCurrency);
+        setContextToCurrency(newCurrency);
 
         // Recalculate conversion when to currency changes
         const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
@@ -716,7 +726,7 @@ export default function CurrencyConverter() {
             const toValue = performConversion(fromValue, fromCurrency, newCurrency);
             setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
         }
-    }, [fromAmountDisplay, fromCurrency, performConversion, formatCurrencyValue]);
+    }, [fromAmountDisplay, fromCurrency, performConversion, formatCurrencyValue, setContextToCurrency]);
 
     // Dropdown handlers
     const handleFromDropdownClick = useCallback(() => {

@@ -42,23 +42,23 @@ export default function AboutUs() {
         <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 pt-16 pb-16">
             <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full max-w-6xl">
-                    <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center">
+                    <div className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-2xl shadow-xl px-6 sm:px-8 lg:px-10 py-8 sm:py-12 w-full border border-slate-200/50 dark:border-slate-700/50 text-slate-600 dark:text-[#CBD5E1]">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-flare-primary mb-4 text-center dark:text-[#CBD5E1]">
                             {t.aboutUs}
                         </h1>
 
                         <div className="prose prose-slate dark:prose-invert max-w-none text-base">
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.ourMission}
                                 </h2>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
+                                <p className="mb-4 text-base">
                                     {t.ourMissionText}
                                 </p>
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.whatWeOffer}
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -66,7 +66,7 @@ export default function AboutUs() {
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.realTimeExchangeRatesTitle}
                                         </h3>
-                                        <p className="text-slate-600 dark:text-slate-400 text-base">
+                                        <p className="text-base">
                                             {t.realTimeExchangeRatesText}
                                         </p>
                                     </div>
@@ -74,7 +74,7 @@ export default function AboutUs() {
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.multiLanguageSupport}
                                         </h3>
-                                        <p className="text-slate-600 dark:text-slate-400 text-base">
+                                        <p className="text-base">
                                             {t.multiLanguageSupportText}
                                         </p>
                                     </div>
@@ -82,7 +82,7 @@ export default function AboutUs() {
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.responsiveDesignTitle}
                                         </h3>
-                                        <p className="text-slate-600 dark:text-slate-400 text-base">
+                                        <p className="text-base">
                                             {t.responsiveDesignText}
                                         </p>
                                     </div>
@@ -90,7 +90,7 @@ export default function AboutUs() {
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.darkModeSupport}
                                         </h3>
-                                        <p className="text-slate-600 dark:text-slate-400 text-base">
+                                        <p className="text-base">
                                             {t.darkModeSupportText}
                                         </p>
                                     </div>
@@ -98,13 +98,13 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.ourTechnology}
                                 </h2>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
+                                <p className="mb-4 text-base">
                                     {t.ourTechnologyText}
                                 </p>
-                                <ul className="list-disc list-inside text-slate-600 dark:text-slate-400 mb-4 space-y-2 text-base">
+                                <ul className="list-disc list-inside mb-4 space-y-2 text-base">
                                     <li><strong>Next.js:</strong> {t.nextjsDescription}</li>
                                     <li><strong>React:</strong> {t.reactDescription}</li>
                                     <li><strong>TypeScript:</strong> {t.typescriptDescription}</li>
@@ -114,10 +114,10 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.privacySecurity}
                                 </h2>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
+                                <p className="mb-4 text-base">
                                     {t.privacySecurityText}
                                 </p>
                             </section>
@@ -125,13 +125,13 @@ export default function AboutUs() {
 
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.futurePlans}
                                 </h2>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
+                                <p className="mb-4 text-base">
                                     {t.futurePlansText}
                                 </p>
-                                <ul className="list-disc list-inside text-slate-600 dark:text-slate-400 mb-4 space-y-2 text-base">
+                                <ul className="list-disc list-inside mb-4 space-y-2 text-base">
                                     <li>{t.additionalCurrencies}</li>
                                     <li>{t.historicalCharts}</li>
                                     <li>{t.currencyAlerts}</li>
@@ -141,10 +141,10 @@ export default function AboutUs() {
                             </section>
 
                             <section className="mb-8">
-                                <h2 className="text-xl font-semibold text-flare-primary mb-4">
+                                <h2 className="text-xl font-semibold text-flare-primary mb-4 dark:text-[#CBD5E1]">
                                     {t.contactUs}
                                 </h2>
-                                <p className="text-slate-600 dark:text-slate-400 mb-4 text-base">
+                                <p className="mb-4 text-base">
                                     {t.contactAboutText} <a href={`mailto:${t.contactEmail}`} className="text-indigo-600 dark:text-indigo-400 hover:underline">{t.contactEmail}</a>
                                 </p>
                             </section>

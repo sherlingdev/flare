@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { type SupportedLocale } from '@/lib/translations';
 
 // Lazy initialization - only create Resend instance when actually needed
 function getResend() {
@@ -9,13 +10,92 @@ function getResend() {
     return new Resend(apiKey);
 }
 
-type Language = 'en' | 'es' | 'fr' | 'pt';
+type Language = SupportedLocale;
 
 interface SendApiKeyEmailParams {
     email: string;
     apiKey: string;
     language?: Language;
 }
+
+const emailCopy: Record<Language, {
+    subject: string;
+    generated: string;
+    apiKeyLabel: string;
+    importantLabel: string;
+    importantBody: string;
+    usage: string;
+    button: string;
+    footer: string;
+    viewDocs: string;
+}> = {
+    en: {
+        subject: 'Flare Exchange Rate | API Key',
+        generated: 'The Flare Exchange Rate API key has been generated successfully.',
+        apiKeyLabel: 'API Key:',
+        importantLabel: 'Important:',
+        importantBody: 'Please save this API key securely. This key will only be shown once and cannot be retrieved later. If you lose this key, you can regenerate a new one using the email address.',
+        usage: 'To use the API key, include it in the request headers:',
+        button: 'View API Documentation',
+        footer: 'Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.',
+        viewDocs: 'View API Documentation: https://flarexrate.com/documentation'
+    },
+    es: {
+        subject: 'Flare Exchange Rate | Clave API',
+        generated: 'La clave API de Flare Exchange Rate ha sido generada exitosamente.',
+        apiKeyLabel: 'Clave API:',
+        importantLabel: 'Importante:',
+        importantBody: 'Por favor, guarda esta clave API de forma segura. Esta clave solo se mostrará una vez y no se puede recuperar más tarde. Si pierdes esta clave, puedes regenerar una nueva usando la dirección de correo electrónico.',
+        usage: 'Para usar la clave API, inclúyela en los encabezados de la solicitud:',
+        button: 'Ver Documentación de la API',
+        footer: 'Flare Exchange Rate | Convierte monedas al instante. Rápido, seguro y siempre preciso.',
+        viewDocs: 'Ver Documentación de la API: https://flarexrate.com/documentation'
+    },
+    fr: {
+        subject: 'Flare Exchange Rate | Clé API',
+        generated: 'La clé API Flare Exchange Rate a été générée avec succès.',
+        apiKeyLabel: 'Clé API:',
+        importantLabel: 'Important:',
+        importantBody: 'Veuillez sauvegarder cette clé API de manière sécurisée. Cette clé ne sera affichée qu\'une seule fois et ne pourra pas être récupérée plus tard. Si vous perdez cette clé, vous pouvez en régénérer une nouvelle en utilisant l\'adresse e-mail.',
+        usage: 'Pour utiliser la clé API, incluez-la dans les en-têtes de la requête:',
+        button: 'Voir la Documentation de l\'API',
+        footer: 'Flare Exchange Rate | Convertissez les devises instantanément. Rapide, sûr et toujours précis.',
+        viewDocs: 'Voir la Documentation de l\'API: https://flarexrate.com/documentation'
+    },
+    pt: {
+        subject: 'Flare Exchange Rate | Chave API',
+        generated: 'A chave API do Flare Exchange Rate foi gerada com sucesso.',
+        apiKeyLabel: 'Chave API:',
+        importantLabel: 'Importante:',
+        importantBody: 'Por favor, salve esta chave API com segurança. Esta chave será exibida apenas uma vez e não pode ser recuperada mais tarde. Se você perder esta chave, pode regenerar uma nova usando o endereço de e-mail.',
+        usage: 'Para usar a chave API, inclua-a nos cabeçalhos da solicitação:',
+        button: 'Ver Documentação da API',
+        footer: 'Flare Exchange Rate | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.',
+        viewDocs: 'Ver Documentação da API: https://flarexrate.com/documentation'
+    },
+    de: {
+        subject: 'Flare Exchange Rate | API-Schlüssel',
+        generated: 'Der API-Schlüssel von Flare Exchange Rate wurde erfolgreich erstellt.',
+        apiKeyLabel: 'API-Schlüssel:',
+        importantLabel: 'Wichtig:',
+        importantBody: 'Bitte bewahren Sie diesen API-Schlüssel sicher auf. Dieser Schlüssel wird nur einmal angezeigt und kann später nicht erneut abgerufen werden. Wenn Sie ihn verlieren, können Sie mit derselben E-Mail-Adresse einen neuen Schlüssel generieren.',
+        usage: 'Um den API-Schlüssel zu verwenden, fügen Sie ihn in die Anfrage-Header ein:',
+        button: 'API-Dokumentation anzeigen',
+        footer: 'Flare Exchange Rate | Währungen sofort umrechnen. Schnell, sicher und immer präzise.',
+        viewDocs: 'API-Dokumentation anzeigen: https://flarexrate.com/documentation'
+    },
+    zh: {
+        subject: 'Flare Exchange Rate | API 密钥',
+        generated: 'Flare Exchange Rate 的 API 密钥已成功生成。',
+        apiKeyLabel: 'API 密钥：',
+        importantLabel: '重要：',
+        importantBody: '请妥善保管此 API 密钥。该密钥仅显示一次，之后无法再次获取。如果丢失，可以使用相同的邮箱重新生成新的密钥。',
+        usage: '要使用此 API 密钥，请将其加入请求头：',
+        button: '查看 API 文档',
+        footer: 'Flare Exchange Rate | 即时货币转换。快速、安全、始终准确。',
+        viewDocs: '查看 API 文档：https://flarexrate.com/documentation'
+    }
+};
 
 export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendApiKeyEmailParams) {
     if (!process.env.RESEND_API_KEY) {
@@ -24,13 +104,8 @@ export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendAp
 
     const fromEmail = process.env.EMAIL_FROM || 'api@flarexrate.com';
 
-    const emailSubject = language === 'en'
-        ? 'Flare Exchange Rate | API Key'
-        : language === 'es'
-            ? 'Flare Exchange Rate | Clave API'
-            : language === 'fr'
-                ? 'Flare Exchange Rate | Clé API'
-                : 'Flare Exchange Rate | Chave API';
+    const copy = emailCopy[language] ?? emailCopy.en;
+    const emailSubject = copy.subject;
 
     const emailHtml = `
 <!DOCTYPE html>
@@ -117,21 +192,9 @@ export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendAp
                 <h1>${emailSubject}</h1>
             </div>
             <div class="content">
-                <p>${language === 'en'
-            ? 'The Flare Exchange Rate API key has been generated successfully.'
-            : language === 'es'
-                ? 'La clave API de Flare Exchange Rate ha sido generada exitosamente.'
-                : language === 'fr'
-                    ? 'La clé API Flare Exchange Rate a été générée avec succès.'
-                    : 'A chave API do Flare Exchange Rate foi gerada com sucesso.'}</p>
+                <p>${copy.generated}</p>
                 
-                <p><strong>${language === 'en'
-            ? 'API Key:'
-            : language === 'es'
-                ? 'Clave API:'
-                : language === 'fr'
-                    ? 'Clé API:'
-                    : 'Chave API:'}</strong></p>
+                <p><strong>${copy.apiKeyLabel}</strong></p>
                 
                 <div class="api-key-box">
                     ${apiKey}
@@ -139,30 +202,12 @@ export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendAp
                 
                 <div class="warning">
                     <p class="warning-text">
-                        <strong>${language === 'en'
-            ? 'Important:'
-            : language === 'es'
-                ? 'Importante:'
-                : language === 'fr'
-                    ? 'Important:'
-                    : 'Importante:'}</strong><br>
-                        ${language === 'en'
-            ? 'Please save this API key securely. This key will only be shown once and cannot be retrieved later. If you lose this key, you can regenerate a new one using the email address.'
-            : language === 'es'
-                ? 'Por favor, guarda esta clave API de forma segura. Esta clave solo se mostrará una vez y no se puede recuperar más tarde. Si pierdes esta clave, puedes regenerar una nueva usando la dirección de correo electrónico.'
-                : language === 'fr'
-                    ? 'Veuillez sauvegarder cette clé API de manière sécurisée. Cette clé ne sera affichée qu\'une seule fois et ne pourra pas être récupérée plus tard. Si vous perdez cette clé, vous pouvez en régénérer une nouvelle en utilisant l\'adresse e-mail.'
-                    : 'Por favor, salve esta chave API com segurança. Esta chave será exibida apenas uma vez e não pode ser recuperada mais tarde. Se você perder esta chave, pode regenerar uma nova usando o endereço de e-mail.'}
+                        <strong>${copy.importantLabel}</strong><br>
+                        ${copy.importantBody}
                     </p>
                 </div>
                 
-                <p><strong>${language === 'en'
-            ? 'To use the API key, include it in the request headers:'
-            : language === 'es'
-                ? 'Para usar la clave API, inclúyela en los encabezados de la solicitud:'
-                : language === 'fr'
-                    ? 'Pour utiliser la clé API, incluez-la dans les en-têtes de la requête:'
-                    : 'Para usar a chave API, inclua-a nos cabeçalhos da solicitação:'}</strong></p>
+                <p><strong>${copy.usage}</strong></p>
                 
                 <div class="api-key-box" style="text-align: left; font-size: 14px;">
                     <code style="color: #ffffff; display: block; margin-bottom: 10px;">Header: X-API-Key: ${apiKey}</code>
@@ -171,24 +216,12 @@ export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendAp
                 
                 <p style="text-align: center; margin-top: 30px;">
                     <a href="https://flarexrate.com/documentation" class="button" style="color: #ffffff; text-decoration: none;">
-                        ${language === 'en'
-            ? 'View API Documentation'
-            : language === 'es'
-                ? 'Ver Documentación de la API'
-                : language === 'fr'
-                    ? 'Voir la Documentation de l\'API'
-                    : 'Ver Documentação da API'}
+                        ${copy.button}
                     </a>
                 </p>
             </div>
             <div class="footer">
-                <p>${language === 'en'
-            ? 'Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.'
-            : language === 'es'
-                ? 'Flare Exchange Rate | Convierte monedas al instante. Rápido, seguro y siempre preciso.'
-                : language === 'fr'
-                    ? 'Flare Exchange Rate | Convertissez les devises instantanément. Rapide, sûr et toujours précis.'
-                    : 'Flare Exchange Rate | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.'}</p>
+                <p>${copy.footer}</p>
                 <p><a href="https://flarexrate.com" style="color: #4F46E5;">flarexrate.com</a></p>
             </div>
         </div>
@@ -200,53 +233,23 @@ export async function sendApiKeyEmail({ email, apiKey, language = 'en' }: SendAp
     const emailText = `
 ${emailSubject}
 
-${language === 'en'
-            ? 'The Flare Exchange Rate API key has been generated successfully.'
-            : language === 'es'
-                ? 'La clave API de Flare Exchange Rate ha sido generada exitosamente.'
-                : language === 'fr'
-                    ? 'La clé API Flare Exchange Rate a été générée avec succès.'
-                    : 'A chave API do Flare Exchange Rate foi gerada com sucesso.'}
+${copy.generated}
 
-${language === 'en'
-            ? 'API Key:'
-            : language === 'es'
-                ? 'Clave API:'
-                : language === 'fr'
-                    ? 'Clé API:'
-                    : 'Chave API:'}
+${copy.apiKeyLabel}
 
 ${apiKey}
 
-${language === 'en'
-            ? 'Important: Please save this API key securely. This key will only be shown once and cannot be retrieved later. If you lose this key, you can regenerate a new one using the email address.'
-            : language === 'es'
-                ? 'Importante: Por favor, guarda esta clave API de forma segura. Esta clave solo se mostrará una vez y no se puede recuperar más tarde. Si pierdes esta clave, puedes regenerar una nueva usando la dirección de correo electrónico.'
-                : language === 'fr'
-                    ? 'Important: Veuillez sauvegarder cette clé API de manière sécurisée. Cette clé ne sera affichée qu\'une seule fois et ne pourra pas être récupérée plus tard. Si vous perdez cette clé, vous pouvez en régénérer une nouvelle en utilisant l\'adresse e-mail.'
-                    : 'Importante: Por favor, salve esta chave API com segurança. Esta chave será exibida apenas uma vez e não pode ser recuperada mais tarde. Se você perder esta chave, pode regenerar uma nova usando o endereço de e-mail.'}
+${copy.importantLabel} ${copy.importantBody}
 
-${language === 'en'
-            ? 'To use the API key, include it in the request headers:'
-            : language === 'es'
-                ? 'Para usar la clave API, inclúyela en los encabezados de la solicitud:'
-                : language === 'fr'
-                    ? 'Pour utiliser la clé API, incluez-la dans les en-têtes de la requête:'
-                    : 'Para usar a chave API, inclua-a nos cabeçalhos da solicitação:'}
+${copy.usage}
 
 Header: X-API-Key: ${apiKey}
 Authorization: Bearer: ${apiKey}
 
-${language === 'en'
-            ? 'View API Documentation: https://flarexrate.com/documentation'
-            : language === 'es'
-                ? 'Ver Documentación de la API: https://flarexrate.com/documentation'
-                : language === 'fr'
-                    ? 'Voir la Documentation de l\'API: https://flarexrate.com/documentation'
-                    : 'Ver Documentação da API: https://flarexrate.com/documentation'}
+${copy.viewDocs}
 
 ---
-Flare Exchange Rate | Convert currencies instantly. Quick, safe, and always accurate.
+${copy.footer}
 https://flarexrate.com
     `;
 

@@ -10,6 +10,12 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Allowlist routes that shouldn't be rate limited (internal use only)
+    const rateLimitBypass = ['/api/payload', '/api/information/payload'];
+    if (rateLimitBypass.some(route => pathname.startsWith(route))) {
+        return NextResponse.next();
+    }
+
     // Get identifier
     const ip = getClientIP(request.headers);
     const apiKey = request.headers.get('x-api-key') ||
