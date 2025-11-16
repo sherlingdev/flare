@@ -27,6 +27,28 @@ const nextConfig: NextConfig = {
 
   // Compression
   compress: true,
+
+  // Webpack configuration to optimize cache performance for large locale strings
+  webpack: (config) => {
+    // Suppress webpack cache warnings for large strings (locale files)
+    const originalInfrastructureLogging = config.infrastructureLogging;
+    config.infrastructureLogging = {
+      ...(originalInfrastructureLogging || {}),
+      level: 'error', // Only show errors, suppress warnings
+    };
+
+    // Ignore the PackFileCacheStrategy warning about serializing big strings
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      {
+        module: /node_modules/,
+      },
+      /Serializing big strings/,
+      /PackFileCacheStrategy/,
+    ];
+
+    return config;
+  },
 };
 
 export default nextConfig;
