@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Layout from "@/components/Layout";
 import Schema from "@/components/Schema";
 import AdSenseScript from "@/components/AdSenseScript";
+import AdsterraScript from "@/components/AdsterraScript";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
@@ -78,20 +79,16 @@ export default function RootLayout({
     <html suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        {/* Adsterra Popunder Script */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = '//pl27886264.effectivegatecpm.com/96/1b/2b/961b2b5a2de24961cf4b10cacdca0ae4.js';
-                script.async = true;
-                document.head.appendChild(script);
-              })();
-            `,
-          }}
-        />
+
+        {/* Resource Hints for Performance - Critical for LCP improvement */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.xe.com" />
+        <link rel="dns-prefetch" href="//pl27886264.effectivegatecpm.com" />
+        <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
+
+        {/* Preload critical API endpoint */}
+        <link rel="preload" href="/api/payload" as="fetch" crossOrigin="anonymous" />
         {/* <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -152,6 +149,7 @@ export default function RootLayout({
               <ThemeProvider>
                 <Loader />
                 <Schema />
+                <AdsterraScript />
                 <AdSenseScript />
                 <GoogleAnalytics />
                 <Layout>

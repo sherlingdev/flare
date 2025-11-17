@@ -37,7 +37,7 @@ export default function Header({
         { code: "fr", name: "Français" },
         { code: "pt", name: "Português" },
         { code: "de", name: "Deutsch" },
-        { code: "zh", name: "中文 (简体)" },
+        { code: "zh", name: "中文" },
     ];
 
     const handleLanguageChange = useCallback((lang: Language) => {

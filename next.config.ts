@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
 
+  // Production source maps for better debugging (optional, can disable for smaller bundle)
+  productionBrowserSourceMaps: false, // Set to true if you want source maps in production
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],

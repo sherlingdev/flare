@@ -679,10 +679,13 @@ export default function CurrencyConverter() {
         setFromAmountDisplay(newFromAmount);
         setToAmountDisplay(newToAmount);
 
-        if (fromAmountRef.current) {
-            fromAmountRef.current.focus();
-            fromAmountRef.current.select();
-        }
+        // Use requestAnimationFrame to ensure DOM is updated before selecting
+        requestAnimationFrame(() => {
+            if (fromAmountRef.current) {
+                fromAmountRef.current.focus();
+                fromAmountRef.current.select();
+            }
+        });
     }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay, setPair]);
 
     // Auto-focus and select all text on left input when component mounts
