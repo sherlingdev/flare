@@ -1,15 +1,23 @@
 "use client";
 
-import Script from 'next/script';
+import { useEffect } from 'react';
 import { adSenseConfig } from '../lib/adsense';
 
 export default function AdSenseScript() {
-    return (
-        <Script
-            id="adsbygoogle-script"
-            strategy="lazyOnload"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseConfig.publisherId}`}
-            crossOrigin="anonymous"
-        />
-    );
+    useEffect(() => {
+        // Load AdSense script manually to avoid data-nscript attribute warning
+        // AdSense requires the script in head without Next.js script attributes
+        if (typeof window !== 'undefined') {
+            // Check if script already exists
+            if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseConfig.publisherId}`;
+                script.crossOrigin = 'anonymous';
+                document.head.appendChild(script);
+            }
+        }
+    }, []);
+
+    return null;
 }

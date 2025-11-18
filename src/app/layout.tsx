@@ -58,6 +58,8 @@ export const metadata: Metadata = {
       'es-ES': 'https://flarexrate.com',
       'fr-FR': 'https://flarexrate.com',
       'pt-BR': 'https://flarexrate.com',
+      'de-DE': 'https://flarexrate.com',
+      'zh-CN': 'https://flarexrate.com',
     },
   },
   category: "Finance",

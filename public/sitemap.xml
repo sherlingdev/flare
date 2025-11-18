@@ -33,6 +33,22 @@
     <loc>https://flarexrate.com/documentation</loc>
     <lastmod>2025-01-27</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- API Key -->
+  <url>
+    <loc>https://flarexrate.com/key</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Information -->
+  <url>
+    <loc>https://flarexrate.com/information</loc>
+    <lastmod>2025-01-27</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>
