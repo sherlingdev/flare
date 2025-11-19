@@ -35,6 +35,7 @@ export default function Layout({ children }: LayoutProps) {
             "/documentation": translations[language].documentationTitle,
             "/key": translations[language].apiKeyTitle,
             "/information": translations[language].informationTitle,
+            "/chart": translations[language].chartTitlePage,
         };
 
         const newTitle = titles[pathname as keyof typeof titles] || translations[language].notFoundPageTitle || translations[language].pageTitle;

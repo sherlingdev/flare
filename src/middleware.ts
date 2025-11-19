@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Allowlist routes that shouldn't be rate limited (internal use only)
-    const rateLimitBypass = ['/api/payload', '/api/information/payload'];
+    const rateLimitBypass = ['/api/payload', '/api/information/payload', '/api/historical'];
     if (rateLimitBypass.some(route => pathname.startsWith(route))) {
         return NextResponse.next();
     }

@@ -10,6 +10,8 @@ import { translations } from "@/lib/translations";
 // Lazy load icons for better performance
 const Sun = lazy(() => import("lucide-react").then(module => ({ default: module.Sun })));
 const Moon = lazy(() => import("lucide-react").then(module => ({ default: module.Moon })));
+const Box = lazy(() => import("lucide-react").then(module => ({ default: module.Box })));
+const Globe = lazy(() => import("lucide-react").then(module => ({ default: module.Globe })));
 
 interface HeaderProps {
     showBackButton?: boolean;
@@ -87,7 +89,9 @@ export default function Header({
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                             aria-label="Open API menu"
                         >
-                            <span className="text-xs sm:text-sm font-medium text-[#475569] dark:text-[#CBD5E1] uppercase">API</span>
+                            <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                                <Box className="w-4 h-4 sm:w-5 sm:h-5 text-flare-primary" />
+                            </Suspense>
                         </button>
                         {isApiDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-800 shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden animate-slide-down">
@@ -106,6 +110,13 @@ export default function Header({
                                     {t.info}
                                 </Link>
                                 <Link
+                                    href="/chart"
+                                    onClick={() => setIsApiDropdownOpen(false)}
+                                    className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/chart' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    Chart
+                                </Link>
+                                <Link
                                     href="/key"
                                     onClick={() => setIsApiDropdownOpen(false)}
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/key' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
@@ -122,9 +133,9 @@ export default function Header({
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm animate-slide-left"
                             aria-label="Select language"
                         >
-                            <span className="text-xs sm:text-sm font-semibold text-flare-primary">
-                                {langMounted ? language.toUpperCase() : "EN"}
-                            </span>
+                            <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                                <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-flare-primary" />
+                            </Suspense>
                         </button>
 
                         {/* Dropdown Menu */}

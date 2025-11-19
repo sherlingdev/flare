@@ -747,3 +747,8 @@ html {
         min-height: 12px;
     }
 }
+
+/* Chart page currency selector - no border, custom background */
+.chart-currency-selector {
+    border: none !important;
+}

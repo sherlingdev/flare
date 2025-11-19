@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow cross-origin requests from local network IPs during development
+  allowedDevOrigins: ['192.168.1.231'],
+
   // Performance optimizations
   experimental: {
     optimizeCss: true,
