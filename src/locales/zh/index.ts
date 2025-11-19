@@ -3,6 +3,8 @@ const zh = {
     enterAmount: "输入金额？",
     fromCurrency: "源货币",
     toCurrency: "目标货币",
+    from: "从",
+    to: "到",
     swap: "交换货币",
     searchCurrency: "搜索货币...",
     currency: "货币",
@@ -711,6 +713,7 @@ const zh = {
     symbolLabel: "象征",
     symbolDescription: "在代码旁边显示货币符号",
     conversionLabel: "转换",
+    chartLabel: "图表",
     conversionDescription: "保持您的实时准确转化",
     coinsLabel: "硬币",
     coinsDescription: "探索流通硬币及其面额",
@@ -750,7 +753,14 @@ const zh = {
     termsTitle: "条款和条件|立即转换货币。快速、安全且始终准确。",
     aboutTitle: "关于我们 |立即转换货币。快速、安全且始终准确。",
     informationTitle: "资讯|立即转换货币。快速、安全且始终准确。",
-    apiKey: "获取API密钥"
+    apiKey: "获取API密钥",
+
+    // Chart page
+    chartTitle: "汇率图表",
+    chartSubtitle: "跟踪货币趋势并分析汇率变化",
+    chartTitlePage: "图表|立即转换货币。快速、安全且始终准确。",
+    performance: "表现",
+    days: "天"
 };
 
 export default zh;

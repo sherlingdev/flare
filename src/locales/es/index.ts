@@ -4,6 +4,8 @@ const es = {
     enterAmount: "¿Cuánto?",
     fromCurrency: "Divisa de origen",
     toCurrency: "Divisa de destino",
+    from: "DESDE",
+    to: "HASTA",
     swap: "Intercambiar divisas",
     searchCurrency: "Buscar divisa...",
     currency: "Divisa",
@@ -772,6 +774,7 @@ const es = {
     symbolLabel: "Símbolo",
     symbolDescription: "Muestra el símbolo de la divisa junto al código",
     conversionLabel: "Conversión",
+    chartLabel: "Gráfico",
     conversionDescription: "Mantiene tus conversiones precisas en tiempo real",
     coinsLabel: "Monedas",
     coinsDescription: "Explora las monedas en circulación y sus denominaciones",
@@ -806,7 +809,14 @@ const es = {
     aboutTitle: "Acerca de nosotros | Convierte divisas al instante. Rápido, seguro y siempre preciso.",
     informationTitle: "Información | Convierte divisas al instante. Rápido, seguro y siempre preciso.",
     pageTitle: "Flare Exchange Rate | Convierte divisas al instante. Rápido, seguro y siempre preciso.",
-    apiKey: "Solicita clave de API"
+    apiKey: "Solicita clave de API",
+
+    // Chart page
+    chartTitle: "Gráfico de tasas de cambio",
+    chartSubtitle: "Rastrea las tendencias de divisas y analiza los cambios en las tasas de cambio",
+    chartTitlePage: "Gráfico | Convierte divisas al instante. Rápido, seguro y siempre preciso.",
+    performance: "Rendimiento",
+    days: "días"
 };
 
 export default es;

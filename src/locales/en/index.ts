@@ -4,6 +4,8 @@ const en = {
     enterAmount: "How much?",
     fromCurrency: "From currency",
     toCurrency: "To currency",
+    from: "FROM",
+    to: "TO",
     swap: "Swap currencies",
     searchCurrency: "Search currency...",
     currency: "Currency",
@@ -767,6 +769,7 @@ const en = {
     symbolLabel: "Symbol",
     symbolDescription: "Show the currency symbol alongside the code",
     conversionLabel: "Conversion",
+    chartLabel: "Chart",
     conversionDescription: "Keep your conversions accurate in real time",
     coinsLabel: "Coins",
     coinsDescription: "Explore circulating coins and their denominations",
@@ -814,7 +817,14 @@ const en = {
     termsTitle: "Terms and conditions | Convert currencies instantly. Quick, safe, and always accurate.",
     aboutTitle: "About us | Convert currencies instantly. Quick, safe, and always accurate.",
     informationTitle: "Information | Convert currencies instantly. Quick, safe, and always accurate.",
-    apiKey: "Get API Key"
+    apiKey: "Get API Key",
+    
+    // Chart page
+    chartTitle: "Exchange rate chart",
+    chartSubtitle: "Track currency trends and analyze exchange rate changes",
+    chartTitlePage: "Chart | Convert currencies instantly. Quick, safe, and always accurate.",
+    performance: "Performance",
+    days: "days"
 };
 
 export default en;

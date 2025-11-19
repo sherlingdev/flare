@@ -4,6 +4,8 @@ const fr = {
     enterAmount: "Combien?",
     fromCurrency: "Devise d'origine",
     toCurrency: "Devise de destination",
+    from: "DE",
+    to: "VERS",
     swap: "Inverser les devises",
     searchCurrency: "Rechercher une devise...",
     currency: "Devise",
@@ -746,6 +748,7 @@ const fr = {
     symbolLabel: "Symbole",
     symbolDescription: "Affiche le symbole de la devise à côté du code",
     conversionLabel: "Conversion",
+    chartLabel: "Graphique",
     conversionDescription: "Garantit des conversions précises en temps réel",
     coinsLabel: "Pièces",
     coinsDescription: "Découvrez les pièces en circulation et leurs dénominations",
@@ -782,7 +785,14 @@ const fr = {
     aboutTitle: "À propos de nous | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
     informationTitle: "Informations | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
     pageTitle: "Flare Exchange Rate | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
-    apiKey: "Obtenez clé API"
+    apiKey: "Obtenez clé API",
+    
+    // Chart page
+    chartTitle: "Graphique des taux de change",
+    chartSubtitle: "Suivez les tendances des devises et analysez les changements de taux de change",
+    chartTitlePage: "Graphique | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
+    performance: "Performance",
+    days: "jours"
 };
 
 export default fr;

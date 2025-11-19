@@ -3,6 +3,8 @@ const de = {
     enterAmount: "Wie viel?",
     fromCurrency: "Ausgangswährung",
     toCurrency: "Zielwährung",
+    from: "VON",
+    to: "ZU",
     swap: "Währungen tauschen",
     searchCurrency: "Währung suchen...",
     currency: "Währung",
@@ -712,6 +714,7 @@ const de = {
     symbolLabel: "Symbol",
     symbolDescription: "Zeigen Sie das Währungssymbol neben dem Code an",
     conversionLabel: "Konvertierung",
+    chartLabel: "Diagramm",
     conversionDescription: "Sorgen Sie dafür, dass Ihre Conversions in Echtzeit korrekt sind",
     coinsLabel: "Münzen",
     coinsDescription: "Entdecken Sie Umlaufmünzen und ihre Stückelungen",
@@ -751,7 +754,14 @@ const de = {
     termsTitle: "Allgemeine Geschäftsbedingungen | Währungen sofort umrechnen. Schnell, sicher und immer präzise.",
     aboutTitle: "Über uns | Währungen sofort umrechnen. Schnell, sicher und immer präzise.",
     informationTitle: "Informationen | Währungen sofort umrechnen. Schnell, sicher und immer präzise.",
-    apiKey: "Holen Sie sich den API-Schlüssel"
+    apiKey: "Holen Sie sich den API-Schlüssel",
+
+    // Chart page
+    chartTitle: "Wechselkursdiagramm",
+    chartSubtitle: "Verfolgen Sie Währungstrends und analysieren Sie Wechselkursänderungen",
+    chartTitlePage: "Diagramm | Währungen sofort umrechnen. Schnell, sicher und immer präzise.",
+    performance: "Leistung",
+    days: "Tage"
 };
 
 export default de;

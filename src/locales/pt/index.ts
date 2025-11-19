@@ -4,6 +4,8 @@ const pt = {
     enterAmount: "Quanto?",
     fromCurrency: "Moeda de origem",
     toCurrency: "Moeda de destino",
+    from: "DE",
+    to: "PARA",
     swap: "Trocar moedas",
     searchCurrency: "Pesquisar moeda...",
     currency: "Moeda",
@@ -748,6 +750,7 @@ const pt = {
     symbolLabel: "Símbolo",
     symbolDescription: "Mostra o símbolo da moeda ao lado do código",
     conversionLabel: "Conversão",
+    chartLabel: "Gráfico",
     conversionDescription: "Mantém as conversões precisas em tempo real",
     coinsLabel: "Moedas",
     coinsDescription: "Conheça as moedas em circulação e seus valores",
@@ -788,7 +791,14 @@ const pt = {
     privacyTitle: "Política de privacidade | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
     aboutTitle: "Sobre nós | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
     informationTitle: "Informações | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
-    apiKey: "Obtenha chave de API"
+    apiKey: "Obtenha chave de API",
+
+    // Chart page
+    chartTitle: "Gráfico de taxas de câmbio",
+    chartSubtitle: "Acompanhe as tendências de moedas e analise as mudanças nas taxas de câmbio",
+    chartTitlePage: "Gráfico | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
+    performance: "Desempenho",
+    days: "dias"
 };
 
 export default pt;
