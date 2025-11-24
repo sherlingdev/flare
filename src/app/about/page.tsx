@@ -62,7 +62,7 @@ export default function AboutUs() {
                                     {t.whatWeOffer}
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.realTimeExchangeRatesTitle}
                                         </h3>
@@ -70,7 +70,7 @@ export default function AboutUs() {
                                             {t.realTimeExchangeRatesText}
                                         </p>
                                     </div>
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.multiLanguageSupport}
                                         </h3>
@@ -78,7 +78,7 @@ export default function AboutUs() {
                                             {t.multiLanguageSupportText}
                                         </p>
                                     </div>
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.responsiveDesignTitle}
                                         </h3>
@@ -86,7 +86,7 @@ export default function AboutUs() {
                                             {t.responsiveDesignText}
                                         </p>
                                     </div>
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3">
                                             {t.darkModeSupport}
                                         </h3>

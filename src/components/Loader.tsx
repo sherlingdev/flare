@@ -109,7 +109,7 @@ export default function Loader({ show, blockScroll = true }: LoaderProps = {}) {
 
     const loaderContent = (
         <div
-            className="fixed inset-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm z-[9999] flex items-center justify-center"
+            className="fixed inset-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md z-[9999] flex items-center justify-center"
             style={{
                 position: 'fixed',
                 top: 0,

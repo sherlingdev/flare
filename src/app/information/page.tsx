@@ -40,17 +40,58 @@ interface Currency {
 const DEFAULT_SELECTED_CODE = "DOP";
 const STORAGE_KEY = "information_selected_currency";
 
+// Helper functions
+const formatDenominations = (group?: { frequently: number[]; rarely: number[] }): string[] => {
+    if (!group) return [];
+    const combined = [
+        ...(Array.isArray(group.frequently) ? group.frequently : []),
+        ...(Array.isArray(group.rarely) ? group.rarely : [])
+    ];
+    if (combined.length === 0) {
+        return [];
+    }
+    return combined
+        .map(value => {
+            if (typeof value !== 'number') {
+                const trimmed = String(value).trim();
+                return trimmed ? trimmed.replace(/,/g, ' ') : undefined;
+            }
+            return Number.isFinite(value)
+                ? value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+                : undefined;
+        })
+        .filter((value): value is string => Boolean(value));
+};
+
+const capitalizeSentence = (text?: string | null): string | undefined => {
+    if (!text) return undefined;
+    const trimmed = text.trim();
+    if (!trimmed) return undefined;
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+};
+
+const titleCaseText = (text?: string | null): string | undefined => {
+    if (!text) return undefined;
+    return text
+        .trim()
+        .split(/\s+/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
+
+const getAllowedCurrencyCodes = (): Set<string> => {
+    return new Set(Object.keys(translations.en.currencyOverview ?? {}));
+};
+
 export default function Information() {
     const { language, mounted } = useLanguage();
     const { setPair } = useConverter();
     const t = translations[mounted ? language : "en"];
-    const allowedCurrencyCodes = useMemo(() => {
-        return new Set(Object.keys(translations.en.currencyOverview ?? {}));
-    }, []);
+    const allowedCurrencyCodes = useMemo(() => getAllowedCurrencyCodes(), []);
 
     const [currencies, setCurrencies] = useState<Currency[]>(() => {
         const fallback = getHardcodedCurrencies();
-        const defaultAllowed = new Set(Object.keys(translations.en.currencyOverview ?? {}));
+        const defaultAllowed = getAllowedCurrencyCodes();
         return fallback
             .filter((currency: Currency) => defaultAllowed.has(currency.code))
             .map((currency: Currency) => ({
@@ -65,7 +106,7 @@ export default function Information() {
     const [selectedCode, setSelectedCode] = useState<string>(() => {
         if (typeof window !== 'undefined') {
             const stored = sessionStorage.getItem(STORAGE_KEY);
-            const defaultAllowed = new Set(Object.keys(translations.en.currencyOverview ?? {}));
+            const defaultAllowed = getAllowedCurrencyCodes();
             if (stored && defaultAllowed.has(stored)) {
                 return stored;
             }
@@ -111,7 +152,9 @@ export default function Information() {
 
                     setCurrencies(filteredCurrencies);
 
-                    if (!filteredCurrencies.find(item => item.code === selectedCode) && filteredCurrencies.length > 0) {
+                    // Update selectedCode if current selection is not in filtered list
+                    const hasSelected = filteredCurrencies.some(c => c.code === selectedCode);
+                    if (!hasSelected && filteredCurrencies.length > 0) {
                         setSelectedCode(filteredCurrencies[0].code);
                     }
                 }
@@ -128,7 +171,8 @@ export default function Information() {
         return () => {
             controller.abort();
         };
-    }, [selectedCode, allowedCurrencyCodes]);
+    }, [allowedCurrencyCodes, selectedCode]);
+
 
     // Scroll to top on mount and prevent scroll restoration
     useEffect(() => {
@@ -160,70 +204,73 @@ export default function Information() {
         };
     }, []);
 
-    const selectedCurrency = currencies.find(currency => currency.code === selectedCode) ?? currencies[0];
+    const selectedCurrency = useMemo(() =>
+        currencies.find(currency => currency.code === selectedCode) ?? currencies[0],
+        [currencies, selectedCode]
+    );
+
     const info = selectedCurrency?.info ?? null;
 
-    const formatDenominations = (group?: { frequently: number[]; rarely: number[] }) => {
-        if (!group) return [];
-        const combined = [
-            ...(Array.isArray(group.frequently) ? group.frequently : []),
-            ...(Array.isArray(group.rarely) ? group.rarely : [])
-        ];
-        if (combined.length === 0) {
-            return [];
-        }
-        return combined
-            .map(value => {
-                if (typeof value !== 'number') {
-                    const trimmed = String(value).trim();
-                    return trimmed ? trimmed.replace(/,/g, ' ') : undefined;
-                }
-                return Number.isFinite(value)
-                    ? value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
-                    : undefined;
-            })
-            .filter((value): value is string => Boolean(value));
-    };
-
-    const capitalizeSentence = (text?: string | null) => {
-        if (!text) return undefined;
-        const trimmed = text.trim();
-        if (!trimmed) return undefined;
-        return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-    };
-
-    const titleCaseText = (text?: string | null) => {
-        if (!text) return undefined;
-        return text
-            .trim()
-            .split(/\s+/)
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    };
-
     const isUsdSelected = selectedCode === "USD";
-    const overviewMap = t.currencyOverview as Record<string, string> | undefined;
-    const centralBankMap = t.centralBankNames as Record<string, string> | undefined;
-    const currencyNamesMap = t.currencyNames as Record<string, string> | undefined;
-    const localizedCurrencyName =
+
+    const overviewMap = useMemo(() =>
+        t.currencyOverview as Record<string, string> | undefined,
+        [t.currencyOverview]
+    );
+
+    const centralBankMap = useMemo(() =>
+        t.centralBankNames as Record<string, string> | undefined,
+        [t.centralBankNames]
+    );
+
+    const currencyNamesMap = useMemo(() =>
+        t.currencyNames as Record<string, string> | undefined,
+        [t.currencyNames]
+    );
+
+    const localizedCurrencyName = useMemo(() =>
         currencyNamesMap?.[selectedCode] ||
         selectedCurrency?.name ||
         translations.en.currencyNames?.[selectedCode as keyof typeof translations.en.currencyNames] ||
-        selectedCode;
-    const conversionText = isUsdSelected ? "USD → EUR" : `${selectedCode} → USD`;
-    const conversionTarget = isUsdSelected
+        selectedCode,
+        [currencyNamesMap, selectedCode, selectedCurrency?.name]
+    );
+
+    const conversionText = useMemo(() =>
+        isUsdSelected ? "USD → EUR" : `${selectedCode} → USD`,
+        [isUsdSelected, selectedCode]
+    );
+
+    const conversionTarget = useMemo(() =>
+        isUsdSelected
         ? { from: "USD", to: "EUR" }
-        : { from: selectedCurrency?.code || selectedCode, to: "USD" };
-    const overviewText =
+            : { from: selectedCurrency?.code || selectedCode, to: "USD" },
+        [isUsdSelected, selectedCurrency?.code, selectedCode]
+    );
+
+    const overviewText = useMemo(() =>
         overviewMap?.[selectedCode] ||
         capitalizeSentence(info?.overview) ||
-        t.ourMissionText;
-    const centralBankText =
+        t.ourMissionText,
+        [overviewMap, selectedCode, info?.overview, t.ourMissionText]
+    );
+
+    const centralBankText = useMemo(() =>
         centralBankMap?.[selectedCode] ||
         titleCaseText(info?.central_bank) ||
-        t.centralBankDescription;
-    const coinsList = formatDenominations(info?.coins);
-    const banknotesList = formatDenominations(info?.banknotes);
+        t.centralBankDescription,
+        [centralBankMap, selectedCode, info?.central_bank, t.centralBankDescription]
+    );
+
+    const coinsList = useMemo(() =>
+        formatDenominations(info?.coins),
+        [info?.coins]
+    );
+
+    const banknotesList = useMemo(() =>
+        formatDenominations(info?.banknotes),
+        [info?.banknotes]
+    );
 
     const renderDenominationBadges = (items: string[], fallback: string) => {
         if (!items.length) {
@@ -256,7 +303,7 @@ export default function Information() {
                         <div className="prose prose-slate dark:prose-invert max-w-none text-base">
                             <section className="mb-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="order-1 w-full md:order-1 bg-slate-50 dark:bg-slate-700 rounded-lg p-6 flex flex-col items-center justify-center">
+                                    <div className="order-1 w-full md:order-1 rounded-lg p-6 flex flex-col items-center justify-center bg-[#F9FAFB] dark:bg-[#374151]">
                                         <div className="w-full max-w-xl">
                                             <CurrencySelector
                                                 currencies={currencies}
@@ -281,7 +328,7 @@ export default function Information() {
                                     {t.currencyInsights}
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6 mb-6">
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3 text-center">
                                             {t.stats}
                                         </h3>
@@ -322,7 +369,7 @@ export default function Information() {
                                             </li>
                                         </ul>
                                     </div>
-                                    <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-6">
+                                    <div className="rounded-lg p-6 bg-[#F9FAFB] dark:bg-[#374151]">
                                         <h3 className="text-lg font-semibold text-flare-primary mb-3 text-center">
                                             {t.profile}
                                         </h3>

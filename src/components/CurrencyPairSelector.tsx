@@ -79,7 +79,7 @@ export default function CurrencyPairSelector() {
     }
 
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative w-full">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 relative w-full">
             {/* From Currency */}
             <div className="w-full lg:flex-1 order-1 lg:order-1 relative z-[100]">
                 <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">

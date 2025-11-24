@@ -20,7 +20,8 @@ const languageNames: Record<Language, string> = {
     fr: "Français",
     pt: "Português",
     de: "Deutsch",
-    zh: "中文 (简体)"
+    zh: "中文 (简体)",
+    it: "Italiano"
 };
 
 const supportedLanguages = Object.keys(languageNames) as Language[];

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 import { createServiceClient } from '@/utils/supabase/service';
 import { randomBytes } from 'crypto';
 import { sendApiKeyEmail } from '@/lib/email';
@@ -22,66 +23,85 @@ function detectLanguage(request: Request): Language {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email, language } = body;
+        const { language } = body;
 
         // Detectar idioma del body o del header
         const detectedLanguage: Language = language || detectLanguage(request);
 
-        if (!email) {
+        // Get authenticated user from session
+        const supabase = await createClient();
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError || !session?.user?.id || !session?.user?.email) {
             return NextResponse.json(
-                { success: false, error: 'Email is required', message: 'Invalid request' },
-                { status: 400 }
+                { success: false, error: 'Authentication required', message: 'You must be logged in to generate an API key' },
+                { status: 401 }
             );
         }
 
-        const supabase = createServiceClient();
+        const authUserId = session.user.id;
+        const email = session.user.email; // For sending email only
+        const serviceSupabase = createServiceClient();
 
-        // Verificar si el usuario ya existe
+        // Verificar si el usuario ya existe usando auth_user_id
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: existingUser } = await (supabase as any)
+        const { data: existingUser, error: queryError } = await (serviceSupabase as any)
             .from('users')
-            .select('id, email, api_key, is_active')
-            .eq('email', email)
-            .single();
+            .select('id, api_key, is_active, auth_user_id')
+            .eq('auth_user_id', authUserId)
+            .maybeSingle();
 
-        let apiKey: string;
+        // Si hay un error de query (no es que no encontró, sino un error real)
+        if (queryError && queryError.code !== 'PGRST116') {
+            throw queryError;
+        }
+
         let userId: number;
 
-        if (existingUser) {
-            // Usuario existe, regenerar API key
-            apiKey = `sk_${randomBytes(32).toString('hex')}`;
+        // Generar nueva API key
+        const apiKey = `sk_${randomBytes(32).toString('hex')}`;
 
+        if (existingUser) {
+            // Usuario existe, actualizar API key
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { error: updateError } = await (supabase as any)
+            const { data: updatedUser, error: updateError } = await (serviceSupabase as any)
                 .from('users')
                 .update({
                     api_key: apiKey,
                     is_active: true
                 })
-                .eq('id', existingUser.id);
+                .eq('auth_user_id', authUserId)
+                .select('id')
+                .single();
 
             if (updateError) {
                 throw updateError;
             }
 
-            userId = existingUser.id;
-        } else {
-            // Usuario nuevo, crear
-            apiKey = `sk_${randomBytes(32).toString('hex')}`;
+            if (!updatedUser) {
+                throw new Error('Failed to update API key');
+            }
 
+            userId = updatedUser.id;
+        } else {
+            // Usuario nuevo, crear usando auth_user_id
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { data: newUser, error: insertError } = await (supabase as any)
+            const { data: newUser, error: insertError } = await (serviceSupabase as any)
                 .from('users')
                 .insert({
-                    email,
+                    auth_user_id: authUserId,
                     api_key: apiKey,
                     is_active: true
                 })
-                .select()
+                .select('id')
                 .single();
 
             if (insertError) {
                 throw insertError;
+            }
+
+            if (!newUser) {
+                throw new Error('Failed to create user');
             }
 
             userId = newUser.id;

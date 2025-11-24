@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuthModal } from "@/contexts/AuthModalContext";
 import { translations } from "@/lib/translations";
 
 interface LayoutProps {
@@ -14,6 +15,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
     const pathname = usePathname();
     const { language, mounted } = useLanguage();
+    const { closeModal, isOpen } = useAuthModal();
 
     useEffect(() => {
         if (!mounted) return;
@@ -46,6 +48,16 @@ export default function Layout({ children }: LayoutProps) {
         }
 
     }, [pathname, language, mounted]);
+
+    // Close auth modal when navigating away from protected pages
+    useEffect(() => {
+        const protectedPages = ['/chart', '/key'];
+        const isProtectedPage = protectedPages.includes(pathname);
+        
+        if (!isProtectedPage && isOpen) {
+            closeModal();
+        }
+    }, [pathname, isOpen, closeModal]);
 
     // Conditional layout based on route
     const isHomeOrKey = pathname === "/" || pathname === "/key";

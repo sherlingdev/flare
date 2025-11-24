@@ -10,6 +10,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import Loader from "@/components/Loader";
 import { ConverterProvider } from "@/contexts/ConverterContext";
+import { AuthModalProvider } from "@/contexts/AuthModalContext";
 import type { Metadata } from "next";
 
 const dmSans = DM_Sans({
@@ -60,6 +61,7 @@ export const metadata: Metadata = {
       'pt-BR': 'https://flarexrate.com',
       'de-DE': 'https://flarexrate.com',
       'zh-CN': 'https://flarexrate.com',
+      'it-IT': 'https://flarexrate.com',
     },
   },
   category: "Finance",
@@ -149,14 +151,16 @@ export default function RootLayout({
           <LoadingProvider>
             <ConverterProvider>
               <ThemeProvider>
-                <Loader />
-                <Schema />
-                <AdsterraScript />
-                <AdSenseScript />
-                <GoogleAnalytics />
-                <Layout>
-                  {children}
-                </Layout>
+                <AuthModalProvider>
+                  <Loader />
+                  <Schema />
+                  <AdsterraScript />
+                  <AdSenseScript />
+                  <GoogleAnalytics />
+                  <Layout>
+                    {children}
+                  </Layout>
+                </AuthModalProvider>
               </ThemeProvider>
             </ConverterProvider>
           </LoadingProvider>

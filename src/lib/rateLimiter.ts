@@ -2,7 +2,7 @@ import { createServiceClient } from '@/utils/supabase/service';
 
 const RATE_LIMITS = {
     anonymous: { requests: 1, window: 60 },
-    authenticated: { requests: 10, window: 60 },
+    authenticated: { requests: 60, window: 60 },
 } as const;
 
 export interface RateLimitResult {
@@ -80,7 +80,7 @@ export async function checkRateLimit(
     };
 }
 
-export async function validateApiKey(apiKey: string): Promise<{ id: number; email: string; is_active: boolean } | null> {
+export async function validateApiKey(apiKey: string): Promise<{ id: number; auth_user_id: string; is_active: boolean } | null> {
     if (!apiKey?.startsWith('sk_')) return null;
 
     try {
@@ -88,14 +88,14 @@ export async function validateApiKey(apiKey: string): Promise<{ id: number; emai
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: user, error } = await (supabase as any)
             .from('users')
-            .select('id, email, is_active')
+            .select('id, auth_user_id, is_active')
             .eq('api_key', apiKey)
             .eq('is_active', true)
             .single();
 
         return (error || !user) ? null : {
             id: user.id,
-            email: user.email,
+            auth_user_id: user.auth_user_id,
             is_active: user.is_active,
         };
     } catch {

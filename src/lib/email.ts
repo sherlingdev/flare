@@ -94,6 +94,17 @@ const emailCopy: Record<Language, {
         button: '查看 API 文档',
         footer: 'Flare Exchange Rate | 即时货币转换。快速、安全、始终准确。',
         viewDocs: '查看 API 文档：https://flarexrate.com/documentation'
+    },
+    it: {
+        subject: 'Flare Exchange Rate | Chiave API',
+        generated: 'La chiave API di Flare Exchange Rate è stata generata con successo.',
+        apiKeyLabel: 'Chiave API:',
+        importantLabel: 'Importante:',
+        importantBody: 'Si prega di salvare questa chiave API in modo sicuro. Questa chiave verrà mostrata solo una volta e non potrà essere recuperata in seguito. Se perdi questa chiave, puoi rigenerarne una nuova utilizzando l\'indirizzo email.',
+        usage: 'Per utilizzare la chiave API, includila negli header della richiesta:',
+        button: 'Visualizza Documentazione API',
+        footer: 'Flare Exchange Rate | Converti valute all\'istante. Veloce, sicuro e sempre preciso.',
+        viewDocs: 'Visualizza Documentazione API: https://flarexrate.com/documentation'
     }
 };
 

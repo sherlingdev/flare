@@ -1,18 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage, type Language } from '@/contexts/LanguageContext';
 import { translations } from '@/lib/translations';
+import { createClient } from '@/utils/supabase/client';
 import Loader from '@/components/Loader';
-
-const invalidEmailMessages: Record<Language, string> = {
-    en: 'Invalid email address',
-    es: 'Dirección de correo electrónico inválida',
-    fr: 'Adresse e-mail invalide',
-    pt: 'Endereço de e-mail inválido',
-    de: 'Ungültige E-Mail-Adresse',
-    zh: '无效的电子邮件地址'
-};
 
 const rateLimitTemplates: Record<Language, string> = {
     en: 'Please wait {time} before trying again',
@@ -20,20 +12,35 @@ const rateLimitTemplates: Record<Language, string> = {
     fr: 'Veuillez attendre {time} avant de réessayer',
     pt: 'Por favor, aguarde {time} antes de tentar novamente',
     de: 'Bitte warten Sie {time}, bevor Sie es erneut versuchen',
+    it: 'Attendere {time} prima di riprovare',
     zh: '请稍候 {time} 后再试'
 };
 
 export default function ApiKeyRequest() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : 'en'];
-    const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [messageKey, setMessageKey] = useState<'success' | 'networkError' | 'invalidEmail' | 'serverError' | null>(null);
+    const [messageKey, setMessageKey] = useState<'success' | 'networkError' | 'serverError' | null>(null);
     const [serverMessage, setServerMessage] = useState<string>('');
     const [isSuccess, setIsSuccess] = useState(false);
     const [rateLimitReset, setRateLimitReset] = useState<Date | null>(null);
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+
+    // Get user email from auth session
+    useEffect(() => {
+        const getUserEmail = async () => {
+            const supabase = createClient();
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user?.email) {
+                setUserEmail(session.user.email);
+            }
+        };
+
+        if (mounted) {
+            getUserEmail();
+        }
+    }, [mounted]);
 
     // Get translated message based on messageKey
     const getMessage = () => {
@@ -43,8 +50,6 @@ export default function ApiKeyRequest() {
             return t.apiKeySuccess;
         } else if (messageKey === 'networkError') {
             return t.apiKeyNetworkError;
-        } else if (messageKey === 'invalidEmail') {
-            return invalidEmailMessages[language] || invalidEmailMessages.en;
         } else if (messageKey === 'serverError') {
             return serverMessage || t.apiKeyNetworkError;
         }
@@ -52,13 +57,6 @@ export default function ApiKeyRequest() {
     };
 
     const message = getMessage();
-
-    useEffect(() => {
-        // Enfocar el input cuando el componente se monte
-        if (mounted && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [mounted]);
 
     // Contador regresivo para el rate limit
     useEffect(() => {
@@ -107,23 +105,7 @@ export default function ApiKeyRequest() {
 
 
     const handleSubmit = async () => {
-        if (!email) return;
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setMessageKey('invalidEmail');
-            setServerMessage('');
-            setIsSuccess(false);
-            // Clean input and focus again for better UX
-            setEmail('');
-            setTimeout(() => {
-                if (inputRef.current) {
-                    inputRef.current.focus();
-                }
-            }, 0);
-            return;
-        }
+        if (!userEmail) return;
 
         setLoading(true);
         setMessageKey(null);
@@ -137,7 +119,6 @@ export default function ApiKeyRequest() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email,
                     language: language || 'en' // Enviar el idioma actual
                 }),
             });
@@ -177,37 +158,20 @@ export default function ApiKeyRequest() {
 
 
 
+    if (!userEmail) {
+        return <Loader show={true} />;
+    }
+
     return (
         <>
             <Loader show={loading} />
 
-            <div className="flex items-center gap-4">
-                {/* Email Input only; submit with Enter */}
-                <div className="flex-1">
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-xl px-6 sm:px-8 py-4 sm:py-5">
-                        <input
-                            ref={inputRef}
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !loading && email) {
-                                    handleSubmit();
-                                }
-                            }}
-                            placeholder={t.apiKeyEmailPlaceholder}
-                            required
-                            className="currency-input w-full border-none outline-none bg-transparent text-base"
-                            autoFocus
-                        />
-                    </div>
-                </div>
-
-                {/* Submit button */}
+            <div className="flex items-center justify-center">
+                {/* Generate button only */}
                 <button
                     onClick={handleSubmit}
-                    disabled={loading || !email || timeRemaining > 0}
-                    className={`inline-flex items-center justify-center px-6 py-4 sm:py-5 text-base rounded-xl transition-colors select-none whitespace-nowrap flex-shrink-0 ${loading || !email || timeRemaining > 0
+                    disabled={loading || timeRemaining > 0}
+                    className={`inline-flex items-center justify-center px-6 py-3 text-base rounded-xl transition-colors select-none whitespace-nowrap ${loading || timeRemaining > 0
                         ? 'bg-indigo-600/60 text-gray-200 cursor-not-allowed'
                         : 'bg-indigo-600 text-gray-200 hover:bg-indigo-700'
                         }`}

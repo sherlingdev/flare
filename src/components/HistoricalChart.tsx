@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useConverter } from "@/contexts/ConverterContext";
+// import { useTheme } from "@/contexts/ThemeContext";
 import { translations } from "@/lib/translations";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -20,7 +21,11 @@ interface ChartData {
 export default function HistoricalChart() {
     const { language, mounted } = useLanguage();
     const { fromCurrency, toCurrency } = useConverter();
+    // const { theme, mounted: themeMounted } = useTheme();
     const t = translations[mounted ? language : "en"];
+
+    // Chart line color based on theme
+    // const lineColor = themeMounted && theme === "dark" ? "#CBD5E1" : "#475569";
 
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -146,17 +151,21 @@ export default function HistoricalChart() {
     return (
         <div className="w-full relative z-0" style={{ minWidth: 0, width: '100%' }}>
             {/* Chart Header with Percentage */}
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-flare-primary mb-2">
+            <div className="mb-6 flex items-center justify-between gap-4">
+                <h2 className="text-2xl font-bold text-flare-primary">
                     {t.performance}
                 </h2>
                 {percentageChange !== null && (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                        15 {t.days} • <span className={percentageChange >= 0 ? "text-green-500" : "text-red-500"}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-flare-primary font-semibold">
+                            15 {t.days}
+                        </span>
+                        <span className="text-flare-primary font-semibold">•</span>
+                        <span className={`text-base font-semibold ${percentageChange >= 0 ? "text-green-500" : "text-red-500"}`}>
                             {percentageChange >= 0 ? "+" : ""}
                             {percentageChange.toFixed(2)}%
                         </span>
-                    </p>
+                    </div>
                 )}
             </div>
 
