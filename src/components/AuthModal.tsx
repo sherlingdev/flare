@@ -357,7 +357,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 setError("");
                 setEmailSent(true);
                 setIsLogin(true);
-                resetFormState();
+                setPassword("");
+                setConfirmPassword("");
+                setShowPassword(false);
+                setShowConfirmPassword(false);
                 setLoading(false);
             } else if (data.session) {
                 resetFormState();
@@ -365,10 +368,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 onClose();
                 setLoading(false);
             } else {
+                // User created but needs email confirmation
                 setError("");
                 setEmailSent(true);
                 setIsLogin(true);
-                resetFormState();
+                setPassword("");
+                setConfirmPassword("");
+                setShowPassword(false);
+                setShowConfirmPassword(false);
                 setLoading(false);
             }
         }
