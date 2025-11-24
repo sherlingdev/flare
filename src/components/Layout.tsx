@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -50,13 +50,21 @@ export default function Layout({ children }: LayoutProps) {
     }, [pathname, language, mounted]);
 
     // Close auth modal when navigating away from protected pages
+    // Track previous pathname to only close when actually navigating away
+    const prevPathnameRef = useRef(pathname);
+    
     useEffect(() => {
         const protectedPages = ['/chart', '/key'];
         const isProtectedPage = protectedPages.includes(pathname);
+        const wasProtectedPage = protectedPages.includes(prevPathnameRef.current);
         
-        if (!isProtectedPage && isOpen) {
+        // Only close if we were on a protected page and now we're not
+        // This prevents closing when user manually opens modal from homepage
+        if (wasProtectedPage && !isProtectedPage && isOpen) {
             closeModal();
         }
+        
+        prevPathnameRef.current = pathname;
     }, [pathname, isOpen, closeModal]);
 
     // Conditional layout based on route

@@ -107,9 +107,8 @@ export default function Header({
             }
         };
 
-        if (mounted) {
-            checkAuth();
-        }
+        // Check auth immediately, don't wait for mounted
+        checkAuth();
 
         // Listen for auth state changes
         const supabase = createClient();
@@ -128,7 +127,7 @@ export default function Header({
         return () => {
             subscription.unsubscribe();
         };
-    }, [mounted]);
+    }, []);
 
     // Handle clicks outside dropdown to close it
     useEffect(() => {
@@ -286,7 +285,10 @@ export default function Header({
                             </>
                         ) : (
                             <button
-                                onClick={openAuthModal}
+                                type="button"
+                                onClick={() => {
+                                    openAuthModal();
+                                }}
                                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm animate-slide-left"
                                 aria-label="Open authentication"
                             >
