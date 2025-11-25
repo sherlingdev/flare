@@ -5,6 +5,30 @@ import { checkRateLimit, validateApiKey, getClientIP } from '@/lib/rateLimiter';
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
+    // Simple OAuth code handling: redirect to callback
+    // Only intercept if we're on homepage with OAuth code (not password reset)
+    const code = request.nextUrl.searchParams.get('code');
+    const type = request.nextUrl.searchParams.get('type');
+
+    if (pathname === '/' && code && !type) {
+        // If we're already on /auth/callback, don't intercept (shouldn't happen, but safety check)
+        if (request.headers.get('referer')?.includes('/auth/callback')) {
+            const cleanUrl = new URL('/', request.url);
+            cleanUrl.search = '';
+            cleanUrl.hash = '';
+            return NextResponse.redirect(cleanUrl.toString(), { status: 302 });
+        }
+
+        // Redirect to callback route
+        const redirect = request.nextUrl.searchParams.get('redirect');
+        const callbackUrl = new URL('/auth/callback', request.url);
+        callbackUrl.searchParams.set('code', code);
+        if (redirect) {
+            callbackUrl.searchParams.set('redirect', redirect);
+        }
+        return NextResponse.redirect(callbackUrl.toString(), { status: 302 });
+    }
+
     // Only process API routes
     if (!pathname.startsWith('/api/') || pathname.includes('/test-')) {
         return NextResponse.next();
@@ -70,5 +94,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/:path*'],
+    matcher: ['/api/:path*', '/'],
 };

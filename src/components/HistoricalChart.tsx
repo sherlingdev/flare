@@ -193,9 +193,9 @@ export default function HistoricalChart() {
 
                 // Only update error state if component is still mounted
                 if (isMountedRef.current) {
-                    setError(err instanceof Error ? err.message : "Failed to load chart data");
-                    setIsLoading(false);
-                }
+                setError(err instanceof Error ? err.message : "Failed to load chart data");
+                setIsLoading(false);
+            }
             }
         };
 
@@ -204,8 +204,8 @@ export default function HistoricalChart() {
             // Small delay to debounce rapid changes
             const timeoutId = setTimeout(() => {
                 if (isMountedRef.current && !signal.aborted) {
-                    fetchHistoricalData();
-                }
+            fetchHistoricalData();
+        }
             }, 100);
 
             return () => {

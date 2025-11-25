@@ -215,7 +215,7 @@ export default function ApiKeyRequest() {
             {/* Always show input field with Generate button */}
             <div className="flex items-center gap-3">
                 <div className="flex-1 relative">
-                    <input
+                        <input
                         type="text"
                         value={displayKey}
                         readOnly

@@ -35,25 +35,25 @@ export async function GET(request: Request) {
 
     if (code) {
         const supabase = await createClient();
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        await supabase.auth.exchangeCodeForSession(code);
 
-        if (!error) {
-            // Get redirect path from query params, default to home
-            const redirectPath = requestUrl.searchParams.get('redirect') || '/';
-            // Ensure redirect path is safe (starts with /)
-            const safeRedirect = redirectPath.startsWith('/') ? redirectPath : '/';
-            return NextResponse.redirect(new URL(safeRedirect, requestUrl.origin));
-        }
-
-        // If there's an error (e.g., flow_state_not_found), redirect to home
-        // The error is likely due to expired PKCE flow state, which is normal
-        // if the user takes too long or the flow is interrupted
+        // Get redirect path, default to home
         const redirectPath = requestUrl.searchParams.get('redirect') || '/';
-        const safeRedirect = redirectPath.startsWith('/') ? redirectPath : '/';
-        return NextResponse.redirect(new URL(safeRedirect, requestUrl.origin));
+        const safeRedirect = redirectPath.startsWith('/') ? redirectPath.split('?')[0].split('#')[0] : '/';
+
+        // Redirect to clean URL using absolute URL
+        const redirectUrl = new URL(safeRedirect, requestUrl.origin);
+        redirectUrl.search = '';
+        redirectUrl.hash = '';
+
+        // Use 302 (Found) redirect - simpler and more reliable
+        return NextResponse.redirect(redirectUrl.toString(), { status: 302 });
     }
 
-    // If there's no code, redirect to home
-    return NextResponse.redirect(new URL('/', requestUrl.origin));
+    // If there's no code, redirect to home (clean URL)
+    const homeUrl = new URL('/', requestUrl.origin);
+    homeUrl.search = '';
+    homeUrl.hash = '';
+    return NextResponse.redirect(homeUrl);
 }
 

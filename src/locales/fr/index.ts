@@ -824,7 +824,7 @@ const fr = {
     informationTitle: "Informations | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
     pageTitle: "Flare Exchange Rate | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
     apiKey: "Obtenez clé API",
-
+    
     // Chart page
     chartTitle: "Graphique des taux de change",
     chartSubtitle: "Suivez les tendances des devises et analysez les changements de taux de change",

@@ -226,7 +226,7 @@ export default function Information() {
 
     const conversionTarget = useMemo(() =>
         isUsdSelected
-            ? { from: "USD", to: "EUR" }
+        ? { from: "USD", to: "EUR" }
             : { from: selectedCurrency?.code || selectedCode, to: "USD" },
         [isUsdSelected, selectedCurrency?.code, selectedCode]
     );

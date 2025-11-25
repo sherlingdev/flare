@@ -156,19 +156,19 @@ export default function Header({
     // Handle logout
     const handleLogout = async () => {
         const supabase = createClient();
-        
+
         // Always clear local state first
         setIsUserDropdownOpen(false);
         setIsAuthenticated(false);
         setUserEmail(null);
         setUserName(null);
-        
+
         // Attempt sign out silently (don't wait for it or show errors)
         // Use signOut without scope to avoid global logout errors
         supabase.auth.signOut().catch(() => {
             // Silently ignore any errors - user is already logged out locally
         });
-        
+
         // Redirect to home page immediately
         router.push('/');
         router.refresh();
