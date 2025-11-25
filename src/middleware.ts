@@ -7,14 +7,23 @@ export async function middleware(request: NextRequest) {
     const code = request.nextUrl.searchParams.get('code');
     const type = request.nextUrl.searchParams.get('type');
 
-    // Intercept OAuth codes from any page and redirect to callback
-    if (code && !type && pathname !== '/auth/callback') {
+    // Intercept OAuth codes from any page (except callback) and redirect to callback
+    // Only intercept if we're not already going to callback and OAuth wasn't just processed
+    const oauthProcessed = request.cookies.get('oauth_processed');
+    if (code && !type && pathname !== '/auth/callback' && !pathname.startsWith('/auth/') && !oauthProcessed) {
         // Use production URL always, except for true localhost
         const isLocalhost = request.nextUrl.hostname === 'localhost' || request.nextUrl.hostname === '127.0.0.1';
         const callbackOrigin = isLocalhost ? request.nextUrl.origin : 'https://flarexrate.com';
         const callbackUrl = new URL('/auth/callback', callbackOrigin);
         callbackUrl.searchParams.set('code', code);
-        return NextResponse.redirect(callbackUrl.toString(), { status: 302 });
+        return NextResponse.redirect(callbackUrl.toString(), { status: 307 });
+    }
+    
+    // Clear oauth_processed cookie if present (one-time use)
+    if (oauthProcessed) {
+        const response = NextResponse.next();
+        response.cookies.delete('oauth_processed');
+        return response;
     }
 
     // Only process API routes
