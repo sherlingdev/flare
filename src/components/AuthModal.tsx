@@ -322,7 +322,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             return false;
         }
 
-                onClose();
+        onClose();
         setEmail("");
         setPassword("");
         setLoading(false);
@@ -431,10 +431,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         setLoading(true);
 
         try {
+            // Save current path to restore after OAuth login
+            sessionStorage.setItem('oauth_redirect_path', window.location.pathname);
+
             const supabase = createClient();
-            const currentPath = window.location.pathname;
-            const redirectUrl = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(currentPath)}`;
-            
+            const redirectUrl = `${window.location.origin}/auth/callback`;
+
             const { error: oauthError } = await supabase.auth.signInWithOAuth({
                 provider,
                 options: {
@@ -701,12 +703,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {/* Form */}
                 <form onSubmit={isResetPasswordMode ? handleUpdatePassword : (isForgotPassword ? handleResetPassword : handleSubmit)} className="space-y-4">
                     {!isLogin && !isForgotPassword && !isResetPasswordMode && (
-                    <div>
+                        <div>
                             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {t.fullName || "Full name"}
-                        </label>
+                            </label>
                             <div className="bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3 border border-gray-200 dark:border-gray-600">
-                        <input
+                                <input
                                     id="fullName"
                                     type="text"
                                     value={fullName}
@@ -731,14 +733,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     {!isForgotPassword && !isResetPasswordMode && (
                         <>
                             <PasswordInput
-                            id="password"
+                                id="password"
                                 label={t.password}
-                            value={password}
+                                value={password}
                                 onChange={setPassword}
-                            placeholder={t.passwordPlaceholder}
+                                placeholder={t.passwordPlaceholder}
                                 showPassword={showPassword}
                                 onToggleVisibility={() => setShowPassword(!showPassword)}
-                        />
+                            />
                         </>
                     )}
 
@@ -754,14 +756,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 onToggleVisibility={() => setShowPassword(!showPassword)}
                             />
                             <PasswordInput
-                                    id="confirmPassword"
+                                id="confirmPassword"
                                 label={t.confirmPassword}
-                                    value={confirmPassword}
+                                value={confirmPassword}
                                 onChange={setConfirmPassword}
-                                    placeholder={t.confirmPasswordPlaceholder}
+                                placeholder={t.confirmPasswordPlaceholder}
                                 showPassword={showConfirmPassword}
                                 onToggleVisibility={() => setShowConfirmPassword(!showConfirmPassword)}
-                                />
+                            />
                         </>
                     )}
 
@@ -808,7 +810,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {/* Resend confirmation email */}
                 {isEmailNotConfirmed && (
                     <div className="mt-4">
-                    <button
+                        <button
                             onClick={handleResendConfirmationEmail}
                             disabled={resendingEmail || !email}
                             className="w-full py-3 px-4 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -835,8 +837,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                             <div className="text-center">
                                 <button onClick={switchMode} className="text-sm text-flare-primary hover:underline">
                                     {t.haveAccount}
-                    </button>
-                </div>
+                                </button>
+                            </div>
                         )}
                     </div>
                 )}

@@ -2,7 +2,6 @@
 
 import { useCallback, lazy, Suspense, useRef, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePathname } from "next/navigation";
@@ -31,8 +30,6 @@ export default function Header({
     const { theme, toggleTheme, mounted } = useTheme();
     const pathname = usePathname();
     const t = translations[langMounted ? language : 'en'] as typeof translations['en'];
-
-    const router = useRouter();
     const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
     const languageDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -163,15 +160,30 @@ export default function Header({
         setUserEmail(null);
         setUserName(null);
 
-        // Attempt sign out silently (don't wait for it or show errors)
-        // Use signOut with scope: 'local' to avoid global logout 403 errors
-        supabase.auth.signOut({ scope: 'local' }).catch(() => {
-            // Silently ignore any errors - user is already logged out locally
+        // Clear session from cookies/localStorage
+        try {
+            document.cookie.split(";").forEach((c) => {
+                const cookieName = c.trim().split("=")[0];
+                if (cookieName.startsWith("sb-")) {
+                    document.cookie = `${cookieName}=;expires=${new Date(0).toUTCString()};path=/`;
+                }
+            });
+
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('sb-')) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } catch {
+            // Ignore errors
+        }
+
+        // Sign out and refresh page
+        supabase.auth.signOut().catch(() => {
+            // Ignore errors
         });
 
-        // Redirect to home page immediately
-        router.push('/');
-        router.refresh();
+        window.location.reload();
     };
 
     // Fallback values for SSR
@@ -199,6 +211,7 @@ export default function Header({
                             <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white dark:bg-slate-800 shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden animate-slide-down">
                                 <Link
                                     href="/documentation"
+                                    prefetch={true}
                                     onClick={() => setIsApiDropdownOpen(false)}
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/documentation' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
@@ -206,6 +219,7 @@ export default function Header({
                                 </Link>
                                 <Link
                                     href="/information"
+                                    prefetch={true}
                                     onClick={() => setIsApiDropdownOpen(false)}
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/information' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
@@ -213,6 +227,7 @@ export default function Header({
                                 </Link>
                                 <Link
                                     href="/chart"
+                                    prefetch={true}
                                     onClick={() => setIsApiDropdownOpen(false)}
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/chart' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
@@ -220,6 +235,7 @@ export default function Header({
                                 </Link>
                                 <Link
                                     href="/key"
+                                    prefetch={true}
                                     onClick={() => setIsApiDropdownOpen(false)}
                                     className={`block px-3 py-2.5 text-sm text-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 ${pathname === '/key' ? 'bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >

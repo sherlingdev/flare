@@ -66,6 +66,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
             if (!shouldExclude) {
                 const isRelativeUrl = url.startsWith('/') && !url.startsWith('//');
                 const isApiRoute = url.startsWith('/api/');
+                const isRscRequest = url.includes('?_rsc='); // Next.js React Server Components
 
                 // Exclude Next.js page navigation routes (documentation, information, chart, key, etc.)
                 // but keep API routes active for loader
@@ -75,8 +76,8 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
                     const pageRoutes = ['/documentation', '/information', '/chart', '/key', '/privacy', '/terms', '/about', '/'];
                     const isKnownPageRoute = pageRoutes.some(route => urlPath === route || (route !== '/' && urlPath.startsWith(route)));
 
-                    // If it's a known page route or a simple path (single segment), exclude from loader
-                    if (isKnownPageRoute || urlPath.match(/^\/[^/]+$/)) {
+                    // If it's a known page route, RSC request, or a simple path (single segment), exclude from loader
+                    if (isKnownPageRoute || isRscRequest || urlPath.match(/^\/[^/]+$/)) {
                         // This is a Next.js page navigation, exclude from loader
                         return originalFetch.apply(this, args);
                     }
