@@ -435,7 +435,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             sessionStorage.setItem('oauth_redirect_path', window.location.pathname);
 
             const supabase = createClient();
-            const redirectUrl = `${window.location.origin}/auth/callback`;
+
+            // Determine redirect URL - use production URL if on production domain
+            let redirectOrigin = window.location.origin;
+            if (window.location.hostname === 'flarexrate.com') {
+                redirectOrigin = 'https://flarexrate.com';
+            }
+            const redirectUrl = `${redirectOrigin}/auth/callback`;
 
             const { error: oauthError } = await supabase.auth.signInWithOAuth({
                 provider,

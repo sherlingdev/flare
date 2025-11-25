@@ -22,6 +22,16 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
 
+      // Handle OAuth code if it arrives at homepage (should go to callback)
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const type = params.get('type');
+      if (code && !type && window.location.pathname === '/') {
+        // Redirect to callback to process the code
+        window.location.replace(`/auth/callback?code=${code}`);
+        return;
+      }
+
       // Redirect to saved path after OAuth login
       const savedPath = sessionStorage.getItem('oauth_redirect_path');
       if (savedPath && savedPath !== '/' && window.location.pathname === '/') {

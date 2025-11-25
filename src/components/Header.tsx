@@ -2,6 +2,7 @@
 
 import { useCallback, lazy, Suspense, useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePathname } from "next/navigation";
@@ -29,6 +30,7 @@ export default function Header({
     const { changeLanguage, mounted: langMounted, language } = useLanguage();
     const { theme, toggleTheme, mounted } = useTheme();
     const pathname = usePathname();
+    const router = useRouter();
     const t = translations[langMounted ? language : 'en'] as typeof translations['en'];
     const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
     const languageDropdownRef = useRef<HTMLDivElement>(null);
@@ -200,6 +202,14 @@ export default function Header({
                     <div className="relative" ref={apiDropdownRef}>
                         <button
                             onClick={() => setIsApiDropdownOpen(!isApiDropdownOpen)}
+                            onMouseEnter={() => {
+                                // Prefetch pages when hovering over the button
+                                if (!isApiDropdownOpen) {
+                                    ['/documentation', '/information', '/chart', '/key'].forEach(path => {
+                                        router.prefetch(path);
+                                    });
+                                }
+                            }}
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                             aria-label="Open API menu"
                         >
