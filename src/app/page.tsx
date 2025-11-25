@@ -7,7 +7,6 @@ import { translations } from "@/lib/translations";
 import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
-import { createClient } from "@/utils/supabase/client";
 
 
 export default function Home() {
@@ -23,20 +22,13 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
 
-      // Handle OAuth code if it arrives at homepage - process directly
+      // Handle OAuth code if it arrives at homepage - redirect to callback (server-side processing)
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
       const type = params.get('type');
       if (code && !type && window.location.pathname === '/') {
-        // Process OAuth code directly without redirecting
-        const supabase = createClient();
-        supabase.auth.exchangeCodeForSession(code).then(() => {
-          // Clean URL after processing
-          window.history.replaceState({}, '', '/');
-        }).catch(() => {
-          // If error, still clean URL
-          window.history.replaceState({}, '', '/');
-        });
+        // Redirect to callback to process code on server (PKCE requires server-side exchange)
+        window.location.replace(`/auth/callback?code=${code}`);
         return;
       }
 
@@ -104,16 +96,11 @@ export default function Home() {
         if (tokenString) {
           // Use window.location.replace to avoid adding to history
           const redirectUrl = `/auth/reset-password${tokenString}`;
-          console.log('[Reset Password] Redirecting to:', redirectUrl);
           window.location.replace(redirectUrl);
           return;
         }
       }
 
-      // Debug: log if we're on homepage and have any token-related params
-      if (window.location.pathname === '/' && (hash || search)) {
-        console.log('[Reset Password Debug] On homepage with:', { hash, search, accessToken, type, hasRecoveryToken });
-      }
     };
 
     // Check immediately
