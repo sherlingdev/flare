@@ -7,6 +7,7 @@ import { translations } from "@/lib/translations";
 import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
+import { createClient } from "@/utils/supabase/client";
 
 
 export default function Home() {
@@ -22,13 +23,20 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
 
-      // Handle OAuth code if it arrives at homepage (should go to callback)
+      // Handle OAuth code if it arrives at homepage - process directly
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
       const type = params.get('type');
       if (code && !type && window.location.pathname === '/') {
-        // Redirect to callback to process the code
-        window.location.replace(`/auth/callback?code=${code}`);
+        // Process OAuth code directly without redirecting
+        const supabase = createClient();
+        supabase.auth.exchangeCodeForSession(code).then(() => {
+          // Clean URL after processing
+          window.history.replaceState({}, '', '/');
+        }).catch(() => {
+          // If error, still clean URL
+          window.history.replaceState({}, '', '/');
+        });
         return;
       }
 
