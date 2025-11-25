@@ -24,6 +24,26 @@ export default function Home() {
     }
   }, [mounted, language]);
 
+  // Detect OAuth code in URL and redirect to callback
+  useEffect(() => {
+    if (!mounted) return;
+
+    const checkOAuthCode = () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get('code');
+      const redirect = searchParams.get('redirect');
+
+      // If there's an OAuth code, redirect to callback
+      if (code && window.location.pathname === '/') {
+        const callbackUrl = `/auth/callback?code=${code}${redirect ? `&redirect=${encodeURIComponent(redirect)}` : ''}`;
+        window.location.replace(callbackUrl);
+        return;
+      }
+    };
+
+    checkOAuthCode();
+  }, [mounted]);
+
   // Detect reset password token in URL hash/search params and redirect to reset password page
   useEffect(() => {
     if (!mounted) return;

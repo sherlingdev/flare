@@ -44,9 +44,16 @@ export async function GET(request: Request) {
             const safeRedirect = redirectPath.startsWith('/') ? redirectPath : '/';
             return NextResponse.redirect(new URL(safeRedirect, requestUrl.origin));
         }
+
+        // If there's an error (e.g., flow_state_not_found), redirect to home
+        // The error is likely due to expired PKCE flow state, which is normal
+        // if the user takes too long or the flow is interrupted
+        const redirectPath = requestUrl.searchParams.get('redirect') || '/';
+        const safeRedirect = redirectPath.startsWith('/') ? redirectPath : '/';
+        return NextResponse.redirect(new URL(safeRedirect, requestUrl.origin));
     }
 
-    // If there's an error or no code, redirect to home
+    // If there's no code, redirect to home
     return NextResponse.redirect(new URL('/', requestUrl.origin));
 }
 
