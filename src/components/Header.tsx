@@ -155,10 +155,28 @@ export default function Header({
 
     // Handle logout
     const handleLogout = async () => {
-        const supabase = createClient();
-        await supabase.auth.signOut();
-        setIsUserDropdownOpen(false);
-        router.refresh();
+        try {
+            const supabase = createClient();
+            // Sign out and ignore errors (session might already be expired)
+            await supabase.auth.signOut({ scope: 'global' }).catch(() => {
+                // Ignore errors - session might not exist
+            });
+            setIsUserDropdownOpen(false);
+            setIsAuthenticated(false);
+            setUserEmail(null);
+            setUserName(null);
+            // Redirect to home page
+            router.push('/');
+            router.refresh();
+        } catch {
+            // Even if there's an error, clear local state and redirect
+            setIsUserDropdownOpen(false);
+            setIsAuthenticated(false);
+            setUserEmail(null);
+            setUserName(null);
+            router.push('/');
+            router.refresh();
+        }
     };
 
     // Fallback values for SSR
