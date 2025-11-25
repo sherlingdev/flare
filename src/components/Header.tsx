@@ -157,25 +157,19 @@ export default function Header({
     const handleLogout = async () => {
         const supabase = createClient();
         
-        // Check if there's an active session before attempting logout
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        // Only attempt sign out if there's an active session
-        if (session) {
-            try {
-                await supabase.auth.signOut({ scope: 'global' });
-            } catch {
-                // Ignore errors - proceed with local cleanup
-            }
-        }
-        
-        // Always clear local state and redirect, regardless of session status
+        // Always clear local state first
         setIsUserDropdownOpen(false);
         setIsAuthenticated(false);
         setUserEmail(null);
         setUserName(null);
         
-        // Redirect to home page
+        // Attempt sign out silently (don't wait for it or show errors)
+        // Use signOut without scope to avoid global logout errors
+        supabase.auth.signOut().catch(() => {
+            // Silently ignore any errors - user is already logged out locally
+        });
+        
+        // Redirect to home page immediately
         router.push('/');
         router.refresh();
     };
