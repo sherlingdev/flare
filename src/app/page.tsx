@@ -22,16 +22,6 @@ export default function Home() {
       // Measure Web Vitals
       measureWebVitals();
 
-      // Handle OAuth code if it arrives at homepage - redirect to callback (server-side processing)
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
-      const type = params.get('type');
-      if (code && !type && window.location.pathname === '/') {
-        // Redirect to callback to process code on server (PKCE requires server-side exchange)
-        window.location.replace(`/auth/callback?code=${code}`);
-        return;
-      }
-
       // Redirect to saved path after OAuth login
       const savedPath = sessionStorage.getItem('oauth_redirect_path');
       if (savedPath && savedPath !== '/' && window.location.pathname === '/') {

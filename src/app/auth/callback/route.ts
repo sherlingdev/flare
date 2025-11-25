@@ -31,12 +31,7 @@ export async function GET(request: Request) {
     if (code) {
         const supabase = await createClient();
         await supabase.auth.exchangeCodeForSession(code);
-
-        // Redirect to home with clean URL (no query params)
-        const homeUrl = new URL('/', requestUrl.origin);
-        homeUrl.search = '';
-        homeUrl.hash = '';
-        return NextResponse.redirect(homeUrl.toString(), { status: 302 });
+        return NextResponse.redirect(new URL('/', requestUrl.origin), { status: 302 });
     }
 
     // No code - redirect to home

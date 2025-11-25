@@ -63,22 +63,22 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
             // Exclude Next.js page navigation (not API routes)
             // Next.js makes fetch requests for page navigation that shouldn't trigger the loader
-            const isRelativeUrl = url.startsWith('/') && !url.startsWith('//');
-            const isApiRoute = url.startsWith('/api/');
+                const isRelativeUrl = url.startsWith('/') && !url.startsWith('//');
+                const isApiRoute = url.startsWith('/api/');
             const isRscRequest = url.includes('?_rsc='); // Next.js React Server Components
             const isNextInternal = url.startsWith('/_next/');
 
             // Exclude page navigation routes (documentation, information, chart, key, etc.)
-            // but keep API routes active for loader
+                // but keep API routes active for loader
             if (!shouldExclude && isRelativeUrl && !isApiRoute && !isNextInternal) {
-                const urlPath = url.split('?')[0].split('#')[0]; // Remove query params and hash
-                const pageRoutes = ['/documentation', '/information', '/chart', '/key', '/privacy', '/terms', '/about', '/'];
-                const isKnownPageRoute = pageRoutes.some(route => urlPath === route || (route !== '/' && urlPath.startsWith(route)));
+                    const urlPath = url.split('?')[0].split('#')[0]; // Remove query params and hash
+                    const pageRoutes = ['/documentation', '/information', '/chart', '/key', '/privacy', '/terms', '/about', '/'];
+                    const isKnownPageRoute = pageRoutes.some(route => urlPath === route || (route !== '/' && urlPath.startsWith(route)));
 
                 // Exclude RSC requests, known page routes, or simple paths (single segment)
                 if (isRscRequest || isKnownPageRoute || urlPath.match(/^\/[^/]+$/)) {
-                    // This is a Next.js page navigation, exclude from loader
-                    return originalFetch.apply(this, args);
+                        // This is a Next.js page navigation, exclude from loader
+                        return originalFetch.apply(this, args);
                 }
             }
 
