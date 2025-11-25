@@ -31,9 +31,21 @@ export async function GET(request: Request) {
     if (code) {
         const supabase = await createClient();
         await supabase.auth.exchangeCodeForSession(code);
-        return NextResponse.redirect(new URL('/', requestUrl.origin), { status: 302 });
+
+        // Redirect to home with clean URL (use production in production, localhost in development)
+        const isProduction = requestUrl.hostname === 'flarexrate.com';
+        const homeOrigin = isProduction ? 'https://flarexrate.com' : requestUrl.origin; // localhost in development
+        const homeUrl = new URL('/', homeOrigin);
+        homeUrl.search = '';
+        homeUrl.hash = '';
+        return NextResponse.redirect(homeUrl.toString(), { status: 302 });
     }
 
     // No code - redirect to home
-    return NextResponse.redirect(new URL('/', requestUrl.origin), { status: 302 });
+    const isProduction = requestUrl.hostname === 'flarexrate.com';
+    const homeOrigin = isProduction ? 'https://flarexrate.com' : requestUrl.origin; // localhost in development
+    const homeUrl = new URL('/', homeOrigin);
+    homeUrl.search = '';
+    homeUrl.hash = '';
+    return NextResponse.redirect(homeUrl.toString(), { status: 302 });
 }

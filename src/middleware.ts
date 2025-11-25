@@ -4,6 +4,20 @@ import { checkRateLimit, validateApiKey, getClientIP } from '@/lib/rateLimiter';
 
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
+    const code = request.nextUrl.searchParams.get('code');
+    const type = request.nextUrl.searchParams.get('type');
+
+    // Intercept OAuth codes from any page and redirect to callback
+    if (code && !type && pathname !== '/auth/callback') {
+        // Use production URL in production, localhost in development
+        const isProduction = request.nextUrl.hostname === 'flarexrate.com';
+        const callbackOrigin = isProduction
+            ? 'https://flarexrate.com'
+            : request.nextUrl.origin; // localhost in development
+        const callbackUrl = new URL('/auth/callback', callbackOrigin);
+        callbackUrl.searchParams.set('code', code);
+        return NextResponse.redirect(callbackUrl.toString(), { status: 302 });
+    }
 
     // Only process API routes
     if (!pathname.startsWith('/api/') || pathname.includes('/test-')) {
@@ -70,5 +84,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/:path*'],
+    matcher: ['/api/:path*', '/((?!_next/static|_next/image|favicon.ico).*)'],
 };

@@ -436,8 +436,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             const supabase = createClient();
 
-            // Always use production URL for OAuth redirect (must be in Supabase Redirect URLs)
-            const redirectUrl = 'https://flarexrate.com/auth/callback';
+            // Use production URL in production, localhost in development
+            const isProduction = window.location.hostname === 'flarexrate.com';
+            const redirectUrl = isProduction
+                ? 'https://flarexrate.com/auth/callback'
+                : `${window.location.origin}/auth/callback`; // localhost in development
 
             const { error: oauthError } = await supabase.auth.signInWithOAuth({
                 provider,
