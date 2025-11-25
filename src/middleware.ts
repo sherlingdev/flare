@@ -9,11 +9,9 @@ export async function middleware(request: NextRequest) {
 
     // Intercept OAuth codes from any page and redirect to callback
     if (code && !type && pathname !== '/auth/callback') {
-        // Use production URL in production, localhost in development
-        const isProduction = request.nextUrl.hostname === 'flarexrate.com';
-        const callbackOrigin = isProduction
-            ? 'https://flarexrate.com'
-            : request.nextUrl.origin; // localhost in development
+        // Use production URL always, except for true localhost
+        const isLocalhost = request.nextUrl.hostname === 'localhost' || request.nextUrl.hostname === '127.0.0.1';
+        const callbackOrigin = isLocalhost ? request.nextUrl.origin : 'https://flarexrate.com';
         const callbackUrl = new URL('/auth/callback', callbackOrigin);
         callbackUrl.searchParams.set('code', code);
         return NextResponse.redirect(callbackUrl.toString(), { status: 302 });
@@ -84,5 +82,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/:path*', '/((?!_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/api/:path*', '/((?!_next/static|_next/image|favicon.ico|auth/callback).*)'],
 };

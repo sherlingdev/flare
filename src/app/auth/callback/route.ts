@@ -32,9 +32,9 @@ export async function GET(request: Request) {
         const supabase = await createClient();
         await supabase.auth.exchangeCodeForSession(code);
 
-        // Redirect to home with clean URL (use production in production, localhost in development)
-        const isProduction = requestUrl.hostname === 'flarexrate.com';
-        const homeOrigin = isProduction ? 'https://flarexrate.com' : requestUrl.origin; // localhost in development
+        // Always redirect to production in production, localhost only in true localhost
+        const isLocalhost = requestUrl.hostname === 'localhost' || requestUrl.hostname === '127.0.0.1';
+        const homeOrigin = isLocalhost ? requestUrl.origin : 'https://flarexrate.com';
         const homeUrl = new URL('/', homeOrigin);
         homeUrl.search = '';
         homeUrl.hash = '';
@@ -42,8 +42,8 @@ export async function GET(request: Request) {
     }
 
     // No code - redirect to home
-    const isProduction = requestUrl.hostname === 'flarexrate.com';
-    const homeOrigin = isProduction ? 'https://flarexrate.com' : requestUrl.origin; // localhost in development
+    const isLocalhost = requestUrl.hostname === 'localhost' || requestUrl.hostname === '127.0.0.1';
+    const homeOrigin = isLocalhost ? requestUrl.origin : 'https://flarexrate.com';
     const homeUrl = new URL('/', homeOrigin);
     homeUrl.search = '';
     homeUrl.hash = '';
