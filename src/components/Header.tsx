@@ -155,28 +155,29 @@ export default function Header({
 
     // Handle logout
     const handleLogout = async () => {
-        try {
-            const supabase = createClient();
-            // Sign out and ignore errors (session might already be expired)
-            await supabase.auth.signOut({ scope: 'global' }).catch(() => {
-                // Ignore errors - session might not exist
-            });
-            setIsUserDropdownOpen(false);
-            setIsAuthenticated(false);
-            setUserEmail(null);
-            setUserName(null);
-            // Redirect to home page
-            router.push('/');
-            router.refresh();
-        } catch {
-            // Even if there's an error, clear local state and redirect
-            setIsUserDropdownOpen(false);
-            setIsAuthenticated(false);
-            setUserEmail(null);
-            setUserName(null);
-            router.push('/');
-            router.refresh();
+        const supabase = createClient();
+        
+        // Check if there's an active session before attempting logout
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        // Only attempt sign out if there's an active session
+        if (session) {
+            try {
+                await supabase.auth.signOut({ scope: 'global' });
+            } catch {
+                // Ignore errors - proceed with local cleanup
+            }
         }
+        
+        // Always clear local state and redirect, regardless of session status
+        setIsUserDropdownOpen(false);
+        setIsAuthenticated(false);
+        setUserEmail(null);
+        setUserName(null);
+        
+        // Redirect to home page
+        router.push('/');
+        router.refresh();
     };
 
     // Fallback values for SSR
@@ -302,18 +303,18 @@ export default function Header({
                                 )}
                             </>
                         ) : (
-                    <button
+                            <button
                                 type="button"
                                 onClick={() => {
                                     openAuthModal();
                                 }}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm animate-slide-left"
-                        aria-label="Open authentication"
-                    >
-                        <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
-                            <User className="w-4 h-4 sm:w-5 sm:h-5 text-flare-primary" />
-                        </Suspense>
-                    </button>
+                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200/80 dark:hover:bg-slate-600/80 border border-slate-200/50 dark:border-slate-600/50 hover:border-slate-300/50 dark:hover:border-slate-500/50 transition-all duration-200 cursor-pointer backdrop-blur-sm animate-slide-left"
+                                aria-label="Open authentication"
+                            >
+                                <Suspense fallback={<div className="w-4 h-4 sm:w-5 sm:h-5" />}>
+                                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-flare-primary" />
+                                </Suspense>
+                            </button>
                         )}
                     </div>
 
