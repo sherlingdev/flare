@@ -164,8 +164,8 @@ export default function Header({
         setUserName(null);
 
         // Attempt sign out silently (don't wait for it or show errors)
-        // Use signOut without scope to avoid global logout errors
-        supabase.auth.signOut().catch(() => {
+        // Use signOut with scope: 'local' to avoid global logout 403 errors
+        supabase.auth.signOut({ scope: 'local' }).catch(() => {
             // Silently ignore any errors - user is already logged out locally
         });
 
