@@ -35,7 +35,8 @@ const it = {
     apiKeyNamePlaceholder: "Il tuo nome (opzionale)",
     apiKeyEmailLabel: "Email",
     apiKeyEmailPlaceholder: "tuo@flarexrate.com",
-    apiKeySuccess: "Chiave API generata! Controlla la tua email",
+    apiKeyInputPlaceholder: "Clicca su genera per creare la tua chiave API",
+    apiKeySuccess: "Chiave API generata con successo!",
     apiKeyErrorPrefix: "Errore:",
     apiKeyNetworkError: "Errore di rete. Riprova.",
     apiKeyRevealTitle: "La tua chiave API (salvala!):",
@@ -530,6 +531,16 @@ const it = {
     registerSubtitle: "Crea un nuovo account",
     signInWithGoogle: "Continua con Google",
     signInWithGitHub: "Continua con GitHub",
+    signInWithApple: "Continua con Apple",
+    signInWithPhone: "Accedi con telefono",
+    phoneSubtitle: "Inserisci il tuo numero di telefono per ricevere un codice di verifica",
+    phonePlaceholder: "+1234567890",
+    phoneRequired: "Inserisci il tuo numero di telefono",
+    otpPlaceholder: "Inserisci il codice di verifica",
+    otpRequired: "Inserisci il codice di verifica",
+    enterOtp: "Inserisci il codice di verifica inviato al tuo telefono",
+    sendOtp: "Invia codice",
+    verifyOtp: "Verifica codice",
     or: "o",
     fullName: "Nome completo",
     fullNamePlaceholder: "Inserisci il tuo nome completo",
@@ -852,8 +863,11 @@ const it = {
     chartTitlePage: "Grafico | Converti valute all'istante. Veloce, sicuro e sempre preciso.",
     chartSignInRequired: "Accedi per visualizzare il grafico",
     apiKeySignInRequired: "Accedi per generare una chiave API",
-    performance: "Prestazioni",
-    days: "giorni"
+    history: "Storico",
+    days: "giorni",
+    days7: "7 giorni",
+    days15: "15 giorni",
+    allTime: "tutto"
 };
 
 export default it;

@@ -43,6 +43,7 @@ export function ConverterProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+
     const value = useMemo(() => ({
         fromCurrency,
         toCurrency,

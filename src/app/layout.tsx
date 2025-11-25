@@ -152,14 +152,14 @@ export default function RootLayout({
             <ConverterProvider>
               <ThemeProvider>
                 <AuthModalProvider>
-                  <Loader />
-                  <Schema />
-                  <AdsterraScript />
-                  <AdSenseScript />
-                  <GoogleAnalytics />
-                  <Layout>
-                    {children}
-                  </Layout>
+                <Loader />
+                <Schema />
+                <AdsterraScript />
+                <AdSenseScript />
+                <GoogleAnalytics />
+                <Layout>
+                  {children}
+                </Layout>
                 </AuthModalProvider>
               </ThemeProvider>
             </ConverterProvider>

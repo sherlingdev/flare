@@ -29,7 +29,8 @@ const de = {
     apiKeyNamePlaceholder: "Dein Name (optional)",
     apiKeyEmailLabel: "E-Mail",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeySuccess: "API-Schlüssel erstellt! Bitte E-Mails prüfen",
+    apiKeyInputPlaceholder: "Klicken Sie auf Generieren, um Ihren API-Schlüssel zu erstellen",
+    apiKeySuccess: "API-Schlüssel erfolgreich erstellt!",
     apiKeyErrorPrefix: "Fehler:",
     apiKeyNetworkError: "Netzwerkfehler. Bitte versuchen Sie es erneut.",
     apiKeyRevealTitle: "Ihr API-Schlüssel (speichern Sie diesen!):",
@@ -516,6 +517,16 @@ const de = {
     loginSubtitle: "Melden Sie sich bei Ihrem Konto an",
     signInWithGoogle: "Mit Google fortfahren",
     signInWithGitHub: "Mit GitHub fortfahren",
+    signInWithApple: "Mit Apple fortfahren",
+    signInWithPhone: "Mit Telefon anmelden",
+    phoneSubtitle: "Geben Sie Ihre Telefonnummer ein, um einen Bestätigungscode zu erhalten",
+    phonePlaceholder: "+1234567890",
+    phoneRequired: "Bitte geben Sie Ihre Telefonnummer ein",
+    otpPlaceholder: "Geben Sie den Bestätigungscode ein",
+    otpRequired: "Bitte geben Sie den Bestätigungscode ein",
+    enterOtp: "Geben Sie den an Ihr Telefon gesendeten Bestätigungscode ein",
+    sendOtp: "Code senden",
+    verifyOtp: "Code überprüfen",
     or: "oder",
     registerSubtitle: "Erstellen Sie ein neues Konto",
     fullName: "Vollständiger Name",
@@ -789,8 +800,11 @@ const de = {
     chartTitlePage: "Diagramm | Währungen sofort umrechnen. Schnell, sicher und immer präzise.",
     chartSignInRequired: "Bitte melden Sie sich an, um das Diagramm anzuzeigen",
     apiKeySignInRequired: "Bitte melden Sie sich an, um einen API-Schlüssel zu generieren",
-    performance: "Leistung",
-    days: "Tage"
+    history: "Verlauf",
+    days: "Tage",
+    days7: "7 tage",
+    days15: "15 tage",
+    allTime: "alles"
 };
 
 export default de;

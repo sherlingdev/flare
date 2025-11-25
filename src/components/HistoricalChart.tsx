@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useConverter } from "@/contexts/ConverterContext";
 // import { useTheme } from "@/contexts/ThemeContext";
@@ -18,6 +18,38 @@ interface ChartData {
     formattedDate: string;
 }
 
+// Constants
+const ALL_TIME_START_DATE = '2025-11-02';
+const EXCLUDED_DATE = '2025-11-01';
+
+// Helper functions
+const extractDateOnly = (dateString: string): string => {
+    return dateString.split('T')[0];
+};
+
+const isValidDateForAllTime = (date: string): boolean => {
+    const dateOnly = extractDateOnly(date);
+    return dateOnly !== EXCLUDED_DATE && dateOnly >= ALL_TIME_START_DATE;
+};
+
+const formatDateForDisplay = (dateString: string, language: string): string => {
+    const dateOnly = extractDateOnly(dateString);
+    const [year, month, day] = dateOnly.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    return dateObj.toLocaleDateString(language, {
+        month: 'short',
+        day: 'numeric'
+    });
+};
+
+const createRateMap = (rates: HistoricalRate[]): Map<string, number> => {
+    const rateMap = new Map<string, number>();
+    rates.forEach((rate) => {
+        rateMap.set(rate.date, rate.rate);
+    });
+    return rateMap;
+};
+
 export default function HistoricalChart() {
     const { language, mounted } = useLanguage();
     const { fromCurrency, toCurrency } = useConverter();
@@ -31,17 +63,58 @@ export default function HistoricalChart() {
     const [isLoading, setIsLoading] = useState(true);
     const [percentageChange, setPercentageChange] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [timeRange, setTimeRange] = useState<7 | 15 | 'all'>(15);
+    const [isSelectOpen, setIsSelectOpen] = useState(false);
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const isMountedRef = useRef(true);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsSelectOpen(false);
+            }
+        };
+
+        if (isSelectOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isSelectOpen]);
 
     useEffect(() => {
+        // Cancel previous request if it exists
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+
+        // Create new AbortController for this request
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
+        const signal = abortController.signal;
+        isMountedRef.current = true;
+
         const fetchHistoricalData = async () => {
+            // Check if component is still mounted before setting loading state
+            if (!isMountedRef.current) return;
+
             setIsLoading(true);
             setError(null);
 
             try {
+                // Build API URL parameters based on time range
+                const urlParams = timeRange === 'all'
+                    ? `fromDate=${ALL_TIME_START_DATE}`
+                    : `days=${timeRange}`;
+
                 // Get historical data for both currencies
                 const [fromResponse, toResponse] = await Promise.all([
-                    fetch(`/api/historical/${fromCurrency}?days=15`),
-                    fetch(`/api/historical/${toCurrency}?days=15`)
+                    fetch(`/api/historical/${fromCurrency}?${urlParams}`, { signal }),
+                    fetch(`/api/historical/${toCurrency}?${urlParams}`, { signal })
                 ]);
 
                 const fromData = await fromResponse.json();
@@ -54,21 +127,23 @@ export default function HistoricalChart() {
                 const fromRates = fromData.data.rates as HistoricalRate[];
                 const toRates = toData.data.rates as HistoricalRate[];
 
-                // Create a map of dates to rates for easier lookup
-                const fromRateMap = new Map<string, number>();
-                fromRates.forEach((rate: HistoricalRate) => {
-                    fromRateMap.set(rate.date, rate.rate);
-                });
+                // Filter rates to only include dates from November 2, 2025 onwards (strictly exclude Nov 1)
+                const filteredFromRates = fromRates.filter((rate) => isValidDateForAllTime(rate.date));
+                const filteredToRates = toRates.filter((rate) => isValidDateForAllTime(rate.date));
 
-                const toRateMap = new Map<string, number>();
-                toRates.forEach((rate: HistoricalRate) => {
-                    toRateMap.set(rate.date, rate.rate);
-                });
+                // Create maps for efficient rate lookup
+                const fromRateMap = createRateMap(filteredFromRates);
+                const toRateMap = createRateMap(filteredToRates);
 
-                // Get all unique dates, sorted
+                // Get all unique dates, filtered and sorted
                 const allDates = Array.from(
-                    new Set([...fromRates.map((r: HistoricalRate) => r.date), ...toRates.map((r: HistoricalRate) => r.date)])
-                ).sort();
+                    new Set([
+                        ...filteredFromRates.map((r) => r.date),
+                        ...filteredToRates.map((r) => r.date)
+                    ])
+                )
+                    .filter(isValidDateForAllTime)
+                    .sort();
 
                 // Calculate exchange rate for each date: toRate / fromRate
                 // Both rates are against USD, so to convert from A to B: (B_rate / USD) / (A_rate / USD) = B_rate / A_rate
@@ -78,14 +153,8 @@ export default function HistoricalChart() {
                         const toRate = toRateMap.get(date);
 
                         if (fromRate && toRate && fromRate > 0) {
-                            // Calculate exchange rate: toRate / fromRate
-                            // This gives us how many units of 'to' currency we get for 1 unit of 'from' currency
                             const exchangeRate = toRate / fromRate;
-                            const dateObj = new Date(date);
-                            const formattedDate = dateObj.toLocaleDateString(mounted ? language : 'en', {
-                                month: 'short',
-                                day: 'numeric'
-                            });
+                            const formattedDate = formatDateForDisplay(date, mounted ? language : 'en');
 
                             return {
                                 date,
@@ -96,7 +165,13 @@ export default function HistoricalChart() {
                         return null;
                     })
                     .filter((item): item is ChartData => item !== null)
+                    .filter((item) => isValidDateForAllTime(item.date))
                     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+                // Check if request was aborted before updating state
+                if (signal.aborted || !isMountedRef.current) {
+                    return;
+                }
 
                 setChartData(calculatedData);
 
@@ -107,18 +182,46 @@ export default function HistoricalChart() {
                     const change = ((lastRate - firstRate) / firstRate) * 100;
                     setPercentageChange(change);
                 }
-            } catch (err) {
-                console.error("Error fetching historical data:", err);
-                setError(err instanceof Error ? err.message : "Failed to load chart data");
-            } finally {
+
                 setIsLoading(false);
+            } catch (err) {
+                // Ignore AbortError - it's expected when canceling previous requests
+                if (err instanceof Error && err.name === 'AbortError') {
+                    // Don't update state if request was aborted - new request will handle it
+                    return;
+                }
+
+                // Only update error state if component is still mounted
+                if (isMountedRef.current) {
+                    setError(err instanceof Error ? err.message : "Failed to load chart data");
+                    setIsLoading(false);
+                }
             }
         };
 
-        if (fromCurrency && toCurrency) {
-            fetchHistoricalData();
+        // Only fetch if currencies are set and component is mounted
+        if (fromCurrency && toCurrency && mounted) {
+            // Small delay to debounce rapid changes
+            const timeoutId = setTimeout(() => {
+                if (isMountedRef.current && !signal.aborted) {
+                    fetchHistoricalData();
+                }
+            }, 100);
+
+            return () => {
+                clearTimeout(timeoutId);
+                abortController.abort();
+            };
+        } else {
+            setIsLoading(false);
         }
-    }, [fromCurrency, toCurrency, language, mounted]);
+
+        // Cleanup: mark as unmounted and abort request
+        return () => {
+            isMountedRef.current = false;
+            abortController.abort();
+        };
+    }, [fromCurrency, toCurrency, mounted, language, timeRange]); // Include timeRange to refetch when range changes
 
     if (isLoading) {
         return (
@@ -148,22 +251,63 @@ export default function HistoricalChart() {
         return value.toFixed(2);
     };
 
+
     return (
         <div className="w-full relative z-0" style={{ minWidth: 0, width: '100%' }}>
-            {/* Chart Header with Percentage */}
-            <div className="mb-6 flex items-center justify-between gap-4">
-                <h2 className="text-2xl font-bold text-flare-primary">
-                    {t.performance}
-                </h2>
-                {percentageChange !== null && (
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-flare-primary font-semibold">
-                            15 {t.days}
+            {/* Chart Header with Time Range Selector and Percentage */}
+            <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+                {/* Time Range Selector */}
+                <div className="relative" ref={dropdownRef}>
+                    <div
+                        onClick={() => setIsSelectOpen(!isSelectOpen)}
+                        className="bg-gray-50 dark:bg-gray-700 text-flare-primary rounded-xl px-3 py-2 text-sm font-medium border-none outline-none cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150 flex items-center justify-between min-w-[100px] gap-2"
+                    >
+                        <span>
+                            {timeRange === 7 ? t.days7 : timeRange === 15 ? t.days15 : t.allTime}
                         </span>
-                        <span className="text-flare-primary font-semibold">•</span>
-                        <span className={`text-base font-semibold ${percentageChange >= 0 ? "text-green-500" : "text-red-500"}`}>
-                            {percentageChange >= 0 ? "+" : ""}
-                            {percentageChange.toFixed(2)}%
+                        <svg className={`w-3 h-3 text-flare-primary transition-transform duration-300 ease-in-out flex-shrink-0 ${isSelectOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    {isSelectOpen && (
+                        <div className="absolute top-full z-50 mt-1 bg-white dark:bg-gray-700 rounded-lg shadow-lg w-full left-0 right-0 min-w-[100px] overflow-hidden">
+                            <div
+                                onClick={() => {
+                                    setTimeRange(7);
+                                    setIsSelectOpen(false);
+                                }}
+                                className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors rounded-t-lg ${timeRange === 7 ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                            >
+                                {t.days7}
+                            </div>
+                            <div
+                                onClick={() => {
+                                    setTimeRange(15);
+                                    setIsSelectOpen(false);
+                                }}
+                                className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors ${timeRange === 15 ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                            >
+                                {t.days15}
+                            </div>
+                            <div
+                                onClick={() => {
+                                    setTimeRange('all');
+                                    setIsSelectOpen(false);
+                                }}
+                                className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors rounded-b-lg ${timeRange === 'all' ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                            >
+                                {t.allTime}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Percentage Change */}
+                {percentageChange !== null && (
+                    <div className={`flex items-center px-3 py-2 rounded-xl ${percentageChange >= 0 ? "bg-green-50 dark:bg-green-900/20" : "bg-red-50 dark:bg-red-900/20"}`}>
+                        <span className={`text-sm font-medium ${percentageChange >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+                            {percentageChange >= 0 ? "+ " : "- "}
+                            {Math.abs(percentageChange).toFixed(2)}%
                         </span>
                     </div>
                 )}

@@ -16,6 +16,12 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Allow GET requests to /api/api-key without rate limit (read-only operation)
+    // POST requests to /api/api-key will still be rate limited
+    if (pathname === '/api/api-key' && request.method === 'GET') {
+        return NextResponse.next();
+    }
+
     // Get identifier
     const ip = getClientIP(request.headers);
     const apiKey = request.headers.get('x-api-key') ||

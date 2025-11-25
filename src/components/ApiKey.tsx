@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLanguage, type Language } from '@/contexts/LanguageContext';
 import { translations } from '@/lib/translations';
 import { createClient } from '@/utils/supabase/client';
 import Loader from '@/components/Loader';
+import { Copy, Check, Eye, EyeOff } from 'lucide-react';
 
 const rateLimitTemplates: Record<Language, string> = {
     en: 'Please wait {time} before trying again',
@@ -26,20 +27,43 @@ export default function ApiKeyRequest() {
     const [rateLimitReset, setRateLimitReset] = useState<Date | null>(null);
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
     const [userEmail, setUserEmail] = useState<string | null>(null);
+    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [loadingKey, setLoadingKey] = useState(true);
+    const [copied, setCopied] = useState(false);
+    const [showFullKey, setShowFullKey] = useState(false);
+    const hasFetchedRef = useRef(false);
 
-    // Get user email from auth session
+    // Get user email and existing API key from auth session
     useEffect(() => {
-        const getUserEmail = async () => {
+        // Prevent duplicate requests
+        if (hasFetchedRef.current || !mounted) return;
+
+        const getUserData = async () => {
+            hasFetchedRef.current = true;
             const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user?.email) {
-                setUserEmail(session.user.email);
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (user?.email && !error) {
+                setUserEmail(user.email);
+
+                // Fetch existing API key
+                try {
+                    const response = await fetch('/api/api-key');
+                    const data = await response.json();
+
+                    if (data.success && data.hasKey && data.data?.api_key) {
+                        setApiKey(data.data.api_key);
+                    }
+                } catch (error) {
+                    console.error('Error fetching API key:', error);
+                } finally {
+                    setLoadingKey(false);
+                }
+            } else {
+                setLoadingKey(false);
             }
         };
 
-        if (mounted) {
-            getUserEmail();
-        }
+        getUserData();
     }, [mounted]);
 
     // Get translated message based on messageKey
@@ -125,7 +149,8 @@ export default function ApiKeyRequest() {
 
             const data = await response.json();
 
-            if (data.success) {
+            if (data.success && data.data?.api_key) {
+                setApiKey(data.data.api_key);
                 setMessageKey('success');
                 setServerMessage('');
                 setIsSuccess(true);
@@ -158,7 +183,28 @@ export default function ApiKeyRequest() {
 
 
 
-    if (!userEmail) {
+    const handleCopy = async () => {
+        if (!apiKey) return;
+
+        try {
+            await navigator.clipboard.writeText(apiKey);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    };
+
+    const maskApiKey = (key: string): string => {
+        if (key.length <= 11) return key; // If key is too short, show it all
+        const start = key.substring(0, 7); // Show first 7 chars (sk_xxxx)
+        const end = key.substring(key.length - 4); // Show last 4 chars
+        return `${start}${'•'.repeat(Math.max(8, key.length - 11))}${end}`;
+    };
+
+    const displayKey = apiKey ? (showFullKey ? apiKey : maskApiKey(apiKey)) : '';
+
+    if (!userEmail || loadingKey) {
         return <Loader show={true} />;
     }
 
@@ -166,14 +212,49 @@ export default function ApiKeyRequest() {
         <>
             <Loader show={loading} />
 
-            <div className="flex items-center justify-center">
-                {/* Generate button only */}
+            {/* Always show input field with Generate button */}
+            <div className="flex items-center gap-3">
+                <div className="flex-1 relative">
+                    <input
+                        type="text"
+                        value={displayKey}
+                        readOnly
+                        placeholder={apiKey ? undefined : t.apiKeyInputPlaceholder}
+                        className="w-full bg-[#F9FAFB] dark:bg-[#374151] text-slate-600 dark:text-slate-300 rounded-xl px-4 py-3 pr-16 text-sm font-mono border-none outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                    />
+                    {apiKey && (
+                        <>
+                            <button
+                                onClick={() => setShowFullKey(!showFullKey)}
+                                className="absolute right-9 top-1/2 transform -translate-y-1/2 p-1.5 rounded-md text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                                aria-label={showFullKey ? "Hide API key" : "Show API key"}
+                            >
+                                {showFullKey ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                            <button
+                                onClick={handleCopy}
+                                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 rounded-md text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
+                                aria-label="Copy API key"
+                            >
+                                {copied ? (
+                                    <Check className="h-4 w-4 text-green-500" />
+                                ) : (
+                                    <Copy className="h-4 w-4" />
+                                )}
+                            </button>
+                        </>
+                    )}
+                </div>
                 <button
                     onClick={handleSubmit}
                     disabled={loading || timeRemaining > 0}
-                    className={`inline-flex items-center justify-center px-6 py-3 text-base rounded-xl transition-colors select-none whitespace-nowrap ${loading || timeRemaining > 0
-                        ? 'bg-indigo-600/60 text-gray-200 cursor-not-allowed'
-                        : 'bg-indigo-600 text-gray-200 hover:bg-indigo-700'
+                    className={`inline-flex items-center justify-center px-4 py-3 text-sm font-mono rounded-xl border-none outline-none transition-colors select-none whitespace-nowrap ${loading || timeRemaining > 0
+                        ? 'bg-[#F9FAFB] dark:bg-[#374151] text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                        : 'bg-[#F9FAFB] dark:bg-[#374151] text-slate-600 dark:text-slate-300 hover:bg-[#E2E8F0] dark:hover:bg-[#4B5563]'
                         }`}
                 >
                     {t.generate}

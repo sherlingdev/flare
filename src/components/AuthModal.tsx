@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
 import { useAuthModal } from "@/contexts/AuthModalContext";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -181,6 +181,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [isResetPasswordMode, setIsResetPasswordMode] = useState(false);
     const [email, setEmail] = useState("");
+    const [fullName, setFullName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -206,6 +207,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         setResetPasswordSent(false);
         setPassword("");
         setConfirmPassword("");
+        setFullName("");
         setShowPassword(false);
         setShowConfirmPassword(false);
     }, []);
@@ -344,6 +346,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         const { data, error: signUpError } = await supabase.auth.signUp({
             email: email.trim(),
             password,
+            options: {
+                data: {
+                    full_name: fullName.trim() || null,
+                },
+            },
         });
 
         if (signUpError && !data.user) {
@@ -359,6 +366,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 setIsLogin(true);
                 setPassword("");
                 setConfirmPassword("");
+                setFullName("");
                 setShowPassword(false);
                 setShowConfirmPassword(false);
                 setLoading(false);
@@ -374,6 +382,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 setIsLogin(true);
                 setPassword("");
                 setConfirmPassword("");
+                setFullName("");
                 setShowPassword(false);
                 setShowConfirmPassword(false);
                 setLoading(false);
@@ -381,7 +390,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         }
 
         return true;
-    }, [email, password, confirmPassword, t, onClose, resetFormState]);
+    }, [email, password, confirmPassword, fullName, t, onClose, resetFormState]);
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -441,6 +450,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             setLoading(false);
         }
     }, [t]);
+
 
     const handleResendConfirmationEmail = useCallback(async () => {
         if (!email) {
@@ -582,6 +592,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         resetFormState();
     }, [resetFormState]);
 
+
     if (!isOpen || !mounted) return null;
 
     const isEmailNotConfirmed = error && (
@@ -688,6 +699,25 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {/* Form */}
                 <form onSubmit={isResetPasswordMode ? handleUpdatePassword : (isForgotPassword ? handleResetPassword : handleSubmit)} className="space-y-4">
+                    {!isLogin && !isForgotPassword && !isResetPasswordMode && (
+                        <div>
+                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {t.fullName || "Full name"}
+                            </label>
+                            <div className="bg-gray-50 dark:bg-gray-700 rounded-xl px-4 py-3 border border-gray-200 dark:border-gray-600">
+                                <input
+                                    id="fullName"
+                                    type="text"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    placeholder={t.fullNamePlaceholder || "Enter your full name"}
+                                    className="w-full text-sm bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-200"
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     {!isResetPasswordMode && (
                         <EmailInput
                             value={email}
@@ -748,7 +778,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                     <button
                         type="submit"
-                        disabled={loading || passwordUpdated}
+                        disabled={
+                            loading ||
+                            passwordUpdated ||
+                            (isLogin && (!email.trim() || !password.trim())) ||
+                            (!isLogin && !isForgotPassword && !isResetPasswordMode && (!email.trim() || !password.trim() || !confirmPassword.trim())) ||
+                            (isForgotPassword && !email.trim()) ||
+                            (isResetPasswordMode && (!password.trim() || !confirmPassword.trim()))
+                        }
                         className="w-full py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 dark:hover:bg-indigo-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? t.loading : isResetPasswordMode ? (t.resetPassword || "Reset password") : (isForgotPassword ? (t.resetPassword || "Reset password") : (isLogin ? (t.signIn || "Sign in") : t.registerButton))}
@@ -757,9 +794,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {/* Back to login button for forgot password */}
                 {(isForgotPassword || isResetPasswordMode) && (
-                    <div className="mt-6 text-center">
-                        <button onClick={switchBackToLogin} className="flex items-center gap-2 text-sm text-flare-primary hover:underline mx-auto">
-                            <ArrowLeft className="w-4 h-4" />
+                    <div className="mt-4">
+                        <button
+                            onClick={switchBackToLogin}
+                            className="w-full flex items-center justify-center gap-2 py-3 text-base font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg bg-transparent hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                        >
                             {t.backToLogin || "Back to login"}
                         </button>
                     </div>
@@ -767,11 +806,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {/* Resend confirmation email */}
                 {isEmailNotConfirmed && (
-                    <div className="mt-6 text-center">
+                    <div className="mt-4">
                         <button
                             onClick={handleResendConfirmationEmail}
                             disabled={resendingEmail || !email}
-                            className="text-sm text-flare-primary hover:underline px-4 py-2 rounded-lg bg-flare-primary/10 dark:bg-flare-primary/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                            className="w-full py-3 px-4 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {resendingEmail ? "Sending..." : "Resend confirmation email"}
                         </button>
@@ -780,19 +819,21 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 {/* Switch mode / Forgot password */}
                 {!isResetPasswordMode && (
-                    <div className="mt-6 text-center space-y-2">
+                    <div className="mt-6">
                         {isLogin && !isForgotPassword && (
-                            <div>
+                            <div className="flex items-center justify-between">
+                                <button onClick={switchMode} className="text-sm text-flare-primary hover:underline">
+                                    {t.noAccount}
+                                </button>
                                 <button type="button" onClick={switchToForgotPassword} className="text-sm text-flare-primary hover:underline">
                                     {t.forgotPassword || "Forgot password?"}
                                 </button>
                             </div>
                         )}
-                        {!isForgotPassword && (
-                            <div>
+                        {!isLogin && !isForgotPassword && (
+                            <div className="text-center">
                                 <button onClick={switchMode} className="text-sm text-flare-primary hover:underline">
-                                    {isLogin ? t.noAccount : t.haveAccount}{" "}
-                                    <span className="font-medium">{isLogin ? t.register : (t.signIn || "Sign in")}</span>
+                                    {t.haveAccount}
                                 </button>
                             </div>
                         )}

@@ -87,7 +87,7 @@ export async function validateApiKey(apiKey: string): Promise<{ id: number; auth
         const supabase = createServiceClient();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: user, error } = await (supabase as any)
-            .from('users')
+            .from('keys')
             .select('id, auth_user_id, is_active')
             .eq('api_key', apiKey)
             .eq('is_active', true)

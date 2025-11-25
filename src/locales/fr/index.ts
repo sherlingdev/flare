@@ -35,7 +35,8 @@ const fr = {
     apiKeyNamePlaceholder: "Votre nom (optionnel)",
     apiKeyEmailLabel: "Email",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeySuccess: "Clé API générée ! Vérifiez votre e-mail",
+    apiKeyInputPlaceholder: "Cliquez sur générer pour créer votre clé API",
+    apiKeySuccess: "Clé API générée avec succès !",
     apiKeyErrorPrefix: "Erreur:",
     apiKeyNetworkError: "Erreur réseau. Veuillez réessayer.",
     apiKeyRevealTitle: "Votre clé API (à conserver !) :",
@@ -530,6 +531,16 @@ const fr = {
     loginSubtitle: "Connectez-vous à votre compte",
     signInWithGoogle: "Continuer avec Google",
     signInWithGitHub: "Continuer avec GitHub",
+    signInWithApple: "Continuer avec Apple",
+    signInWithPhone: "Se connecter avec le téléphone",
+    phoneSubtitle: "Entrez votre numéro de téléphone pour recevoir un code de vérification",
+    phonePlaceholder: "+1234567890",
+    phoneRequired: "Veuillez entrer votre numéro de téléphone",
+    otpPlaceholder: "Entrez le code de vérification",
+    otpRequired: "Veuillez entrer le code de vérification",
+    enterOtp: "Entrez le code de vérification envoyé à votre téléphone",
+    sendOtp: "Envoyer le code",
+    verifyOtp: "Vérifier le code",
     or: "ou",
     registerSubtitle: "Créez un nouveau compte",
     fullName: "Nom complet",
@@ -820,8 +831,11 @@ const fr = {
     chartTitlePage: "Graphique | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",
     chartSignInRequired: "Veuillez vous connecter pour voir le graphique",
     apiKeySignInRequired: "Veuillez vous connecter pour générer une clé API",
-    performance: "Performance",
-    days: "jours"
+    history: "Historique",
+    days: "jours",
+    days7: "7 jours",
+    days15: "15 jours",
+    allTime: "tout"
 };
 
 export default fr;

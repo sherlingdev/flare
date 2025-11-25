@@ -24,7 +24,7 @@ export default function CopyButton({ textToCopy, className = "" }: CopyButtonPro
     return (
         <button
             onClick={handleCopy}
-            className={`absolute top-2 right-2 p-1.5 rounded-md text-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200 focus:outline-none hidden sm:flex items-center justify-center ${className}`}
+            className={`absolute top-2 right-2 p-1.5 rounded-md text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 focus:outline-none hidden sm:flex items-center justify-center ${className}`}
             aria-label="Copy to clipboard"
         >
             {copied ? (

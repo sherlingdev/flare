@@ -28,7 +28,7 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
         // Store original fetch
         const originalFetch = window.fetch;
 
-        // URLs to exclude from loading (ads, analytics, etc.)
+        // URLs to exclude from loading (ads, analytics, Next.js navigation, etc.)
         const excludedPatterns = [
             /google-analytics\.com/,
             /googletagmanager\.com/,
@@ -37,6 +37,8 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
             /effectivegatecpm\.com/,
             /adsterra/,
             /\.netlify\/functions\/currency-rates/, // Exclude Netlify function (fallback)
+            // Exclude Next.js internal navigation and prefetching
+            /^\/_next\//, // Next.js internal routes (_next/static, _next/data, etc.)
         ];
 
         // Override fetch
@@ -58,6 +60,28 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
 
             // Check if this request should be excluded
             const shouldExclude = excludedPatterns.some(pattern => pattern.test(url));
+
+            // Also exclude Next.js page navigation (not API routes)
+            // Next.js makes fetch requests for page navigation that shouldn't trigger the loader
+            if (!shouldExclude) {
+                const isRelativeUrl = url.startsWith('/') && !url.startsWith('//');
+                const isApiRoute = url.startsWith('/api/');
+
+                // Exclude Next.js page navigation routes (documentation, information, chart, key, etc.)
+                // but keep API routes active for loader
+                if (isRelativeUrl && !isApiRoute && !url.startsWith('/_next/')) {
+                    // Check if it's a page route (not an API call)
+                    const urlPath = url.split('?')[0].split('#')[0]; // Remove query params and hash
+                    const pageRoutes = ['/documentation', '/information', '/chart', '/key', '/privacy', '/terms', '/about', '/'];
+                    const isKnownPageRoute = pageRoutes.some(route => urlPath === route || (route !== '/' && urlPath.startsWith(route)));
+
+                    // If it's a known page route or a simple path (single segment), exclude from loader
+                    if (isKnownPageRoute || urlPath.match(/^\/[^/]+$/)) {
+                        // This is a Next.js page navigation, exclude from loader
+                        return originalFetch.apply(this, args);
+                    }
+                }
+            }
 
             if (!shouldExclude) {
                 incrementLoading();

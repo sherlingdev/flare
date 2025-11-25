@@ -35,7 +35,8 @@ const pt = {
     apiKeyNamePlaceholder: "Seu nome (opcional)",
     apiKeyEmailLabel: "Email",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeySuccess: "Chave de API gerada! Verifique seu e-mail",
+    apiKeyInputPlaceholder: "Clique em gerar para criar sua chave de API",
+    apiKeySuccess: "Chave de API gerada com sucesso!",
     apiKeyErrorPrefix: "Erro:",
     apiKeyNetworkError: "Erro de rede. Tente novamente.",
     apiKeyRevealTitle: "Sua chave de API (salve isto!):",
@@ -529,6 +530,16 @@ const pt = {
     loginSubtitle: "Acesse sua conta",
     signInWithGoogle: "Continuar com Google",
     signInWithGitHub: "Continuar com GitHub",
+    signInWithApple: "Continuar com Apple",
+    signInWithPhone: "Entrar com telefone",
+    phoneSubtitle: "Digite seu número de telefone para receber um código de verificação",
+    phonePlaceholder: "+1234567890",
+    phoneRequired: "Por favor, digite seu número de telefone",
+    otpPlaceholder: "Digite o código de verificação",
+    otpRequired: "Por favor, digite o código de verificação",
+    enterOtp: "Digite o código de verificação enviado para seu telefone",
+    sendOtp: "Enviar código",
+    verifyOtp: "Verificar código",
     or: "ou",
     registerSubtitle: "Crie uma nova conta",
     fullName: "Nome completo",
@@ -826,8 +837,11 @@ const pt = {
     chartTitlePage: "Gráfico | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",
     chartSignInRequired: "Por favor, faça login para ver o gráfico",
     apiKeySignInRequired: "Por favor, faça login para gerar uma chave API",
-    performance: "Desempenho",
-    days: "dias"
+    history: "Histórico",
+    days: "dias",
+    days7: "7 dias",
+    days15: "15 dias",
+    allTime: "tudo"
 };
 
 export default pt;

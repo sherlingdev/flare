@@ -38,7 +38,6 @@ interface Currency {
 }
 
 const DEFAULT_SELECTED_CODE = "DOP";
-const STORAGE_KEY = "information_selected_currency";
 
 // Helper functions
 const formatDenominations = (group?: { frequently: number[]; rarely: number[] }): string[] => {
@@ -102,24 +101,8 @@ export default function Information() {
             }));
     });
 
-    // Initialize selectedCode from sessionStorage or default
-    const [selectedCode, setSelectedCode] = useState<string>(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem(STORAGE_KEY);
-            const defaultAllowed = getAllowedCurrencyCodes();
-            if (stored && defaultAllowed.has(stored)) {
-                return stored;
-            }
-        }
-        return DEFAULT_SELECTED_CODE;
-    });
-
-    // Save selectedCode to sessionStorage whenever it changes
-    useEffect(() => {
-        if (typeof window !== 'undefined' && selectedCode) {
-            sessionStorage.setItem(STORAGE_KEY, selectedCode);
-        }
-    }, [selectedCode]);
+    // Initialize selectedCode with default
+    const [selectedCode, setSelectedCode] = useState<string>(DEFAULT_SELECTED_CODE);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -243,7 +226,7 @@ export default function Information() {
 
     const conversionTarget = useMemo(() =>
         isUsdSelected
-        ? { from: "USD", to: "EUR" }
+            ? { from: "USD", to: "EUR" }
             : { from: selectedCurrency?.code || selectedCode, to: "USD" },
         [isUsdSelected, selectedCurrency?.code, selectedCode]
     );

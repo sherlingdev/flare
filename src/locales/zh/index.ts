@@ -29,7 +29,8 @@ const zh = {
     apiKeyNamePlaceholder: "您的姓名（可选）",
     apiKeyEmailLabel: "电子邮件",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeySuccess: "API 密钥已生成！请检查邮箱",
+    apiKeyInputPlaceholder: "点击生成以创建您的 API 密钥",
+    apiKeySuccess: "API 密钥已成功生成！",
     apiKeyErrorPrefix: "错误：",
     apiKeyNetworkError: "网络错误。请再试一次。",
     apiKeyRevealTitle: "您的 API 密钥（保存它！）：",
@@ -515,6 +516,16 @@ const zh = {
     loginSubtitle: "登录您的帐户",
     signInWithGoogle: "使用 Google 继续",
     signInWithGitHub: "使用 GitHub 继续",
+    signInWithApple: "使用 Apple 继续",
+    signInWithPhone: "使用手机登录",
+    phoneSubtitle: "输入您的手机号码以接收验证码",
+    phonePlaceholder: "+1234567890",
+    phoneRequired: "请输入您的手机号码",
+    otpPlaceholder: "输入验证码",
+    otpRequired: "请输入验证码",
+    enterOtp: "输入发送到您手机的验证码",
+    sendOtp: "发送验证码",
+    verifyOtp: "验证代码",
     or: "或",
     registerSubtitle: "创建一个新帐户",
     fullName: "姓名",
@@ -788,8 +799,11 @@ const zh = {
     chartTitlePage: "图表|立即转换货币。快速、安全且始终准确。",
     chartSignInRequired: "请登录以查看图表",
     apiKeySignInRequired: "请登录以生成API密钥",
-    performance: "表现",
-    days: "天"
+    history: "历史",
+    days: "天",
+    days7: "7 天",
+    days15: "15 天",
+    allTime: "全部"
 };
 
 export default zh;

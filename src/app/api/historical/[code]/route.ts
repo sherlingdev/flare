@@ -11,6 +11,7 @@ export async function GET(
         const code = codeParam.toUpperCase();
         const daysParam = searchParams.get('days');
         const dateParam = searchParams.get('date');
+        const fromDateParam = searchParams.get('fromDate');
 
         const supabase = await createClient();
 
@@ -49,6 +50,24 @@ export async function GET(
                 );
             }
             query = query.eq('date', dateParam);
+        } else if (fromDateParam) {
+            // Use fromDate to get data from a specific date onwards
+            const fromDate = new Date(fromDateParam);
+            if (isNaN(fromDate.getTime())) {
+                return NextResponse.json(
+                    { success: false, error: 'Invalid fromDate format. Use YYYY-MM-DD', message: 'Invalid request' },
+                    { status: 400 }
+                );
+            }
+            // Ensure we use the date in YYYY-MM-DD format for comparison
+            // For November 2, 2025, we want to exclude November 1, so we use gt (greater than) instead of gte
+            const formattedDate = fromDate.toISOString().split('T')[0];
+            // If the date is 2025-11-02, we want to exclude 2025-11-01, so we filter for dates > 2025-11-01
+            if (formattedDate === '2025-11-02') {
+                query = query.gt('date', '2025-11-01');
+            } else {
+                query = query.gte('date', formattedDate);
+            }
         } else {
             const days = Math.min(Math.max(parseInt(daysParam || '30'), 1), 365);
             const startDate = new Date();
