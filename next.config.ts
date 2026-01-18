@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  // Set the workspace root to silence the multiple lockfiles warning
+  outputFileTracingRoot: path.resolve(process.cwd()),
+
   // Allow cross-origin requests from local network IPs during development
   allowedDevOrigins: ['192.168.1.231'],
 

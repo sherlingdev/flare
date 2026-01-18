@@ -29,7 +29,7 @@ const zh = {
     apiKeyNamePlaceholder: "您的姓名（可选）",
     apiKeyEmailLabel: "电子邮件",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeyInputPlaceholder: "点击生成以创建您的 API 密钥",
+    apiKeyInputPlaceholder: "按按钮开始",
     apiKeySuccess: "API 密钥已成功生成！",
     apiKeyErrorPrefix: "错误：",
     apiKeyNetworkError: "网络错误。请再试一次。",
@@ -803,6 +803,9 @@ const zh = {
     days: "天",
     days7: "7 天",
     days15: "15 天",
+    days30: "30 天",
+    days60: "60 天",
+    days90: "90 天",
     allTime: "全部"
 };
 

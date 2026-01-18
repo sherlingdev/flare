@@ -29,7 +29,7 @@ const de = {
     apiKeyNamePlaceholder: "Dein Name (optional)",
     apiKeyEmailLabel: "E-Mail",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeyInputPlaceholder: "Klicken Sie auf Generieren, um Ihren API-Schlüssel zu erstellen",
+    apiKeyInputPlaceholder: "Drücken Sie die Taste, um zu beginnen",
     apiKeySuccess: "API-Schlüssel erfolgreich erstellt!",
     apiKeyErrorPrefix: "Fehler:",
     apiKeyNetworkError: "Netzwerkfehler. Bitte versuchen Sie es erneut.",
@@ -804,6 +804,9 @@ const de = {
     days: "Tage",
     days7: "7 tage",
     days15: "15 tage",
+    days30: "30 tage",
+    days60: "60 tage",
+    days90: "90 tage",
     allTime: "alles"
 };
 

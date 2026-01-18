@@ -21,13 +21,6 @@ export default function Home() {
 
       // Measure Web Vitals
       measureWebVitals();
-
-      // Redirect to saved path after OAuth login
-      const savedPath = sessionStorage.getItem('oauth_redirect_path');
-      if (savedPath && savedPath !== '/' && window.location.pathname === '/') {
-        sessionStorage.removeItem('oauth_redirect_path');
-        window.location.replace(savedPath);
-      }
     }
   }, [mounted, language]);
 

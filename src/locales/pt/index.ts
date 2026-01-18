@@ -35,7 +35,7 @@ const pt = {
     apiKeyNamePlaceholder: "Seu nome (opcional)",
     apiKeyEmailLabel: "Email",
     apiKeyEmailPlaceholder: "you@flarexrate.com",
-    apiKeyInputPlaceholder: "Clique em gerar para criar sua chave de API",
+    apiKeyInputPlaceholder: "Pressione o botão para começar",
     apiKeySuccess: "Chave de API gerada com sucesso!",
     apiKeyErrorPrefix: "Erro:",
     apiKeyNetworkError: "Erro de rede. Tente novamente.",
@@ -841,6 +841,9 @@ const pt = {
     days: "dias",
     days7: "7 dias",
     days15: "15 dias",
+    days30: "30 dias",
+    days60: "60 dias",
+    days90: "90 dias",
     allTime: "tudo"
 };
 

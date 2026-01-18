@@ -91,8 +91,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//pl27886264.effectivegatecpm.com" />
         <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
 
-        {/* Preload critical API endpoint */}
-        <link rel="preload" href="/api/payload" as="fetch" crossOrigin="anonymous" />
+        {/* Prefetch API endpoint for faster loading when component mounts */}
+        <link rel="prefetch" href="/api/payload" />
         {/* <script
           dangerouslySetInnerHTML={{
             __html: `
