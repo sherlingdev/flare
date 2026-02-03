@@ -870,7 +870,15 @@ const en = {
     days60: "60 days",
     days90: "90 days",
     allTime: "all",
-    days: "days"
+    days: "days",
+    chartTypeLine: "Line",
+    chartTypeArea: "Area",
+    chartTypeBar: "Bar",
+    customRange: "custom range",
+    customRangeFrom: "From",
+    customRangeTo: "To",
+    apply: "Apply",
+    noHistoricalData: "No historical data available"
 };
 
 export default en;

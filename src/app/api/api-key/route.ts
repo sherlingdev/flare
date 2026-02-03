@@ -3,24 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { createServiceClient } from '@/utils/supabase/service';
 import { randomBytes } from 'crypto';
 // import { sendApiKeyEmail } from '@/lib/email'; // Commented out - API key is now displayed directly in UI
-import { type SupportedLocale } from '@/lib/translations';
-
-type Language = SupportedLocale;
-
-function detectLanguage(request: Request): Language {
-    // Intentar obtener el idioma del header Accept-Language
-    const acceptLanguage = request.headers.get('accept-language') || '';
-
-    if (acceptLanguage.includes('es')) return 'es';
-    if (acceptLanguage.includes('fr')) return 'fr';
-    if (acceptLanguage.includes('pt')) return 'pt';
-    if (acceptLanguage.includes('de')) return 'de';
-    if (acceptLanguage.includes('zh')) return 'zh';
-
-    return 'en'; // Default
-}
-
-export async function GET(request: Request) {
+export async function GET() {
     try {
         // Get authenticated user - use getUser() for security
         const supabase = await createClient();
@@ -78,14 +61,8 @@ export async function GET(request: Request) {
     }
 }
 
-export async function POST(request: Request) {
+export async function POST() {
     try {
-        const body = await request.json();
-        const { language } = body;
-
-        // Detectar idioma del body o del header
-        const detectedLanguage: Language = language || detectLanguage(request);
-
         // Get authenticated user - use getUser() for security
         const supabase = await createClient();
         const { data: { user }, error: userError } = await supabase.auth.getUser();

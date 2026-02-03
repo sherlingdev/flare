@@ -838,7 +838,15 @@ const fr = {
     days30: "30 jours",
     days60: "60 jours",
     days90: "90 jours",
-    allTime: "tout"
+    allTime: "tout",
+    chartTypeLine: "Ligne",
+    chartTypeArea: "Aire",
+    chartTypeBar: "Barres",
+    customRange: "plage personnalisée",
+    customRangeFrom: "Du",
+    customRangeTo: "Au",
+    apply: "Appliquer",
+    noHistoricalData: "Aucune donnée historique disponible"
 };
 
 export default fr;

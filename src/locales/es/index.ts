@@ -862,7 +862,15 @@ const es = {
     days30: "30 días",
     days60: "60 días",
     days90: "90 días",
-    allTime: "todo"
+    allTime: "todo",
+    chartTypeLine: "Línea",
+    chartTypeArea: "Área",
+    chartTypeBar: "Barras",
+    customRange: "rango personalizado",
+    customRangeFrom: "Desde",
+    customRangeTo: "Hasta",
+    apply: "Aplicar",
+    noHistoricalData: "No hay datos históricos disponibles"
 };
 
 export default es;

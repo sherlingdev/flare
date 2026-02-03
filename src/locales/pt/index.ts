@@ -844,7 +844,15 @@ const pt = {
     days30: "30 dias",
     days60: "60 dias",
     days90: "90 dias",
-    allTime: "tudo"
+    allTime: "tudo",
+    chartTypeLine: "Linha",
+    chartTypeArea: "Área",
+    chartTypeBar: "Barras",
+    customRange: "intervalo personalizado",
+    customRangeFrom: "De",
+    customRangeTo: "Até",
+    apply: "Aplicar",
+    noHistoricalData: "Nenhum dado histórico disponível"
 };
 
 export default pt;

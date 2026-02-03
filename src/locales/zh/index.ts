@@ -806,7 +806,15 @@ const zh = {
     days30: "30 天",
     days60: "60 天",
     days90: "90 天",
-    allTime: "全部"
+    allTime: "全部",
+    chartTypeLine: "折线",
+    chartTypeArea: "面积",
+    chartTypeBar: "柱状",
+    customRange: "自定义范围",
+    customRangeFrom: "开始",
+    customRangeTo: "结束",
+    apply: "应用",
+    noHistoricalData: "暂无历史数据"
 };
 
 export default zh;

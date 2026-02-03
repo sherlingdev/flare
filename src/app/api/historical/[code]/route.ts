@@ -12,6 +12,7 @@ export async function GET(
         const daysParam = searchParams.get('days');
         const dateParam = searchParams.get('date');
         const fromDateParam = searchParams.get('fromDate');
+        const toDateParam = searchParams.get('toDate');
 
         const supabase = await createClient();
 
@@ -50,8 +51,36 @@ export async function GET(
                 );
             }
             query = query.eq('date', dateParam);
+        } else if (fromDateParam && toDateParam) {
+            // Custom date range: fromDate and toDate (inclusive)
+            const fromDate = new Date(fromDateParam);
+            const toDate = new Date(toDateParam);
+            if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+                return NextResponse.json(
+                    { success: false, error: 'Invalid date format. Use YYYY-MM-DD for fromDate and toDate', message: 'Invalid request' },
+                    { status: 400 }
+                );
+            }
+            const fromStr = fromDate.toISOString().split('T')[0];
+            const toStr = toDate.toISOString().split('T')[0];
+            if (fromStr > toStr) {
+                return NextResponse.json(
+                    { success: false, error: 'fromDate must be before or equal to toDate', message: 'Invalid request' },
+                    { status: 400 }
+                );
+            }
+            const maxRangeDays = 365;
+            const diffTime = toDate.getTime() - fromDate.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays > maxRangeDays) {
+                return NextResponse.json(
+                    { success: false, error: `Date range cannot exceed ${maxRangeDays} days`, message: 'Invalid request' },
+                    { status: 400 }
+                );
+            }
+            query = query.gte('date', fromStr).lte('date', toStr).order('date', { ascending: true });
         } else if (fromDateParam) {
-            // Use fromDate to get data from a specific date onwards
+            // Use fromDate to get data from a specific date onwards (e.g. "all time")
             const fromDate = new Date(fromDateParam);
             if (isNaN(fromDate.getTime())) {
                 return NextResponse.json(
@@ -59,20 +88,16 @@ export async function GET(
                     { status: 400 }
                 );
             }
-            // Ensure we use the date in YYYY-MM-DD format for comparison
-            // For November 2, 2025, we want to exclude November 1, so we use gt (greater than) instead of gte
             const formattedDate = fromDate.toISOString().split('T')[0];
-            // If the date is 2025-11-02, we want to exclude 2025-11-01, so we filter for dates > 2025-11-01
             if (formattedDate === '2025-11-02') {
                 query = query.gt('date', '2025-11-01');
             } else {
                 query = query.gte('date', formattedDate);
             }
         } else {
+            // Last N days that have a rate (records), not last N calendar days
             const days = Math.min(Math.max(parseInt(daysParam || '30'), 1), 365);
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - days);
-            query = query.gte('date', startDate.toISOString().split('T')[0]);
+            query = query.limit(days);
         }
 
         const { data, error, count } = await query;

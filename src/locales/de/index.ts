@@ -807,7 +807,15 @@ const de = {
     days30: "30 tage",
     days60: "60 tage",
     days90: "90 tage",
-    allTime: "alles"
+    allTime: "alles",
+    chartTypeLine: "Linie",
+    chartTypeArea: "Fläche",
+    chartTypeBar: "Balken",
+    customRange: "benutzerdefinierter Zeitraum",
+    customRangeFrom: "Von",
+    customRangeTo: "Bis",
+    apply: "Anwenden",
+    noHistoricalData: "Keine historischen Daten verfügbar"
 };
 
 export default de;
