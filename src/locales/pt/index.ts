@@ -4,6 +4,11 @@ const pt = {
     enterAmount: "Quanto?",
     fromCurrency: "Moeda de origem",
     toCurrency: "Moeda de destino",
+    addCurrency: "Adicionar moeda",
+    removeCurrency: "Remover",
+    keepOneCurrency: "Manter pelo menos uma moeda",
+    moveUp: "Mover para cima",
+    moveDown: "Mover para baixo",
     from: "DE",
     to: "PARA",
     swap: "Trocar moedas",
@@ -12,6 +17,8 @@ const pt = {
     noCurrenciesFound: "Nenhuma moeda encontrada",
     dynamicTitle: "Converter {from} para {to}",
     dynamicTitleFull: "{fromName} para {toName}",
+    converterTitle: "Conversor de moedas",
+    converterTitleMulti: "Conversor multi moedas",
     dynamicConversion: "{amount} {from} = {result} {to}",
     dynamicRate: "1 {from} = {rate} {to}",
     dynamicAmount: "{amount} {fromName}",
@@ -27,6 +34,8 @@ const pt = {
 
     // Site description
     siteDescription: "Converta moedas instantaneamente. Rápido, seguro e sempre preciso",
+    taglineTitle: "Converta moedas instantaneamente",
+    taglineSubtitle: "Rápido, seguro e sempre preciso",
 
     // API Key section
     apiKeyTitle: "Obtenha chave de API | Converta moedas instantaneamente. Rápido, seguro e sempre preciso.",

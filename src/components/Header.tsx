@@ -170,7 +170,7 @@ export default function Header({
                     document.cookie = `${cookieName}=;expires=${new Date(0).toUTCString()};path=/`;
                 }
             });
-            
+
             Object.keys(localStorage).forEach(key => {
                 if (key.startsWith('sb-')) {
                     localStorage.removeItem(key);

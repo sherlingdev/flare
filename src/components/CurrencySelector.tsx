@@ -199,7 +199,7 @@ export default function CurrencySelector({
                             </div>
                         </div>
                         {isDropdownOpen && (
-                            <div className="dropdown-options absolute top-full z-[99999] mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg w-full left-0 right-0 max-h-60 overflow-y-auto" style={{ zIndex: 99999 }}>
+                            <div className="dropdown-options currency-selector-dropdown">
                                 <div className="search-container">
                                     <div className="relative">
                                         <input
@@ -236,7 +236,7 @@ export default function CurrencySelector({
                                             }}
                                             className={`${currencyOption.code === selectedCode ? 'selected' : ''} ${index === selectedIndex ? 'keyboard-selected' : ''}`}
                                         >
-                                            <div className="flex items-center space-x-2 min-w-0 overflow-hidden">
+                                            <div className="flex items-center space-x-2">
                                                 <div className="flex-shrink-0 w-5 h-3.5 rounded-sm overflow-hidden shadow-sm border border-gray-200 dark:border-gray-600">
                                                     <Image
                                                         src={currencyOption.flag}
@@ -249,8 +249,8 @@ export default function CurrencySelector({
                                                         }}
                                                     />
                                                 </div>
-                                                <div className="flex-1 min-w-0 overflow-hidden">
-                                                    <span className="truncate uppercase text-sm block">
+                                                <div className="flex-1 min-w-0">
+                                                    <span className="uppercase text-sm block whitespace-nowrap">
                                                         {currencyOption.code} <span className="font-normal">({currencyOption.symbol})</span> - {(currencyNamesMap?.[currencyOption.code] ?? currencyOption.name)}
                                                     </span>
                                                 </div>

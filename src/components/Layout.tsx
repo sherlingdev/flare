@@ -74,11 +74,11 @@ export default function Layout({ children }: LayoutProps) {
     return (
         <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-800 flex flex-col">
             <Header />
-            <div className={`flex-1 flex justify-center ${isHomeOrKey
-                ? "items-center pt-24 sm:pt-28 pb-16 sm:pb-20"
+            <div className={`flex-1 flex justify-center min-w-0 ${isHomeOrKey
+                ? "items-center pt-20 sm:pt-24 lg:pt-28 pb-12 sm:pb-16 lg:pb-20"
                 : isLegalPage
-                    ? "items-start overflow-y-auto pt-20 sm:pt-24"
-                    : "items-center pt-20 sm:pt-24"
+                    ? "items-start overflow-y-auto pt-16 sm:pt-20 lg:pt-24"
+                    : "items-center pt-16 sm:pt-20 lg:pt-24"
                 }`}>
                 {children}
             </div>

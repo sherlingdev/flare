@@ -112,21 +112,19 @@ export default function Home() {
   }, [mounted]);
 
   return (
-    <main className="relative z-10 w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 homepage-vertical-center">
-      {/* Header */}
-      <div className="w-full max-w-6xl mb-6">
-        <div className="text-center">
-          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary mb-4">
-            Flare Exchange Rate
-          </h1>
-          <p className="text-base sm:text-xl text-flare-primary max-w-2xl mx-auto">
-            {t.siteDescription}
-          </p>
-        </div>
+    <main className="relative z-10 w-full min-w-0 flex flex-col items-center justify-center px-3 sm:px-6 lg:px-8 homepage-vertical-center">
+      {/* Header — two lines: Convert currencies instantly. + Quick, safe... */}
+      <div className="w-full max-w-6xl py-6 sm:py-12 px-4 sm:px-8 mb-0">
+        <h1 className="text-center text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary w-full max-w-full">
+          {(t as { taglineTitle?: string }).taglineTitle ?? "Convert currencies instantly"}
+        </h1>
+        <p className="text-center text-sm sm:text-base lg:text-xl text-flare-primary mt-2 sm:mt-3 w-full max-w-full">
+          {(t as { taglineSubtitle?: string }).taglineSubtitle ?? "Quick, safe, and always accurate"}
+        </p>
       </div>
 
-      <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
-        <div className="w-full max-w-none">
+      <div className="w-full max-w-6xl min-w-0 flex flex-col items-center justify-center gap-4 sm:gap-6">
+        <div className="w-full max-w-none min-w-0">
           <CurrencyCard>
             <CurrencyConverter />
           </CurrencyCard>

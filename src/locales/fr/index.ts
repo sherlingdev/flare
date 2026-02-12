@@ -4,6 +4,11 @@ const fr = {
     enterAmount: "Combien?",
     fromCurrency: "Devise d'origine",
     toCurrency: "Devise de destination",
+    addCurrency: "Ajouter une devise",
+    removeCurrency: "Retirer",
+    keepOneCurrency: "Garder au moins une devise",
+    moveUp: "Monter",
+    moveDown: "Descendre",
     from: "DE",
     to: "VERS",
     swap: "Inverser les devises",
@@ -12,6 +17,8 @@ const fr = {
     noCurrenciesFound: "Aucune devise trouvée",
     dynamicTitle: "Convertir {from} en {to}",
     dynamicTitleFull: "{fromName} en {toName}",
+    converterTitle: "Convertisseur de devises",
+    converterTitleMulti: "Convertisseur multi devises",
     dynamicConversion: "{amount} {from} = {result} {to}",
     dynamicRate: "1 {from} = {rate} {to}",
     dynamicAmount: "{amount} {fromName}",
@@ -27,6 +34,8 @@ const fr = {
 
     // Site description
     siteDescription: "Convertissez des devises instantanément. Rapide, sûr et toujours précis",
+    taglineTitle: "Convertissez des devises instantanément",
+    taglineSubtitle: "Rapide, sûr et toujours précis",
 
     // API Key section
     apiKeyTitle: "Obtenez clé API | Convertissez des devises instantanément. Rapide, sûr et toujours précis.",

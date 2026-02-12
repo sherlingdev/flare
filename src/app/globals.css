@@ -244,6 +244,36 @@ svg {
     scrollbar-color: #475569 transparent;
 }
 
+/* Currency list: reserve scrollbar space + gap so scrollbar is detached from cards */
+.currency-list-scroll {
+    scrollbar-gutter: stable;
+    padding-right: 0.5rem;
+}
+
+/* Base row: same scroll container as list + explicit right space (scrollbar + padding) so USD = DOP */
+.currency-base-container {
+    max-height: none;
+    overflow: visible;
+    /* Reserve same right space as list (desktop) when base has no scrollbar */
+    padding-right: calc(0.5rem + 14px);
+}
+@media (max-width: 1024px) {
+    .currency-input-group .currency-base-container {
+        padding-right: calc(0.25rem + 7px);
+    }
+}
+
+/* When card dropdown is open: keep same width (no grow) + reserve scrollbar space */
+.currency-list-scroll.card-dropdown-open {
+    contain: layout inline-size;
+    padding-right: calc(0.5rem + 8px);
+}
+
+.card-row-dropdown-open {
+    contain: layout inline-size;
+}
+
+
 /* Layout optimizations */
 .overflow-hidden {
     overflow: hidden;
@@ -353,9 +383,17 @@ svg {
         width: 100%;
     }
     
-    /* Increase input padding only on mobile - same as desktop */
-    .currency-input-group .flex.items-center {
+    /* Other flex rows (not inside list scroll): increase padding on mobile */
+    .currency-input-group .flex.items-center:not(.currency-base-row) {
         padding: 1rem 2rem;
+    }
+    /* Inner card blocks only: no padding so flag and DOP stay pegao */
+    .currency-input-group .currency-list-scroll .flex.items-center:not(.justify-between) {
+        padding: 0;
+    }
+    /* Card row: design-pattern padding (16px sides), not the generic 2rem */
+    .currency-input-group .currency-list-scroll .flex.items-center.justify-between {
+        padding: 14px 16px;
     }
 }
 
@@ -374,9 +412,17 @@ svg {
         width: 100%;
     }
     
-    /* Maintain good padding for very small screens */
-    .currency-input-group .flex.items-center {
+    /* Other flex rows (not inside list scroll) on very small screens */
+    .currency-input-group .flex.items-center:not(.currency-base-row) {
         padding: 0.875rem 1.75rem;
+    }
+    /* Inner card blocks only: no padding so flag and DOP stay pegao */
+    .currency-input-group .currency-list-scroll .flex.items-center:not(.justify-between) {
+        padding: 0;
+    }
+    /* Card row: design-pattern padding (16px sides), not the generic 1.75rem */
+    .currency-input-group .currency-list-scroll .flex.items-center.justify-between {
+        padding: 14px 16px;
     }
 }
 
@@ -556,6 +602,44 @@ html {
     overflow-x: hidden;
 }
 
+/* All dropdowns: occupy the space they need — no truncation (same behavior everywhere) */
+.currency-input-dropdown.dropdown-options,
+.add-currency-dropdown.dropdown-options,
+.currency-selector-dropdown.dropdown-options,
+.card-currency-dropdown.dropdown-options {
+    right: auto;
+    left: 0;
+    width: max-content;
+    min-width: 20rem;
+    max-width: min(90vw, 32rem);
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+.currency-input-dropdown.dropdown-options { left: 0; }
+.add-currency-dropdown.dropdown-options { left: 50%; transform: translate(-50%, 0); }
+.currency-selector-dropdown.dropdown-options { left: 0; z-index: 99999; }
+.card-currency-dropdown.dropdown-options { left: 0; z-index: 100; }
+
+/* Let list items define width so dropdown grows to fit full text */
+.dropdown-options > div {
+    overflow: visible;
+}
+
+/* Drag and drop styles for currency cards */
+[draggable="true"] {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Prevent text selection during drag */
+.dragging {
+    user-select: none;
+    pointer-events: none;
+}
+
 /* Search input container - added at the top */
 .dropdown-options .search-container {
     @apply sticky top-0 bg-gray-50 dark:bg-gray-700;
@@ -564,6 +648,12 @@ html {
     margin: 0;
     width: 100%;
     box-sizing: border-box;
+}
+
+/* Search in all dropdowns: input uses dropdown width (dropdown sized by content) */
+.dropdown-options .search-container,
+.dropdown-options .search-input {
+    min-width: 0;
 }
 
 /* No hover effects for search container */
@@ -592,15 +682,16 @@ html {
     color: #CBD5E1 !important;
 }
 
-/* Search input field */
+/* Search input field — slightly larger for harmony with list */
 .dropdown-options .search-input {
-    @apply w-full text-sm bg-gray-50 dark:bg-gray-700 border-none outline-none;
+    @apply w-full text-base bg-gray-50 dark:bg-gray-700 border-none outline-none;
     color: #475569;
-    padding: 12px 16px;
+    padding: 14px 16px;
     padding-right: 2.5rem;
     width: 100%;
     margin: 0;
     box-sizing: border-box;
+    min-height: 48px;
 }
 
 .dropdown-options .search-input::placeholder {
@@ -634,15 +725,14 @@ html {
     color: #CBD5E1 !important;
 }
 
-/* Dropdown option items */
+/* Dropdown option items — full text visible, dropdown grows to fit */
 .dropdown-options > div {
-    @apply px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 font-normal;
+    @apply px-4 py-2.5 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 font-normal;
     display: flex;
     align-items: center;
-    min-height: 44px;
+    min-height: 40px;
     transition: background-color 0.2s ease;
     white-space: nowrap;
-    overflow: hidden;
     color: #475569;
 }
 
@@ -683,8 +773,9 @@ html {
     }
     
     .dropdown-options {
-        width: 260px;
-        overflow-x: hidden;
+        width: max-content;
+        min-width: 20rem;
+        max-width: min(90vw, 32rem);
     }
 }
 
@@ -706,18 +797,17 @@ html {
     }
     
     .dropdown-options {
-        width: 280px;
-        overflow-x: hidden;
+        width: max-content;
+        min-width: 20rem;
+        max-width: min(calc(100vw - 2rem), 32rem);
         right: 0.5rem;
-        max-width: calc(100vw - 2rem);
     }
     
     .dropdown-options > div {
         min-height: 48px;
     }
     
-    /* Remove padding from flex container on mobile */
-    .dropdown-options > div .flex.items-center.space-x-2.min-w-0 {
+    .dropdown-options > div .flex.items-center.space-x-2 {
         padding: 0;
         margin: 0;
     }

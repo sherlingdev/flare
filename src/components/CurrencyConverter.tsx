@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useConverter } from "@/contexts/ConverterContext";
 import { translations } from "@/lib/translations";
-import SwapButton from "./SwapButton";
 import LastUpdated from "./LastUpdated";
 import CurrencyInput from "./CurrencyInput";
+import CurrencyRow from "./CurrencyRow";
+import CurrencyRowValueSlot from "./CurrencyRowValueSlot";
+import CurrencyRowSelector from "./CurrencyRowSelector";
+import CurrencySelectModal from "./CurrencySelectModal";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function CurrencyConverter() {
@@ -15,9 +19,12 @@ export default function CurrencyConverter() {
     const {
         fromCurrency,
         toCurrency,
+        toCurrencies,
         setFromCurrency: setContextFromCurrency,
-        setToCurrency: setContextToCurrency,
-        setPair
+        addToCurrency,
+        removeToCurrency,
+        setPair,
+        setPairMultiple
     } = useConverter();
     const router = useRouter();
 
@@ -25,22 +32,6 @@ export default function CurrencyConverter() {
     const [currencyRates, setCurrencyRates] = useState<Record<string, number>>({});
     const [currencies, setCurrencies] = useState<Array<{ code: string, name: string, symbol: string, flag: string }>>([]);
     const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(true);
-
-    // Generate dynamic title based on current currencies
-    const dynamicTitle = t.dynamicTitleFull
-        .replace('{fromName}', t.currencyNames[fromCurrency as keyof typeof t.currencyNames] || fromCurrency)
-        .replace('{toName}', t.currencyNames[toCurrency as keyof typeof t.currencyNames] || toCurrency);
-
-    // Update dynamic title directly in the DOM when currencies change
-    useEffect(() => {
-        if (mounted) {
-            // Find and update the h1 element in the page
-            const h1Element = document.querySelector('h1.text-flare-primary');
-            if (h1Element) {
-                h1Element.textContent = dynamicTitle;
-            }
-        }
-    }, [dynamicTitle, mounted]);
 
     // Load dynamic rates and currencies on component mount
     useEffect(() => {
@@ -181,21 +172,25 @@ export default function CurrencyConverter() {
         const from = params.get('from');
         const to = params.get('to');
         let updated = false;
+        const fromCode = from?.toUpperCase();
+        const toCode = to?.toUpperCase();
 
-        if (from && currencies.some(currency => currency.code === from.toUpperCase())) {
-            setContextFromCurrency(from);
+        if (fromCode && currencies.some((c) => c.code === fromCode)) {
+            if (toCode && currencies.some((c) => c.code === toCode)) {
+                setPair(fromCode, toCode);
+            } else {
+                setContextFromCurrency(fromCode);
+            }
             updated = true;
-        }
-
-        if (to && currencies.some(currency => currency.code === to.toUpperCase())) {
-            setContextToCurrency(to);
+        } else if (toCode && currencies.some((c) => c.code === toCode)) {
+            setPair(fromCurrency, toCode);
             updated = true;
         }
 
         if (updated && window.location.search) {
             router.replace(window.location.pathname, { scroll: false });
         }
-    }, [currencies, isLoadingCurrencies, router, setContextFromCurrency, setContextToCurrency]);
+    }, [currencies, isLoadingCurrencies, router, fromCurrency, setContextFromCurrency, setPair]);
 
     // Function to get hardcoded rates as fallback
     const getHardcodedRates = (): Record<string, number> => {
@@ -496,20 +491,28 @@ export default function CurrencyConverter() {
     };
 
     const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
-    const [toDropdownOpen, setToDropdownOpen] = useState(false);
+    const [addCurrencyOpen, setAddCurrencyOpen] = useState(false);
+    const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+    const dragOverIndexRef = useRef<number | null>(null);
+    const touchDragRef = useRef<{ startIndex: number; touchId: number; startY: number; activated: boolean; longPressRequired?: boolean; longPressTimerId?: ReturnType<typeof setTimeout> } | null>(null);
+    const justDidDragRef = useRef(false);
+    const addCurrencyDropdownRef = useRef<HTMLDivElement>(null);
     const fromAmountRef = useRef<HTMLInputElement>(null);
-    const toAmountRef = useRef<HTMLInputElement>(null);
     const fromDropdownRef = useRef<HTMLDivElement>(null);
-    const toDropdownRef = useRef<HTMLDivElement>(null);
 
-    const [fromAmountDisplay, setFromAmountDisplay] = useState("1.00");
+    // Edit-any behavior (like single pair + swap): whichever field you edit becomes the source; others calculate from it.
+    const [baseAmount, setBaseAmount] = useState(1);
+    const [baseCurrency, setBaseCurrency] = useState(fromCurrency);
+    const [usdInputRaw, setUsdInputRaw] = useState<string | null>(null);
+    const [cardInputRaw, setCardInputRaw] = useState<{ code: string; value: string } | null>(null);
 
-    // Debouncing refs
     const fromDebounceRef = useRef<NodeJS.Timeout | null>(null);
-    const toDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Calculate initial rate from global rates
-    const [toAmountDisplay, setToAmountDisplay] = useState("1.00");
+    useEffect(() => setBaseCurrency((prev) => (prev === fromCurrency ? prev : fromCurrency)), [fromCurrency]);
+    useEffect(() => { if (cardInputRaw && !toCurrencies.includes(cardInputRaw.code)) setCardInputRaw(null); }, [cardInputRaw, toCurrencies]);
+    useEffect(() => { dragOverIndexRef.current = dragOverIndex; }, [dragOverIndex]);
 
     // Unified conversion system - single source of truth
     const performConversion = useCallback((fromValue: number, fromCurr: string, toCurr: string): number => {
@@ -538,19 +541,17 @@ export default function CurrencyConverter() {
             const toRate = rates[toCurr] || 1;
             return usdValue * toRate;
         }
-    }, [currencyRates]); // Depend on currencyRates
+    }, [currencyRates]);
 
-    // Calculate initial rate on mount (only when component first loads)
-    const hasInitialized = useRef(false);
     useEffect(() => {
-        if (!hasInitialized.current && fromCurrency !== toCurrency && Object.keys(currencyRates).length > 0) {
-            const rate = performConversion(1, fromCurrency, toCurrency);
-            setToAmountDisplay(rate.toFixed(2));
-            hasInitialized.current = true;
+        const validBase = baseCurrency === fromCurrency || toCurrencies.includes(baseCurrency);
+        if (!validBase) {
+            setBaseCurrency(fromCurrency);
+            setBaseAmount(performConversion(baseAmount, baseCurrency, fromCurrency));
         }
-    }, [fromCurrency, toCurrency, performConversion, currencyRates]);
+    }, [baseCurrency, fromCurrency, toCurrencies, baseAmount, performConversion]);
 
-    // Helper function to format currency values
+    // --- Format & conversion helpers ---
     const formatCurrencyValue = useCallback((value: string): string => {
         if (value === "" || value === "0") return "0.00";
         const num = parseFloat(value.replace(/,/g, ''));
@@ -559,6 +560,20 @@ export default function CurrencyConverter() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
+    }, []);
+
+    const setBaseFromAmount = useCallback((amount: number, currency: string) => {
+        if (!Number.isNaN(amount) && amount >= 0) {
+            setBaseAmount(amount);
+            setBaseCurrency(currency);
+        }
+    }, []);
+
+    const handleAmountKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') e.currentTarget.blur();
+        if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
+        if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
+        if (!/^[0-9.,]$/.test(e.key)) e.preventDefault();
     }, []);
 
     // Helper function to sanitize input value
@@ -612,35 +627,10 @@ export default function CurrencyConverter() {
 
 
 
-    // Debounced conversion functions using unified system
-    const debouncedFromConversion = useCallback((value: string) => {
-        if (fromDebounceRef.current) {
-            clearTimeout(fromDebounceRef.current);
-        }
-
-        fromDebounceRef.current = setTimeout(() => {
-            const fromValue = parseFloat(value.replace(/,/g, ''));
-            if (!isNaN(fromValue) && fromValue >= 0) {
-                const toValue = performConversion(fromValue, fromCurrency, toCurrency);
-                setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
-            }
-        }, 300);
-    }, [fromCurrency, toCurrency, formatCurrencyValue, performConversion]);
-
-    const debouncedToConversion = useCallback((value: string) => {
-        if (toDebounceRef.current) {
-            clearTimeout(toDebounceRef.current);
-        }
-
-        toDebounceRef.current = setTimeout(() => {
-            const toValue = parseFloat(value.replace(/,/g, ''));
-            if (!isNaN(toValue) && toValue >= 0) {
-                // For reverse conversion: use performConversion with swapped currencies
-                const fromValue = performConversion(toValue, toCurrency, fromCurrency);
-                setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
-            }
-        }, 300);
-    }, [fromCurrency, toCurrency, formatCurrencyValue, performConversion]);
+    const debouncedFromConversion = useCallback(() => {
+        if (fromDebounceRef.current) clearTimeout(fromDebounceRef.current);
+        fromDebounceRef.current = setTimeout(() => {}, 300);
+    }, []);
 
     // Get available currencies for dropdown (exclude the other currency to prevent same selection)
     // Put the currently selected currency at the top of the list
@@ -660,33 +650,6 @@ export default function CurrencyConverter() {
         return availableCurrencies;
     }, [currencies]);
 
-    // Handle currency swap
-    const handleSwapCurrencies = useCallback(() => {
-        const newFromCurrency = toCurrency;
-        const newToCurrency = fromCurrency;
-        const newFromAmount = toAmountDisplay;
-        const newToAmount = fromAmountDisplay;
-
-        // Clear any pending debounced conversions
-        if (fromDebounceRef.current) {
-            clearTimeout(fromDebounceRef.current);
-        }
-        if (toDebounceRef.current) {
-            clearTimeout(toDebounceRef.current);
-        }
-
-        setPair(newFromCurrency, newToCurrency);
-        setFromAmountDisplay(newFromAmount);
-        setToAmountDisplay(newToAmount);
-
-        // Use requestAnimationFrame to ensure DOM is updated before selecting
-        requestAnimationFrame(() => {
-            if (fromAmountRef.current) {
-                fromAmountRef.current.focus();
-                fromAmountRef.current.select();
-            }
-        });
-    }, [fromCurrency, toCurrency, fromAmountDisplay, toAmountDisplay, setPair]);
 
     // Auto-focus and select all text on left input when component mounts
     useEffect(() => {
@@ -696,101 +659,213 @@ export default function CurrencyConverter() {
         }
     }, [mounted]);
 
-    // Cleanup timeouts on unmount
     useEffect(() => {
         return () => {
-            if (fromDebounceRef.current) {
-                clearTimeout(fromDebounceRef.current);
-            }
-            if (toDebounceRef.current) {
-                clearTimeout(toDebounceRef.current);
-            }
+            if (fromDebounceRef.current) clearTimeout(fromDebounceRef.current);
         };
     }, []);
 
-    // Handle currency changes with unified conversion
+    // Derived: "from" amount and all card amounts from current base (edit-any source of truth)
+    const fromAmountNum = performConversion(baseAmount, baseCurrency, fromCurrency);
+    const fromAmountDisplay = formatCurrencyValue(fromAmountNum.toFixed(2));
+
+    const getCardConvertedValue = useCallback((code: string) => performConversion(baseAmount, baseCurrency, code), [baseAmount, baseCurrency, performConversion]);
+
+    const currenciesToAdd = currencies.filter(
+        (c) => c.code !== fromCurrency && !toCurrencies.includes(c.code)
+    );
+
+    const cardSlotCurrencies = openCardIndex !== null && toCurrencies[openCardIndex]
+        ? getAvailableCurrencies(fromCurrency, toCurrencies[openCardIndex])
+        : [];
     const handleFromCurrencyChange = useCallback((newCurrency: string) => {
         setContextFromCurrency(newCurrency);
+    }, [setContextFromCurrency]);
 
-        // Recalculate conversion when from currency changes
-        const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
-        if (!isNaN(fromValue) && fromValue >= 0) {
-            const toValue = performConversion(fromValue, newCurrency, toCurrency);
-            setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', index.toString());
+        // Close any open dropdowns when starting drag
+        setOpenCardIndex(null);
+        setAddCurrencyOpen(false);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (draggedIndex !== null && draggedIndex !== index) {
+            setDragOverIndex(index);
         }
-    }, [fromAmountDisplay, toCurrency, performConversion, formatCurrencyValue, setContextFromCurrency]);
+    };
 
-    const handleToCurrencyChange = useCallback((newCurrency: string) => {
-        setContextToCurrency(newCurrency);
+    const handleDragLeave = () => {
+        setDragOverIndex(null);
+    };
 
-        // Recalculate conversion when to currency changes
-        const fromValue = parseFloat(fromAmountDisplay.replace(/,/g, ''));
-        if (!isNaN(fromValue) && fromValue >= 0) {
-            const toValue = performConversion(fromValue, fromCurrency, newCurrency);
-            setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+    const applyReorder = useCallback((fromIndex: number, toIndex: number) => {
+        if (fromIndex === toIndex) return;
+        const newList = [...toCurrencies];
+        const [removed] = newList.splice(fromIndex, 1);
+        newList.splice(toIndex, 0, removed);
+        setPairMultiple(fromCurrency, newList);
+    }, [toCurrencies, fromCurrency, setPairMultiple]);
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === dropIndex) {
+            setDraggedIndex(null);
+            setDragOverIndex(null);
+            return;
         }
-    }, [fromAmountDisplay, fromCurrency, performConversion, formatCurrencyValue, setContextToCurrency]);
+        applyReorder(draggedIndex, dropIndex);
+        setDraggedIndex(null);
+        setDragOverIndex(null);
+    };
 
-    // Dropdown handlers
-    const handleFromDropdownClick = useCallback(() => {
-        setFromDropdownOpen(!fromDropdownOpen);
-        setToDropdownOpen(false);
-    }, [fromDropdownOpen]);
+    const handleDragEnd = useCallback(() => {
+        setDraggedIndex(null);
+        setDragOverIndex(null);
+    }, []);
 
-    const handleToDropdownClick = useCallback(() => {
-        setToDropdownOpen(!toDropdownOpen);
-        setFromDropdownOpen(false);
-    }, [toDropdownOpen]);
+    // Touch drag for mobile (native DnD doesn't work on touch). Handle: drag on move. Row (long-press): drag after ~400ms hold.
+    const TOUCH_DRAG_THRESHOLD_PX = 10;
+    const LONG_PRESS_MS = 400;
+    const handleTouchStart = useCallback((e: React.TouchEvent, index: number, fromRow = false) => {
+        if (touchDragRef.current) return;
+        if (fromRow) {
+            const target = e.target as HTMLElement;
+            if (target.closest?.('input') || target.closest?.('button')) return;
+        }
+        const touch = e.changedTouches[0];
+        touchDragRef.current = {
+            startIndex: index,
+            touchId: touch.identifier,
+            startY: touch.clientY,
+            activated: false,
+            longPressRequired: fromRow,
+            longPressTimerId: fromRow ? undefined : undefined
+        };
 
-    // Handle clicks outside dropdowns to close them
+        const getTouch = (ev: TouchEvent) => {
+            for (let i = 0; i < ev.changedTouches.length; i++) {
+                if (ev.changedTouches[i].identifier === touchDragRef.current?.touchId) return ev.changedTouches[i];
+            }
+            for (let i = 0; i < ev.touches.length; i++) {
+                if (ev.touches[i].identifier === touchDragRef.current?.touchId) return ev.touches[i];
+            }
+            return null;
+        };
+
+        const cleanup = () => {
+            const t = touchDragRef.current;
+            if (t?.longPressTimerId) clearTimeout(t.longPressTimerId);
+            touchDragRef.current = null;
+            document.removeEventListener('touchmove', onTouchMove as (ev: Event) => void, { passive: false } as EventListenerOptions);
+            document.removeEventListener('touchend', onTouchEnd as (ev: Event) => void, { capture: true });
+            document.removeEventListener('touchcancel', onTouchEnd as (ev: Event) => void, { capture: true });
+        };
+
+        if (fromRow) {
+            touchDragRef.current.longPressTimerId = setTimeout(() => {
+                const t = touchDragRef.current;
+                if (!t || t.activated) return;
+                t.activated = true;
+                t.longPressTimerId = undefined;
+                setOpenCardIndex(null);
+                setAddCurrencyOpen(false);
+                setDraggedIndex(t.startIndex);
+            }, LONG_PRESS_MS);
+        }
+
+        const onTouchMove = (ev: TouchEvent) => {
+            const t = touchDragRef.current;
+            if (!t) return;
+            const touch = getTouch(ev);
+            if (!touch) return;
+            const dy = Math.abs(touch.clientY - t.startY);
+            if (!t.activated) {
+                if (t.longPressRequired) {
+                    if (dy > TOUCH_DRAG_THRESHOLD_PX) {
+                        cleanup();
+                        return;
+                    }
+                    return;
+                }
+                if (dy > TOUCH_DRAG_THRESHOLD_PX) {
+                    t.activated = true;
+                    setOpenCardIndex(null);
+                    setAddCurrencyOpen(false);
+                    setDraggedIndex(t.startIndex);
+                }
+            }
+            if (t.activated) {
+                ev.preventDefault();
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                const row = el?.closest?.('[data-drag-index]');
+                const idxStr = row?.getAttribute('data-drag-index') ?? null;
+                if (idxStr != null) {
+                    const idx = parseInt(idxStr, 10);
+                    if (!Number.isNaN(idx)) setDragOverIndex(idx);
+                }
+            }
+        };
+
+        const onTouchEnd = (ev: TouchEvent) => {
+            const t = touchDragRef.current;
+            if (!t || getTouch(ev) === null) return;
+            if (t.activated) {
+                const dropIdx = dragOverIndexRef.current;
+                if (dropIdx !== null && dropIdx !== t.startIndex) {
+                    applyReorder(t.startIndex, dropIdx);
+                    justDidDragRef.current = true;
+                    setTimeout(() => { justDidDragRef.current = false; }, 300);
+                }
+                setDraggedIndex(null);
+                setDragOverIndex(null);
+            }
+            cleanup();
+        };
+
+        document.addEventListener('touchmove', onTouchMove as (ev: Event) => void, { passive: false } as AddEventListenerOptions);
+        document.addEventListener('touchend', onTouchEnd as (ev: Event) => void, { capture: true });
+        document.addEventListener('touchcancel', onTouchEnd as (ev: Event) => void, { capture: true });
+    }, [applyReorder]);
+
+    // Reset drag state when any drag ends (e.g. drop outside list) — standard DnD pattern
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as Node;
-
-            // Check if click is outside from dropdown
-            if (fromDropdownRef.current && !fromDropdownRef.current.contains(target)) {
-                setFromDropdownOpen(false);
-            }
-
-            // Check if click is outside to dropdown
-            if (toDropdownRef.current && !toDropdownRef.current.contains(target)) {
-                setToDropdownOpen(false);
-            }
+        const onDocumentDragEnd = () => {
+            setDraggedIndex(null);
+            setDragOverIndex(null);
         };
+        document.addEventListener('dragend', onDocumentDragEnd);
+        return () => document.removeEventListener('dragend', onDocumentDragEnd);
+    }, []);
 
-        // Add event listener when any dropdown is open
-        if (fromDropdownOpen || toDropdownOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        // Cleanup event listener
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [fromDropdownOpen, toDropdownOpen]);
+    // Currency modals (base, add, list row) close via CurrencySelectModal backdrop/X only — no document click-outside, so clicks inside the modal don't close it
 
     return (
         <>
-            <div className="currency-input-group flex flex-col lg:flex-row items-center justify-center space-y-4 lg:space-y-0 lg:space-x-8 relative">
-                {/* From Currency Section */}
-                <div className="w-full lg:flex-1 order-1 lg:order-1">
+            <div className="currency-input-group flex flex-col w-full min-w-0 max-w-full">
+                {/* Base row: same wrapper as list rows so USD and DOP have identical context and width */}
+                <div className="currency-list-scroll currency-base-container w-full max-w-full min-w-0">
                     <CurrencyInput
-                        value={fromAmountDisplay}
+                        value={usdInputRaw !== null ? usdInputRaw : fromAmountDisplay}
                         onChange={(value) => {
-                            const sanitizedValue = sanitizeInputValue(value);
-                            setFromAmountDisplay(sanitizedValue);
-                            debouncedFromConversion(sanitizedValue);
+                            const sanitized = sanitizeInputValue(value);
+                            setUsdInputRaw(sanitized);
+                            setBaseFromAmount(parseFloat(sanitized.replace(/,/g, '')) || 0, fromCurrency);
+                            debouncedFromConversion();
                         }}
-                        onFocus={() => { }}
+                        onFocus={() => setUsdInputRaw(usdInputRaw ?? fromAmountDisplay)}
                         onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                            const value = e.target.value;
-                            if (value === "") {
-                                setFromAmountDisplay("1.00");
-                                const toValue = performConversion(1, fromCurrency, toCurrency);
-                                setToAmountDisplay(formatCurrencyValue(toValue.toFixed(2)));
+                            const v = e.target.value.replace(/,/g, '');
+                            const num = parseFloat(v);
+                            setUsdInputRaw(null);
+                            if (v === '' || Number.isNaN(num) || num < 0) {
+                                setBaseFromAmount(1, fromCurrency);
                             } else {
-                                const formattedValue = formatCurrencyValue(value);
-                                setFromAmountDisplay(formattedValue);
+                                setBaseFromAmount(num, fromCurrency);
                             }
                         }}
                         placeholder={t.enterAmount}
@@ -798,89 +873,160 @@ export default function CurrencyConverter() {
                         onCurrencyChange={handleFromCurrencyChange}
                         availableCurrencies={getAvailableCurrencies(toCurrency, fromCurrency)}
                         isDropdownOpen={fromDropdownOpen}
-                        onDropdownToggle={handleFromDropdownClick}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') e.currentTarget.blur();
-                            if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                            if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                            if (!/^[0-9.,]$/.test(e.key)) {
-                                e.preventDefault();
-                            }
-                        }}
+                        onDropdownToggle={() => { setFromDropdownOpen(!fromDropdownOpen); setAddCurrencyOpen(false); }}
+                        onKeyDown={handleAmountKeyDown}
                         onClick={(e) => e.currentTarget.select()}
                         currencyNames={t.currencyNames}
                         ariaLabel={t.fromCurrency}
                         inputRef={fromAmountRef}
                         dropdownRef={fromDropdownRef}
                         isLoadingCurrencies={isLoadingCurrencies}
-                        t={{
-                            searchCurrency: t.searchCurrency,
-                            noCurrenciesFound: t.noCurrenciesFound
-                        }}
+                        t={{ searchCurrency: t.searchCurrency, noCurrenciesFound: t.noCurrenciesFound, removeCurrency: t.removeCurrency }}
                     />
                 </div>
 
-                {/* Swap Button - Centered on Mobile, Between inputs on Desktop */}
-                <div className="flex-shrink-0 order-2 lg:order-2 flex justify-center lg:justify-center my-2 lg:my-0">
-                    <SwapButton
-                        onClick={handleSwapCurrencies}
-                        size="md"
-                        variant="default"
-                    />
+                {/* "+" button — right size: mobile 44px, desktop 48px; icon proportional */}
+                <div className="w-full flex justify-center py-4 sm:py-5 mt-3 sm:mt-4">
+                    <div className="relative inline-flex" ref={addCurrencyDropdownRef}>
+                        <button
+                            type="button"
+                            onClick={() => { setOpenCardIndex(null); setAddCurrencyOpen(true); }}
+                            aria-label={t.addCurrency}
+                            className="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-100 dark:bg-slate-700/80 border border-slate-200/60 dark:border-slate-600/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600/80 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400/30 dark:focus:ring-slate-500/30 focus:ring-offset-0 touch-manipulation p-0"
+                        >
+                            <Plus className="w-5 h-5 sm:w-5 sm:h-5 flex-shrink-0" strokeWidth={2.5} aria-hidden />
+                        </button>
+                        <CurrencySelectModal
+                            isOpen={addCurrencyOpen}
+                            onClose={() => setAddCurrencyOpen(false)}
+                            currencies={currenciesToAdd}
+                            currencyNames={t.currencyNames}
+                            selectedCode=""
+                            onSelect={(code) => {
+                                addToCurrency(code);
+                                setAddCurrencyOpen(false);
+                            }}
+                            title={t.addCurrency}
+                            searchPlaceholder={t.searchCurrency}
+                            noResultsText={t.noCurrenciesFound}
+                        />
+                    </div>
                 </div>
 
-                {/* To Currency Section */}
-                <div className="w-full lg:flex-1 order-3 lg:order-3">
-                    <CurrencyInput
-                        value={toAmountDisplay}
-                        onChange={(value) => {
-                            const sanitizedValue = sanitizeInputValue(value);
-                            setToAmountDisplay(sanitizedValue);
-                            debouncedToConversion(sanitizedValue);
-                        }}
-                        onFocus={() => { }}
-                        onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                            const value = e.target.value;
-                            if (value === "" || value === "0" || value === "0." || value === "0.0" || value === "0.00") {
-                                setToAmountDisplay("1.00");
-                                const fromValue = performConversion(1, toCurrency, fromCurrency);
-                                setFromAmountDisplay(formatCurrencyValue(fromValue.toFixed(2)));
-                            } else {
-                                const formattedValue = formatCurrencyValue(value);
-                                setToAmountDisplay(formattedValue);
-                            }
-                        }}
-                        placeholder={t.enterAmount}
-                        currency={toCurrency}
-                        onCurrencyChange={handleToCurrencyChange}
-                        availableCurrencies={getAvailableCurrencies(fromCurrency, toCurrency)}
-                        isDropdownOpen={toDropdownOpen}
-                        onDropdownToggle={handleToDropdownClick}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') e.currentTarget.blur();
-                            if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(e.key)) return;
-                            if (e.ctrlKey && ['a', 'c', 'v', 'x'].includes(e.key.toLowerCase())) return;
-                            if (!/^[0-9.,]$/.test(e.key)) {
-                                e.preventDefault();
-                            }
-                        }}
-                        onClick={(e) => e.currentTarget.select()}
-                        currencyNames={t.currencyNames}
-                        ariaLabel={t.toCurrency}
-                        inputRef={toAmountRef}
-                        dropdownRef={toDropdownRef}
-                        isLoadingCurrencies={isLoadingCurrencies}
-                        t={{
-                            searchCurrency: t.searchCurrency,
-                            noCurrenciesFound: t.noCurrenciesFound
-                        }}
-                    />
+                {/* List: same horizontal space as arriba; compact spacing like USD row */}
+                <div className="mt-2.5 sm:mt-4 w-full max-w-full min-w-0">
+                    <div className={`currency-list-scroll space-y-1.5 sm:space-y-2.5 w-full max-w-full min-w-0 max-h-[10rem] sm:max-h-[21.5rem] ${openCardIndex !== null ? 'overflow-visible card-dropdown-open' : 'overflow-y-auto overflow-x-auto'}`}>
+                    {toCurrencies.length === 0 ? (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 py-4 text-center">{t.addCurrency}</p>
+                    ) : (
+                        toCurrencies.map((code, index) => {
+                            const info = currencies.find((c) => c.code === code);
+                            const value = getCardConvertedValue(code);
+                            const displayValue = formatCurrencyValue(value.toFixed(2));
+                            const isDragging = draggedIndex === index;
+                            const isDragOver = dragOverIndex === index;
+                            const leftSlot = (
+                                        <div
+                                            draggable
+                                            onDragStart={(e) => handleDragStart(e, index)}
+                                            onDragEnd={handleDragEnd}
+                                            onTouchStart={(e) => handleTouchStart(e, index)}
+                                            className="flex-shrink-0 cursor-grab active:cursor-grabbing text-gray-400 dark:text-gray-500 hover:text-flare-primary transition-colors p-0 sm:p-1 touch-none"
+                                            aria-label="Drag to reorder"
+                                        >
+                                            <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                                                <path d="M9 5h2v2H9V5zm0 6h2v2H9v-2zm0 6h2v2H9v-2zm4-12h2v2h-2V5zm0 6h2v2h-2v-2zm0 6h2v2h-2v-2z" />
+                                            </svg>
+                                        </div>
+                                    );
+                            const rightSlot = (
+                                <CurrencyRowValueSlot
+                                    value={cardInputRaw?.code === code ? cardInputRaw.value : displayValue}
+                                    onChange={(next) => {
+                                        setCardInputRaw({ code, value: next });
+                                        setBaseFromAmount(parseFloat(next.replace(/,/g, '')), code);
+                                    }}
+                                    onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+                                        e.currentTarget.select();
+                                        setCardInputRaw({ code, value: displayValue });
+                                    }}
+                                    onBlur={(e) => {
+                                        const v = e.target.value.replace(/,/g, '');
+                                        const num = parseFloat(v);
+                                        setCardInputRaw(null);
+                                        if (Number.isNaN(num) || num < 0) {
+                                            setBaseFromAmount(1, fromCurrency);
+                                        } else {
+                                            setBaseFromAmount(num, code);
+                                        }
+                                    }}
+                                    onClick={(e) => e.currentTarget.select()}
+                                    onKeyDown={handleAmountKeyDown}
+                                    ariaLabel={`${code} ${t.toCurrency}`}
+                                    inputMode="decimal"
+                                    deleteDisabled={toCurrencies.length === 1}
+                                    onDelete={() => removeToCurrency(code)}
+                                    removeAriaLabel={`${t.removeCurrency} ${code}`}
+                                />
+                            );
+                            return (
+                                <CurrencyRow
+                                    key={code}
+                                    left={leftSlot}
+                                    right={rightSlot}
+                                    className={`select-none ${openCardIndex === index ? 'overflow-visible card-row-dropdown-open' : ''} ${isDragging ? 'opacity-50' : ''} ${isDragOver ? '!border-indigo-500 dark:!border-indigo-400 shadow-md' : ''}`}
+                                    containerProps={
+                                        {
+                                            'data-drag-index': index,
+                                            onDragOver: (e) => handleDragOver(e, index),
+                                            onDragLeave: handleDragLeave,
+                                            onDrop: (e) => handleDrop(e, index),
+                                            onTouchStart: (e) => handleTouchStart(e, index, true),
+                                            onContextMenu: (e) => e.preventDefault()
+                                        } as React.HTMLAttributes<HTMLDivElement>
+                                    }
+                                >
+                                    <CurrencyRowSelector
+                                        flag={info?.flag}
+                                        code={code}
+                                        symbol={info?.symbol ?? code}
+                                        name={t.currencyNames[code as keyof typeof t.currencyNames] || info?.name || code}
+                                        isOpen={openCardIndex === index}
+                                        onToggle={() => {
+                                            if (justDidDragRef.current) return;
+                                            setAddCurrencyOpen(false);
+                                            setOpenCardIndex(openCardIndex === index ? null : index);
+                                        }}
+                                        ariaLabel="Select currency"
+                                    >
+                                        {null}
+                                    </CurrencyRowSelector>
+                                </CurrencyRow>
+                            );
+                        })
+                    )}
+                    </div>
                 </div>
             </div>
 
+            <CurrencySelectModal
+                isOpen={openCardIndex !== null}
+                onClose={() => setOpenCardIndex(null)}
+                currencies={cardSlotCurrencies}
+                currencyNames={t.currencyNames}
+                selectedCode={openCardIndex !== null ? (toCurrencies[openCardIndex] ?? '') : ''}
+                onSelect={(code) => {
+                    if (openCardIndex === null) return;
+                    const next = [...toCurrencies];
+                    next[openCardIndex] = code;
+                    setPairMultiple(fromCurrency, next);
+                    setOpenCardIndex(null);
+                }}
+                searchPlaceholder={t.searchCurrency}
+                noResultsText={t.noCurrenciesFound}
+            />
 
-            {/* Last Updated below the converter */}
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
                 <LastUpdated />
             </div>
         </>

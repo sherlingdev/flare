@@ -4,6 +4,11 @@ const it = {
     enterAmount: "Quanto?",
     fromCurrency: "Valuta di origine",
     toCurrency: "Valuta di destinazione",
+    addCurrency: "Aggiungi valuta",
+    removeCurrency: "Rimuovi",
+    keepOneCurrency: "Mantieni almeno una valuta",
+    moveUp: "Sposta su",
+    moveDown: "Sposta giù",
     from: "DA",
     to: "A",
     swap: "Scambia valute",
@@ -12,6 +17,8 @@ const it = {
     noCurrenciesFound: "Nessuna valuta trovata",
     dynamicTitle: "Converti {from} in {to}",
     dynamicTitleFull: "{fromName} in {toName}",
+    converterTitle: "Convertitore di valute",
+    converterTitleMulti: "Convertitore multi valute",
     dynamicConversion: "{amount} {from} = {result} {to}",
     dynamicRate: "1 {from} = {rate} {to}",
     dynamicAmount: "{amount} {fromName}",
@@ -27,6 +34,8 @@ const it = {
 
     // Site description
     siteDescription: "Converti valute all'istante. Veloce, sicuro e sempre preciso",
+    taglineTitle: "Converti valute all'istante",
+    taglineSubtitle: "Veloce, sicuro e sempre preciso",
 
     // API Key section
     apiKeyTitle: "Ottieni chiave API | Converti valute all'istante. Veloce, sicuro e sempre preciso.",
