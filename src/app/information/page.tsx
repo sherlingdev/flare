@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { getHardcodedCurrencies } from "@/../scripts/currencies.cjs";
 import { useConverter } from "@/contexts/ConverterContext";
-import CurrencySelector from "@/components/CurrencySelector";
+import InformationCurrencyPicker from "@/components/InformationCurrencyPicker";
 
 interface CurrencyInfo {
     country_codes: string[];
@@ -288,10 +288,15 @@ export default function Information() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="order-1 w-full md:order-1 rounded-lg p-6 flex flex-col items-center justify-center bg-[#F9FAFB] dark:bg-[#374151]">
                                         <div className="w-full max-w-xl">
-                                            <CurrencySelector
+                                            <InformationCurrencyPicker
                                                 currencies={currencies}
                                                 selectedCode={selectedCurrency?.code || selectedCode}
                                                 onSelect={setSelectedCode}
+                                                currencyNames={t.currencyNames as Record<string, string>}
+                                                searchPlaceholder={t.searchCurrency}
+                                                noResultsText={t.noCurrenciesFound}
+                                                modalTitle={t.currency}
+                                                ariaLabel={t.currency}
                                             />
                                         </div>
                                     </div>

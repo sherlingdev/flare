@@ -18,6 +18,7 @@ const Box = lazy(() => import("lucide-react").then(module => ({ default: module.
 const Globe = lazy(() => import("lucide-react").then(module => ({ default: module.Globe })));
 const User = lazy(() => import("lucide-react").then(module => ({ default: module.User })));
 const LogOut = lazy(() => import("lucide-react").then(module => ({ default: module.LogOut })));
+const Settings = lazy(() => import("lucide-react").then(module => ({ default: module.Settings })));
 
 interface HeaderProps {
     showBackButton?: boolean;
@@ -205,7 +206,7 @@ export default function Header({
                             onMouseEnter={() => {
                                 // Prefetch pages when hovering over the button
                                 if (!isApiDropdownOpen) {
-                                    ['/documentation', '/information', '/chart', '/key'].forEach(path => {
+                                    ['/documentation', '/information', '/chart', '/key', '/settings'].forEach(path => {
                                         router.prefetch(path);
                                     });
                                 }
@@ -310,6 +311,21 @@ export default function Header({
                                                 </p>
                                             )}
                                         </div>
+                                        <Link
+                                            href="/settings"
+                                            prefetch
+                                            onClick={() => setIsUserDropdownOpen(false)}
+                                            className={`flex w-full items-center gap-2 px-3 py-2.5 text-sm transition-colors duration-150 hover:bg-slate-100 dark:hover:bg-slate-700 ${
+                                                pathname === "/settings"
+                                                    ? "bg-slate-100 dark:bg-slate-700 text-flare-primary font-semibold"
+                                                    : "text-gray-700 dark:text-gray-300"
+                                            }`}
+                                        >
+                                            <Suspense fallback={<div className="h-4 w-4" />}>
+                                                <Settings className="h-4 w-4 shrink-0" />
+                                            </Suspense>
+                                            {t.settings}
+                                        </Link>
                                         <button
                                             onClick={handleLogout}
                                             className="w-full px-3 py-2.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150 text-gray-700 dark:text-gray-300 flex items-center gap-2"

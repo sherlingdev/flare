@@ -114,16 +114,16 @@ export default function Home() {
   return (
     <main className="relative z-10 w-full min-w-0 flex flex-col items-center justify-center px-3 sm:px-6 lg:px-8 homepage-vertical-center">
       {/* Header — two lines: Convert currencies instantly. + Quick, safe... */}
-      <div className="w-full max-w-6xl py-6 sm:py-12 px-4 sm:px-8 mb-0">
+      <div className="w-full max-w-6xl py-3 sm:py-6 lg:py-8 px-4 sm:px-8 mb-0">
         <h1 className="text-center text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary w-full max-w-full">
           {(t as { taglineTitle?: string }).taglineTitle ?? "Convert currencies instantly"}
         </h1>
-        <p className="text-center text-sm sm:text-base lg:text-xl text-flare-primary mt-2 sm:mt-3 w-full max-w-full">
+        <p className="text-center text-sm sm:text-base lg:text-xl text-flare-primary mt-2 sm:mt-2.5 w-full max-w-full">
           {(t as { taglineSubtitle?: string }).taglineSubtitle ?? "Quick, safe, and always accurate"}
         </p>
       </div>
 
-      <div className="w-full max-w-6xl min-w-0 flex flex-col items-center justify-center gap-4 sm:gap-6">
+      <div className="w-full max-w-6xl min-w-0 flex flex-col items-center justify-center gap-3 sm:gap-5">
         <div className="w-full max-w-none min-w-0">
           <CurrencyCard>
             <CurrencyConverter />

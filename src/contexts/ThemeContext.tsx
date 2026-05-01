@@ -6,6 +6,8 @@ type Theme = "light" | "dark";
 
 interface ThemeContextType {
     theme: Theme;
+    /** Set light or dark explicitly (e.g. settings picker). */
+    setTheme: (theme: Theme) => void;
     toggleTheme: () => void;
     mounted: boolean;
     isDark: boolean;
@@ -16,14 +18,14 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Always start with "dark" to match server rendering
-    const [theme, setTheme] = useState<Theme>("dark");
+    const [theme, setThemeState] = useState<Theme>("dark");
     const [mounted, setMounted] = useState(false);
 
     // Load theme from localStorage after mount
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme === "light" || savedTheme === "dark") {
-            setTheme(savedTheme);
+            setThemeState(savedTheme);
         }
         setMounted(true);
     }, []);
@@ -48,12 +50,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         }
     }, [theme, mounted]);
 
+    const setTheme = useCallback((next: Theme) => {
+        setThemeState(next);
+    }, []);
+
     const toggleTheme = useCallback(() => {
-        setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+        setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
     }, []);
 
     const value = {
         theme,
+        setTheme,
         toggleTheme,
         mounted,
         isDark: theme === "dark",

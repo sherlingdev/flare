@@ -6,15 +6,17 @@ import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import CurrencyCard from "@/components/CurrencyCard";
-import CurrencyPairSelector from "@/components/CurrencyPairSelector";
+import MultiCurrencyPairPanel from "@/components/MultiCurrencyPairPanel";
 import HistoricalChart from "@/components/HistoricalChart";
 import Loader from "@/components/Loader";
+import { useCurrencyPayload } from "@/hooks/useCurrencyPayload";
 
 export default function ChartPage() {
     const { language, mounted } = useLanguage();
     const t = translations[mounted ? language : "en"];
     const { openModal } = useAuthModal();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const { currencyRates, currencies, isLoadingCurrencies } = useCurrencyPayload();
 
     useEffect(() => {
         // Scroll to top on mount
@@ -78,21 +80,33 @@ export default function ChartPage() {
             </div>
 
             <div className="w-full max-w-6xl flex flex-col items-center justify-center gap-6">
-                {/* Currency Pair Selector */}
+                {/* Same multi-currency UI as home converter (read-only amounts on chart) */}
                 <div className="w-full max-w-none relative z-[200]">
                     <CurrencyCard>
-                        <CurrencyPairSelector />
+                        {isLoadingCurrencies ? (
+                            <div className="flex items-center justify-center py-12">
+                                <div className="text-flare-primary">{t.loading}</div>
+                            </div>
+                        ) : (
+                            <MultiCurrencyPairPanel
+                                variant="chart"
+                                currencyRates={currencyRates}
+                                currencies={currencies}
+                                isLoadingCurrencies={isLoadingCurrencies}
+                            />
+                        )}
                     </CurrencyCard>
                 </div>
 
-                {/* Historical Chart */}
+                {/* Historical chart: full width of card so toolbar + plot align with currency rows above (same horizontal rhythm) */}
                 <div className="w-full max-w-none relative z-[1]">
                     <CurrencyCard>
-                        <HistoricalChart />
+                        <div className="w-full min-w-0">
+                            <HistoricalChart />
+                        </div>
                     </CurrencyCard>
                 </div>
             </div>
         </main>
     );
 }
-

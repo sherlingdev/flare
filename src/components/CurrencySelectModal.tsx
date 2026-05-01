@@ -200,7 +200,7 @@ export default function CurrencySelectModal({
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <span className="font-medium text-gray-900 dark:text-gray-100 block truncate">
+                                            <span className="font-medium text-[#475569] dark:text-[#CBD5E1] block truncate">
                                                 {c.code} <span className="font-normal text-gray-600 dark:text-gray-400">({c.symbol})</span>
                                             </span>
                                             <span className="text-xs text-gray-500 dark:text-gray-400 truncate block">

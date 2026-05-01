@@ -244,29 +244,24 @@ svg {
     scrollbar-color: #475569 transparent;
 }
 
-/* Currency list: reserve scrollbar space + gap so scrollbar is detached from cards */
+/* Currency list: `auto` only reserves gutter when a classic scrollbar is shown — `stable` left a permanent
+   empty strip vs the base row (USD). Rows stay full width until overflow requires a scrollbar. */
 .currency-list-scroll {
-    scrollbar-gutter: stable;
-    padding-right: 0.5rem;
+    scrollbar-gutter: auto;
+    padding-right: 0;
 }
 
-/* Base row: same scroll container as list + explicit right space (scrollbar + padding) so USD = DOP */
+/* Base row: full width like list rows — alignment with scrollbar column is handled by scrollbar-gutter on the list */
 .currency-base-container {
     max-height: none;
     overflow: visible;
-    /* Reserve same right space as list (desktop) when base has no scrollbar */
-    padding-right: calc(0.5rem + 14px);
-}
-@media (max-width: 1024px) {
-    .currency-input-group .currency-base-container {
-        padding-right: calc(0.25rem + 7px);
-    }
+    padding-right: 0;
 }
 
-/* When card dropdown is open: keep same width (no grow) + reserve scrollbar space */
+/* When card dropdown is open: keep same width (no grow) */
 .currency-list-scroll.card-dropdown-open {
     contain: layout inline-size;
-    padding-right: calc(0.5rem + 8px);
+    padding-right: 0;
 }
 
 .card-row-dropdown-open {
@@ -360,18 +355,18 @@ svg {
     }
 }
 
-/* Responsive currency converter specific styles - Mobile Only */
+/* Responsive currency converter — stack on smaller viewports; rows stay full card width */
 @media (max-width: 1024px) {
     .currency-input-group {
         flex-direction: column;
         gap: 0.75rem;
-        align-items: center;
+        align-items: stretch;
         overflow: visible !important;
     }
 
     .currency-input-group>div {
         width: 100%;
-        max-width: 320px;
+        max-width: 100%;
     }
 
     /* Reduce spacing around swap button on mobile */
@@ -401,7 +396,12 @@ svg {
 @media (max-width: 480px) {
     .currency-input-group {
         gap: 0.5rem;
+        align-items: stretch;
         overflow: visible !important;
+    }
+
+    .currency-input-group>div {
+        max-width: 100%;
     }
     
     .currency-input-group>div:nth-child(2) {

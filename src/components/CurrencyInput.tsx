@@ -36,6 +36,14 @@ interface CurrencyInputProps {
         noCurrenciesFound: string;
         removeCurrency: string;
     };
+    /** Chart page: currency only — no amount column */
+    hideAmount?: boolean;
+    /** Override default grip icon (e.g. draggable handle from parent). */
+    leftSlot?: React.ReactNode;
+    /** Appended to the row container className */
+    rowClassName?: string;
+    /** Merged onto CurrencyRow root (drag/drop, data attributes, etc.) */
+    rowContainerProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export default function CurrencyInput({
@@ -56,16 +64,31 @@ export default function CurrencyInput({
     inputRef,
     dropdownRef,
     isLoadingCurrencies = false,
-    t
+    t,
+    hideAmount = false,
+    leftSlot: leftSlotProp,
+    rowClassName = '',
+    rowContainerProps,
 }: CurrencyInputProps) {
-    const leftSlot = (
+    const defaultLeftSlot = (
             <div className="flex-shrink-0 text-gray-400 dark:text-gray-500 p-0 sm:p-1 cursor-pointer" aria-hidden title="">
                 <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
                     <path d="M9 5h2v2H9V5zm0 6h2v2H9v-2zm0 6h2v2H9v-2zm4-12h2v2h-2V5zm0 6h2v2h-2v-2zm0 6h2v2h-2v-2z" />
                 </svg>
             </div>
         );
-    const rightSlot = (
+    const leftSlot = leftSlotProp ?? defaultLeftSlot;
+    const rightSlot = hideAmount ? (
+        <CurrencyRowValueSlot
+            hideAmount
+            value=""
+            onChange={() => {}}
+            ariaLabel={ariaLabel}
+            deleteDisabled
+            onDelete={() => {}}
+            removeAriaLabel={`${t.removeCurrency} ${currency}`}
+        />
+    ) : (
         <CurrencyRowValueSlot
             value={value}
             onChange={onChange}
@@ -88,7 +111,13 @@ export default function CurrencyInput({
 
     return (
         <>
-            <CurrencyRow left={leftSlot} right={rightSlot} noScroll className={`currency-base-row ${isDropdownOpen ? 'dropdown-open' : ''}`}>
+            <CurrencyRow
+                left={leftSlot}
+                right={rightSlot ?? undefined}
+                noScroll
+                className={`currency-base-row ${isDropdownOpen ? 'dropdown-open' : ''} ${rowClassName}`.trim()}
+                containerProps={rowContainerProps ?? {}}
+            >
                 <CurrencyRowSelector
                     flag={flagUrl}
                     code={currency}

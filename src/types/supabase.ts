@@ -49,6 +49,14 @@ export interface RateLimit {
     updated_at?: string;
 }
 
+/** Row in public.profiles — Supabase Auth user id + app preferences */
+export interface Profile {
+    id: string;
+    currency_id: number | null;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Info {
     id: number;
     currency_id: number;
@@ -82,32 +90,55 @@ export interface Database {
                 Row: Currency;
                 Insert: Omit<Currency, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<Currency, 'id' | 'created_at'>>;
+                Relationships: [];
+            };
+            profiles: {
+                Row: Profile;
+                Insert: {
+                    id: string;
+                    currency_id?: number | null;
+                };
+                Update: {
+                    currency_id?: number | null;
+                };
+                Relationships: [];
             };
             rates: {
                 Row: Rate;
                 Insert: Omit<Rate, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<Rate, 'id' | 'created_at'>>;
+                Relationships: [];
             };
             historicals: {
                 Row: Historical;
                 Insert: Omit<Historical, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<Historical, 'id' | 'created_at'>>;
+                Relationships: [];
             };
             users: {
                 Row: User;
                 Insert: Omit<User, 'id' | 'created_at'>;
                 Update: Partial<Omit<User, 'id' | 'created_at'>>;
+                Relationships: [];
             };
             rate_limits: {
                 Row: RateLimit;
                 Insert: Omit<RateLimit, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<RateLimit, 'id' | 'created_at'>>;
+                Relationships: [];
             };
             info: {
                 Row: Info;
                 Insert: Omit<Info, 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Omit<Info, 'id' | 'created_at'>>;
+                Relationships: [];
             };
+        };
+        Views: {
+            [_ in never]: never;
+        };
+        Functions: {
+            [_ in never]: never;
         };
     };
 }
