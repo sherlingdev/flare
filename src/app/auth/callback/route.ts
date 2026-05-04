@@ -1,11 +1,12 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import type { Database } from "@/types/supabase";
 
 /**
- * OAuth PKCE + email magic-link completion: exchange ?code= for a session (sets cookies).
- * Post-exchange redirects use this request's origin so Set-Cookie stays on the same host
- * (cross-origin redirect would drop the new session).
- * Use NEXT_PUBLIC_SITE_URL in OAuth `redirectTo` (AuthModal) so users complete login on the custom domain.
+ * OAuth PKCE + email completion: exchange ?code= for a session.
+ *
+ * Uses a NextResponse prepared up front so `setAll` attaches session cookies to the same
+ * redirect Supabase expects (Route Handler + `cookies()` from next/headers can drop Set-Cookie on redirects).
  */
 export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url);
@@ -26,12 +27,36 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL(`/auth/reset-password${tokenString}`, origin));
     }
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     if (code) {
-        const supabase = await createClient();
+        if (!supabaseUrl || !supabaseKey) {
+            console.error("[auth/callback] Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
+            const fail = new URL("/", origin);
+            fail.searchParams.set("auth_error", "oauth_exchange_failed");
+            return NextResponse.redirect(fail);
+        }
+
+        const successResponse = NextResponse.redirect(new URL(next, origin));
+
+        const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll();
+                },
+                setAll(cookiesToSet) {
+                    cookiesToSet.forEach(({ name, value, options }) => {
+                        successResponse.cookies.set(name, value, options);
+                    });
+                },
+            },
+        });
+
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
-            return NextResponse.redirect(new URL(next, origin));
+            return successResponse;
         }
 
         console.error("[auth/callback] exchangeCodeForSession:", error.message);
