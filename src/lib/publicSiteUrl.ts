@@ -5,8 +5,8 @@
  *
  * 1. User clicks sign-in → `signInWithOAuth({ options: { redirectTo: <origin>/auth/callback } })`.
  * 2. Redirect to provider → Supabase → browser returns to `redirectTo` with `?code=`.
- * 3. `app/auth/callback/route.ts` exchanges `?code=` via `@/utils/supabase/route-handler` (cookies on redirect response)
- *    per [Supabase social login + PKCE](https://supabase.com/docs/guides/auth/social-login).
+ * 3. `app/auth/callback/page.tsx` runs `exchangeCodeForSession` in the **browser** (same PKCE storage
+ *    as `signInWithOAuth`) per [PKCE flow](https://supabase.com/docs/guides/auth/sessions/pkce-flow).
  *    Redirects use `x-forwarded-host` so Netlify keeps the public domain (e.g. flarexrate.com).
  *
  * ### Why `window.location.origin` (no separate “canonical env” for OAuth)
@@ -32,7 +32,7 @@ export function getAuthRedirectOrigin(): string {
     return process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ?? "";
 }
 
-/** OAuth + email-confirm return URL — keep in sync with Supabase Redirect URLs and `app/auth/callback/route.ts`. */
+/** OAuth + email-confirm return URL — keep in sync with Supabase Redirect URLs and `app/auth/callback/page.tsx`. */
 export function getOAuthCallbackUrl(): string {
     return `${getAuthRedirectOrigin()}/auth/callback`;
 }

@@ -16,7 +16,7 @@ export default function Home() {
   const t = translations[mounted ? language : "en"];
   const [showOauthErrorBanner, setShowOauthErrorBanner] = useState(false);
 
-  /** `app/auth/callback/route.ts` redirects here with `?auth_error=oauth_exchange_failed` on exchange failure */
+  /** Client `/auth/callback` redirects here with `?auth_error=oauth_exchange_failed` if PKCE exchange fails */
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);

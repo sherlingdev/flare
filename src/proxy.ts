@@ -26,8 +26,8 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(dest, 307);
     }
 
-    // PKCE code exchange runs in `app/auth/callback/route.ts`. Refreshing the session here first
-    // can race with `exchangeCodeForSession` and contribute to `oauth_exchange_failed` in prod.
+    // PKCE exchange runs in the browser on `app/auth/callback/page.tsx` — do not refresh session
+    // before that page’s JS runs (can invalidate PKCE state on some hosts).
     if (pathname === "/auth/callback") {
         const passthrough = NextResponse.next({ request });
         passthrough.headers.set(
