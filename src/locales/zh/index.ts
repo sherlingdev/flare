@@ -526,6 +526,10 @@ const zh = {
     loginSubtitle: "登录您的帐户",
     signInWithGoogle: "使用 Google 继续",
     signInWithGitHub: "使用 GitHub 继续",
+    oauthExchangeFailedTitle: "无法完成登录",
+    oauthExchangeFailedBody:
+        "安全登录步骤未完成（会话或代码已过期，或 cookie 被拦截）。请在本标签页重新登录；允许本网站 cookie；在跳转过程中暂时关闭广告拦截。",
+    oauthErrorDismiss: "知道了",
     signInWithApple: "使用 Apple 继续",
     signInWithPhone: "使用手机登录",
     phoneSubtitle: "输入您的手机号码以接收验证码",

@@ -541,6 +541,10 @@ const pt = {
     loginSubtitle: "Acesse sua conta",
     signInWithGoogle: "Continuar com Google",
     signInWithGitHub: "Continuar com GitHub",
+    oauthExchangeFailedTitle: "Não foi possível concluir o login",
+    oauthExchangeFailedBody:
+        "A etapa segura de login não terminou (sessão ou código expirado, ou cookies bloqueados). Tente Entrar de novo nesta aba; permita cookies para este site; pause bloqueadores de anúncios durante o redirecionamento.",
+    oauthErrorDismiss: "Entendi",
     signInWithApple: "Continuar com Apple",
     signInWithPhone: "Entrar com telefone",
     phoneSubtitle: "Digite seu número de telefone para receber um código de verificação",

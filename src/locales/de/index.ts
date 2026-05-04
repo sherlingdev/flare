@@ -528,6 +528,10 @@ const de = {
     loginSubtitle: "Melden Sie sich bei Ihrem Konto an",
     signInWithGoogle: "Mit Google fortfahren",
     signInWithGitHub: "Mit GitHub fortfahren",
+    oauthExchangeFailedTitle: "Anmeldung unvollständig",
+    oauthExchangeFailedBody:
+        "Der sichere Anmeldeschritt wurde nicht abgeschlossen (Sitzung oder Code abgelaufen, oder Cookies blockiert). Bitte erneut anmelden, in diesem Tab; Cookies für diese Seite zulassen; Werbeblocker während der Weiterleitung pausieren.",
+    oauthErrorDismiss: "OK",
     signInWithApple: "Mit Apple fortfahren",
     signInWithPhone: "Mit Telefon anmelden",
     phoneSubtitle: "Geben Sie Ihre Telefonnummer ein, um einen Bestätigungscode zu erhalten",

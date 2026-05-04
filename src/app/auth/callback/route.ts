@@ -13,7 +13,14 @@ export async function GET(request: NextRequest) {
     const origin = requestUrl.origin;
     const code = requestUrl.searchParams.get("code");
     const nextRaw = requestUrl.searchParams.get("next");
-    const next = nextRaw?.startsWith("/") ? nextRaw : "/";
+    // Same-origin path only (blocks protocol-relative //host and open redirects)
+    const next =
+        nextRaw &&
+        nextRaw.startsWith("/") &&
+        !nextRaw.startsWith("//") &&
+        !nextRaw.includes("://")
+            ? nextRaw
+            : "/";
 
     const type = requestUrl.searchParams.get("type");
     const accessToken = requestUrl.searchParams.get("access_token");
@@ -59,7 +66,12 @@ export async function GET(request: NextRequest) {
             return successResponse;
         }
 
-        console.error("[auth/callback] exchangeCodeForSession:", error.message);
+        const err = error as { message: string; status?: number; code?: string };
+        console.error("[auth/callback] exchangeCodeForSession failed:", {
+            message: err.message,
+            status: err.status,
+            code: err.code,
+        });
         const fail = new URL("/", origin);
         fail.searchParams.set("auth_error", "oauth_exchange_failed");
         return NextResponse.redirect(fail);

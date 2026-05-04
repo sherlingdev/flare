@@ -542,6 +542,10 @@ const it = {
     registerSubtitle: "Crea un nuovo account",
     signInWithGoogle: "Continua con Google",
     signInWithGitHub: "Continua con GitHub",
+    oauthExchangeFailedTitle: "Accesso non completato",
+    oauthExchangeFailedBody:
+        "Il passaggio di accesso sicuro non è terminato (sessione o codice scaduto, o cookie bloccati). Riprova da Accedi nella stessa scheda; consenti i cookie per questo sito; sospendi gli ad blocker durante il reindirizzamento.",
+    oauthErrorDismiss: "OK",
     signInWithApple: "Continua con Apple",
     signInWithPhone: "Accedi con telefono",
     phoneSubtitle: "Inserisci il tuo numero di telefono per ricevere un codice di verifica",

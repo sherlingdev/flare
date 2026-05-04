@@ -542,6 +542,10 @@ const fr = {
     loginSubtitle: "Connectez-vous à votre compte",
     signInWithGoogle: "Continuer avec Google",
     signInWithGitHub: "Continuer avec GitHub",
+    oauthExchangeFailedTitle: "Connexion incomplète",
+    oauthExchangeFailedBody:
+        "L’étape de connexion sécurisée n’a pas abouti (session ou code expiré, ou cookies bloqués). Réessayez depuis Se connecter dans cet onglet ; autorisez les cookies pour ce site ; désactivez temporairement les bloqueurs de publicité pendant la redirection.",
+    oauthErrorDismiss: "Compris",
     signInWithApple: "Continuer avec Apple",
     signInWithPhone: "Se connecter avec le téléphone",
     phoneSubtitle: "Entrez votre numéro de téléphone pour recevoir un code de vérification",

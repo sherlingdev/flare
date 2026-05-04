@@ -542,6 +542,10 @@ const en = {
     registerSubtitle: "Create a new account",
     signInWithGoogle: "Continue with Google",
     signInWithGitHub: "Continue with GitHub",
+    oauthExchangeFailedTitle: "Couldn’t complete sign-in",
+    oauthExchangeFailedBody:
+        "The secure login step didn’t finish (session or code expired, or cookies blocked). Try Sign in again in this same tab; allow cookies for this site; pause ad blockers for the redirect.",
+    oauthErrorDismiss: "Got it",
     signInWithApple: "Continue with Apple",
     signInWithPhone: "Sign in with phone",
     phoneSubtitle: "Enter your phone number to receive a verification code",

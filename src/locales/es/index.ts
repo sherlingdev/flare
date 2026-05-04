@@ -541,6 +541,10 @@ const es = {
     loginSubtitle: "Accede a tu cuenta",
     signInWithGoogle: "Continuar con Google",
     signInWithGitHub: "Continuar con GitHub",
+    oauthExchangeFailedTitle: "No se pudo completar el inicio de sesión",
+    oauthExchangeFailedBody:
+        "No terminó el paso seguro (sesión o código caducado, o cookies bloqueadas). Vuelve a iniciar sesión en esta misma pestaña; permite cookies para este sitio; pausa bloqueadores de anuncios durante la redirección.",
+    oauthErrorDismiss: "Entendido",
     signInWithApple: "Continuar con Apple",
     signInWithPhone: "Iniciar sesión con teléfono",
     phoneSubtitle: "Ingresa tu número de teléfono para recibir un código de verificación",
