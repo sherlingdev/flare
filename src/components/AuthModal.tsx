@@ -141,6 +141,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const [mounted, setMounted] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [oauthLoading, setOauthLoading] = useState<"google" | "github" | null>(null);
 
     // Refs
     const modalRef = useRef<HTMLDivElement>(null);
@@ -282,6 +283,29 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         return true;
     }, [email, password, t, onClose]);
 
+    const handleOAuth = useCallback(
+        async (provider: "google" | "github") => {
+            setError("");
+            setOauthLoading(provider);
+            try {
+                const supabase = createClient();
+                const redirectTo = `${window.location.origin}/auth/callback`;
+                const { error: oauthError } = await supabase.auth.signInWithOAuth({
+                    provider,
+                    options: { redirectTo },
+                });
+                if (oauthError) {
+                    setError(translateError(oauthError.message, t));
+                    setOauthLoading(null);
+                }
+            } catch {
+                setError(t.unexpectedError || "An unexpected error occurred. Please try again.");
+                setOauthLoading(null);
+            }
+        },
+        [t]
+    );
+
     const handleRegister = useCallback(async () => {
         if (password !== confirmPassword) {
             setError(t.passwordsDoNotMatch || "Passwords do not match");
@@ -297,12 +321,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         const supabase = createClient();
 
-        // Use production URL in production, current origin in development
-        // IMPORTANT: This URL must be added to Supabase Dashboard > Authentication > URL Configuration > Redirect URLs
-        const isProduction = window.location.hostname === 'flarexrate.com';
-        const emailRedirectTo = isProduction
-            ? 'https://flarexrate.com/auth/callback'
-            : `${window.location.origin}/auth/callback`;
+        // Must match Supabase Dashboard → Authentication → URL Configuration → Redirect URLs
+        const emailRedirectTo = `${window.location.origin}/auth/callback`;
 
         const { data, error: signUpError } = await supabase.auth.signUp({
             email: email.trim(),
@@ -595,6 +615,39 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         {isResetPasswordMode ? "Enter your new password below" : (isForgotPassword ? (t.resetPasswordSubtitle || "Enter your email to receive a password reset link") : (isLogin ? t.loginSubtitle : t.registerSubtitle))}
                     </p>
                 </div>
+
+                {!isForgotPassword && !isResetPasswordMode && (
+                    <>
+                        <div className="space-y-3 mb-2">
+                            <button
+                                type="button"
+                                disabled={!!oauthLoading || loading}
+                                onClick={() => void handleOAuth("google")}
+                                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {oauthLoading === "google" ? t.loading : t.signInWithGoogle}
+                            </button>
+                            <button
+                                type="button"
+                                disabled={!!oauthLoading || loading}
+                                onClick={() => void handleOAuth("github")}
+                                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {oauthLoading === "github" ? t.loading : t.signInWithGitHub}
+                            </button>
+                        </div>
+                        <div className="relative my-5">
+                            <div className="absolute inset-0 flex items-center" aria-hidden>
+                                <div className="w-full border-t border-gray-200 dark:border-slate-600" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase tracking-wide">
+                                <span className="px-3 bg-[#FFFFFFF2] dark:bg-[#1E293BF2] text-gray-500 dark:text-gray-400">
+                                    {t.or}
+                                </span>
+                            </div>
+                        </div>
+                    </>
+                )}
 
                 {/* Error message */}
                 {error && (

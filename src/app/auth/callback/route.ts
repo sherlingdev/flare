@@ -1,35 +1,41 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-export async function GET(request: Request) {
+/**
+ * OAuth PKCE + email magic-link completion: exchange ?code= for a session (sets cookies).
+ * Recovery flows may send fragments (hash) — those are not visible here; keep reset-password client handling.
+ */
+export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url);
-    const type = requestUrl.searchParams.get('type');
-    const hash = requestUrl.hash;
-    const accessToken = requestUrl.searchParams.get('access_token');
+    const code = requestUrl.searchParams.get("code");
+    const nextRaw = requestUrl.searchParams.get("next");
+    const next = nextRaw?.startsWith("/") ? nextRaw : "/";
 
-    // Handle password reset
-    const isRecovery = type === 'recovery' ||
-        hash?.includes('type=recovery') ||
-        hash?.includes('type%3Drecovery') ||
-        (accessToken && type === 'recovery');
+    const type = requestUrl.searchParams.get("type");
+    const accessToken = requestUrl.searchParams.get("access_token");
 
-    if (isRecovery) {
-        let tokenString = hash || '';
-        if (!tokenString && accessToken) {
-            tokenString = `#access_token=${accessToken}&type=recovery`;
-        } else if (!tokenString) {
-            const token = requestUrl.searchParams.get('token');
-            if (token) {
-                tokenString = `#access_token=${token}&type=recovery`;
-            }
-        }
+    const isRecovery =
+        type === "recovery" ||
+        (accessToken != null && requestUrl.searchParams.get("type") === "recovery");
+
+    if (isRecovery && accessToken) {
+        const tokenString = `#access_token=${encodeURIComponent(accessToken)}&type=recovery`;
         return NextResponse.redirect(new URL(`/auth/reset-password${tokenString}`, requestUrl.origin));
     }
 
-    // No recovery token - redirect to home
-    const isLocalhost = requestUrl.hostname === 'localhost' || requestUrl.hostname === '127.0.0.1';
-    const homeOrigin = isLocalhost ? requestUrl.origin : 'https://flarexrate.com';
-    const homeUrl = new URL('/', homeOrigin);
-    homeUrl.search = '';
-    homeUrl.hash = '';
-    return NextResponse.redirect(homeUrl.toString(), { status: 302 });
+    if (code) {
+        const supabase = await createClient();
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (!error) {
+            return NextResponse.redirect(new URL(next, requestUrl.origin));
+        }
+
+        console.error("[auth/callback] exchangeCodeForSession:", error.message);
+        const fail = new URL("/", requestUrl.origin);
+        fail.searchParams.set("auth_error", "oauth_exchange_failed");
+        return NextResponse.redirect(fail);
+    }
+
+    return NextResponse.redirect(new URL("/", requestUrl.origin));
 }
