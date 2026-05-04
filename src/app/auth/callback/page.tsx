@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 /**
@@ -23,19 +22,22 @@ function safeNextPath(raw: string | null): string {
 }
 
 function CallbackContent() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const started = useRef(false);
 
+    /**
+     * Read params from `window.location`, not only `useSearchParams()`, so we never treat `code` as
+     * missing on the first hydration tick (avoids spurious `router.replace` / odd URL states).
+     */
     useEffect(() => {
         if (started.current) return;
         started.current = true;
 
         const run = async () => {
-            const code = searchParams.get("code");
-            const next = safeNextPath(searchParams.get("next"));
-            const type = searchParams.get("type");
-            const accessToken = searchParams.get("access_token");
+            const url = new URL(window.location.href);
+            const code = url.searchParams.get("code");
+            const next = safeNextPath(url.searchParams.get("next"));
+            const type = url.searchParams.get("type");
+            const accessToken = url.searchParams.get("access_token");
 
             if (type === "recovery" && accessToken != null) {
                 window.location.replace(
@@ -45,7 +47,7 @@ function CallbackContent() {
             }
 
             if (!code) {
-                router.replace("/");
+                window.location.replace(`${window.location.origin}/`);
                 return;
             }
 
@@ -73,7 +75,7 @@ function CallbackContent() {
         };
 
         void run();
-    }, [router, searchParams]);
+    }, []);
 
     return (
         <div className="flex min-h-[45vh] w-full flex-col items-center justify-center px-4">
@@ -83,15 +85,5 @@ function CallbackContent() {
 }
 
 export default function AuthCallbackPage() {
-    return (
-        <Suspense
-            fallback={
-                <div className="flex min-h-[45vh] w-full items-center justify-center px-4">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</p>
-                </div>
-            }
-        >
-            <CallbackContent />
-        </Suspense>
-    );
+    return <CallbackContent />;
 }
