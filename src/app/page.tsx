@@ -7,6 +7,7 @@ import { translations } from "@/lib/translations";
 import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
+import { createClient } from "@/utils/supabase/client";
 
 
 export default function Home() {
@@ -27,6 +28,21 @@ export default function Home() {
       (qs ? `?${qs}` : "") +
       window.location.hash;
     window.history.replaceState(null, "", clean);
+  }, [mounted]);
+
+  /** If the user is actually signed in, never keep the OAuth exchange error banner up. */
+  useEffect(() => {
+    if (!mounted) return;
+    const supabase = createClient();
+    void supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setShowOauthErrorBanner(false);
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) setShowOauthErrorBanner(false);
+    });
+    return () => subscription.unsubscribe();
   }, [mounted]);
 
   useEffect(() => {

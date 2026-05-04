@@ -17,6 +17,26 @@ function forwardAuthCookies(from: NextResponse, to: NextResponse) {
 export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
+    // Supabase sometimes lands on Site URL root: `/?code=...` instead of `/auth/callback?code=...`
+    // (e.g. redirectTo not applied / fallback). Hitting `/` first runs `updateSession` and can break
+    // PKCE before client JS forwards. Redirect at the edge, preserving the full query string.
+    if (pathname === "/" && request.nextUrl.searchParams.has("code")) {
+        const dest = request.nextUrl.clone();
+        dest.pathname = "/auth/callback";
+        return NextResponse.redirect(dest, 307);
+    }
+
+    // PKCE code exchange runs in `app/auth/callback/route.ts`. Refreshing the session here first
+    // can race with `exchangeCodeForSession` and contribute to `oauth_exchange_failed` in prod.
+    if (pathname === "/auth/callback") {
+        const passthrough = NextResponse.next({ request });
+        passthrough.headers.set(
+            "Cache-Control",
+            "no-store, private, max-age=0, must-revalidate"
+        );
+        return passthrough;
+    }
+
     const sessionResponse = await updateSession(request);
 
     if (!pathname.startsWith("/api/") || pathname.includes("/test-")) {
