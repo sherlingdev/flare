@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
+import { getAuthRedirectOrigin } from "@/lib/publicSiteUrl";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -289,7 +290,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             setOauthLoading(provider);
             try {
                 const supabase = createClient();
-                const redirectTo = `${window.location.origin}/auth/callback`;
+                const redirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
                 const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider,
                     options: { redirectTo },
@@ -322,7 +323,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         const supabase = createClient();
 
         // Must match Supabase Dashboard → Authentication → URL Configuration → Redirect URLs
-        const emailRedirectTo = `${window.location.origin}/auth/callback`;
+        const emailRedirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
 
         const { data, error: signUpError } = await supabase.auth.signUp({
             email: email.trim(),
@@ -424,11 +425,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         try {
             const supabase = createClient();
 
-            // Use production URL in production, current origin in development
-            const isProduction = window.location.hostname === 'flarexrate.com';
-            const emailRedirectTo = isProduction
-                ? 'https://flarexrate.com/auth/callback'
-                : `${window.location.origin}/auth/callback`;
+            const emailRedirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
 
             const { error: resendError } = await supabase.auth.resend({
                 type: 'signup',
@@ -472,7 +469,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         try {
             const supabase = createClient();
             const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-                redirectTo: `${window.location.origin}/auth/reset-password`,
+                redirectTo: `${getAuthRedirectOrigin()}/auth/reset-password`,
             });
 
             if (resetError) {

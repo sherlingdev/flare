@@ -25,6 +25,18 @@ export default function Home() {
   }, [mounted, language]);
 
 
+  // OAuth sometimes lands with ?code= on "/" — forward to /auth/callback on same origin (PKCE cookies).
+  useEffect(() => {
+    if (!mounted) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (window.location.pathname === "/" && params.get("code")) {
+      window.location.replace(
+        `${window.location.origin}/auth/callback?${params.toString()}`
+      );
+    }
+  }, [mounted]);
+
   // Detect reset password token in URL hash/search params and redirect to reset password page
   useEffect(() => {
     if (!mounted) return;
