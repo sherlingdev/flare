@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
-import { getAuthRedirectOrigin } from "@/lib/publicSiteUrl";
+import { getAuthRedirectOrigin, getOAuthCallbackUrl } from "@/lib/publicSiteUrl";
 import { useAuthModal } from "@/contexts/AuthModalContext";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -290,7 +290,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             setOauthLoading(provider);
             try {
                 const supabase = createClient();
-                const redirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
+                const redirectTo = getOAuthCallbackUrl();
                 const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider,
                     options: { redirectTo },
@@ -323,7 +323,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         const supabase = createClient();
 
         // Must match Supabase Dashboard → Authentication → URL Configuration → Redirect URLs
-        const emailRedirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
+        const emailRedirectTo = getOAuthCallbackUrl();
 
         const { data, error: signUpError } = await supabase.auth.signUp({
             email: email.trim(),
@@ -425,7 +425,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         try {
             const supabase = createClient();
 
-            const emailRedirectTo = `${getAuthRedirectOrigin()}/auth/callback`;
+            const emailRedirectTo = getOAuthCallbackUrl();
 
             const { error: resendError } = await supabase.auth.resend({
                 type: 'signup',

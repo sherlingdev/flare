@@ -3,20 +3,23 @@ import type { NextRequest, NextResponse } from "next/server";
 import type { Database } from "@/types/supabase";
 
 /**
- * Supabase client for Route Handlers that exchange OAuth codes.
- * Cookies must be written onto the **same** `NextResponse` you return (often a redirect);
- * using only `cookies()` from `next/headers` can omit `Set-Cookie` on redirect responses.
+ * Supabase client for App Router **Route Handlers** performing OAuth code exchange.
+ *
+ * `cookies()` from `next/headers` does not reliably attach `Set-Cookie` to `NextResponse.redirect`
+ * in all Next.js versions. Cookie writes must target the **same** `NextResponse` you return.
+ *
+ * @see https://supabase.com/docs/guides/auth/server-side/nextjs
  */
-export function createExchangeRouteHandlerClient(
+export function createSupabaseRouteHandlerClient(
     request: NextRequest,
-    response: NextResponse
+    response: NextResponse,
 ) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
         throw new Error(
-            "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY",
         );
     }
 

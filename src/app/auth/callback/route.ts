@@ -1,19 +1,19 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createExchangeRouteHandlerClient } from "@/utils/supabase/route-handler-exchange";
+import { createSupabaseRouteHandlerClient } from "@/utils/supabase/route-handler";
 
 /**
- * OAuth PKCE callback — matches Supabase Server-Side Auth guide:
- * https://supabase.com/docs/guides/auth/social-login/auth-github (Next.js `route.ts` snippet)
+ * Single OAuth / PKCE completion endpoint for Google & GitHub (same `redirectTo` from AuthModal).
  *
- * Session cookies from `exchangeCodeForSession` are applied to the **redirect** `NextResponse`
- * (see `@/utils/supabase/route-handler-exchange`) so Set-Cookie is not dropped in the App Router.
+ * Flow: Supabase redirects here with `?code=` → `exchangeCodeForSession` → session cookies on redirect.
  *
- * Uses `x-forwarded-host` / `x-forwarded-proto` so redirects after login use the **public** domain
- * on Netlify (custom domain) instead of the internal `*.netlify.app` origin.
+ * @see https://supabase.com/docs/guides/auth/social-login/auth-github (Next.js route snippet)
  */
 
 function noStore(res: NextResponse) {
-    res.headers.set("Cache-Control", "no-store, private, max-age=0, must-revalidate");
+    res.headers.set(
+        "Cache-Control",
+        "no-store, private, max-age=0, must-revalidate",
+    );
     return res;
 }
 
@@ -25,7 +25,7 @@ function safeNextPath(raw: string | null): string {
     return raw;
 }
 
-/** Redirect URL visible to the browser — respects load balancer / Netlify forwarded host. */
+/** Public URL for redirects behind Netlify / other proxies (custom domain). */
 function absoluteRedirectUrl(request: NextRequest, pathnameAndQuery: string): string {
     const requestUrl = new URL(request.url);
     const origin = requestUrl.origin;
@@ -54,23 +54,21 @@ export async function GET(request: NextRequest) {
     const type = requestUrl.searchParams.get("type");
     const accessToken = requestUrl.searchParams.get("access_token");
 
-    const isRecovery =
-        type === "recovery" ||
-        (accessToken != null && requestUrl.searchParams.get("type") === "recovery");
+    const isRecovery = type === "recovery" && accessToken != null;
 
-    if (isRecovery && accessToken) {
+    if (isRecovery) {
         const tokenString = `#access_token=${encodeURIComponent(accessToken)}&type=recovery`;
         return noStore(
             NextResponse.redirect(
-                `${absoluteRedirectUrl(request, "/auth/reset-password")}${tokenString}`
-            )
+                `${absoluteRedirectUrl(request, "/auth/reset-password")}${tokenString}`,
+            ),
         );
     }
 
     if (code) {
         const successUrl = absoluteRedirectUrl(request, next);
         const redirectResponse = NextResponse.redirect(successUrl);
-        const supabase = createExchangeRouteHandlerClient(request, redirectResponse);
+        const supabase = createSupabaseRouteHandlerClient(request, redirectResponse);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
@@ -84,9 +82,10 @@ export async function GET(request: NextRequest) {
             code: err.code,
         });
 
-        const failPath = `/?auth_error=oauth_exchange_failed`;
         return noStore(
-            NextResponse.redirect(absoluteRedirectUrl(request, failPath))
+            NextResponse.redirect(
+                absoluteRedirectUrl(request, "/?auth_error=oauth_exchange_failed"),
+            ),
         );
     }
 

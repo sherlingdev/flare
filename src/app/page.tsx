@@ -8,6 +8,7 @@ import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
 import { createClient } from "@/utils/supabase/client";
+import { getOAuthCallbackUrl } from "@/lib/publicSiteUrl";
 
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
   const t = translations[mounted ? language : "en"];
   const [showOauthErrorBanner, setShowOauthErrorBanner] = useState(false);
 
-  /** `?auth_error=oauth_exchange_failed` — set by /auth/callback when exchangeCodeForSession fails; strip from URL after showing message */
+  /** `app/auth/callback/route.ts` redirects here with `?auth_error=oauth_exchange_failed` on exchange failure */
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -64,7 +65,7 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     if (window.location.pathname === "/" && params.get("code")) {
       window.location.replace(
-        `${window.location.origin}/auth/callback?${params.toString()}`
+        `${getOAuthCallbackUrl()}?${params.toString()}`
       );
     }
   }, [mounted]);
