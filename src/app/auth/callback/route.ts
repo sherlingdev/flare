@@ -1,26 +1,47 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import type { Database } from "@/types/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 /**
- * OAuth PKCE + email completion: exchange ?code= for a session.
+ * OAuth PKCE callback — matches Supabase Server-Side Auth guide:
+ * https://supabase.com/docs/guides/auth/social-login/auth-github (Next.js `route.ts` snippet)
  *
- * Uses a NextResponse prepared up front so `setAll` attaches session cookies to the same
- * redirect Supabase expects (Route Handler + `cookies()` from next/headers can drop Set-Cookie on redirects).
+ * Uses `x-forwarded-host` / `x-forwarded-proto` so redirects after login use the **public** domain
+ * on Netlify (custom domain) instead of the internal `*.netlify.app` origin.
  */
-export async function GET(request: NextRequest) {
+
+function safeNextPath(raw: string | null): string {
+    const fallback = "/";
+    if (!raw || !raw.startsWith("/") || raw.startsWith("//") || raw.includes("://")) {
+        return fallback;
+    }
+    return raw;
+}
+
+/** Redirect URL visible to the browser — respects load balancer / Netlify forwarded host. */
+function absoluteRedirectUrl(request: NextRequest, pathnameAndQuery: string): string {
     const requestUrl = new URL(request.url);
     const origin = requestUrl.origin;
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    const isLocal = process.env.NODE_ENV === "development";
+
+    if (isLocal) {
+        return `${origin}${pathnameAndQuery}`;
+    }
+
+    if (forwardedHost) {
+        const host = forwardedHost.split(",")[0].trim();
+        const proto = (forwardedProto ?? "https").split(",")[0].trim();
+        return `${proto}://${host}${pathnameAndQuery}`;
+    }
+
+    return `${origin}${pathnameAndQuery}`;
+}
+
+export async function GET(request: NextRequest) {
+    const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
-    const nextRaw = requestUrl.searchParams.get("next");
-    // Same-origin path only (blocks protocol-relative //host and open redirects)
-    const next =
-        nextRaw &&
-        nextRaw.startsWith("/") &&
-        !nextRaw.startsWith("//") &&
-        !nextRaw.includes("://")
-            ? nextRaw
-            : "/";
+    const next = safeNextPath(requestUrl.searchParams.get("next"));
 
     const type = requestUrl.searchParams.get("type");
     const accessToken = requestUrl.searchParams.get("access_token");
@@ -31,39 +52,17 @@ export async function GET(request: NextRequest) {
 
     if (isRecovery && accessToken) {
         const tokenString = `#access_token=${encodeURIComponent(accessToken)}&type=recovery`;
-        return NextResponse.redirect(new URL(`/auth/reset-password${tokenString}`, origin));
+        return NextResponse.redirect(
+            `${absoluteRedirectUrl(request, "/auth/reset-password")}${tokenString}`
+        );
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
     if (code) {
-        if (!supabaseUrl || !supabaseKey) {
-            console.error("[auth/callback] Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
-            const fail = new URL("/", origin);
-            fail.searchParams.set("auth_error", "oauth_exchange_failed");
-            return NextResponse.redirect(fail);
-        }
-
-        const successResponse = NextResponse.redirect(new URL(next, origin));
-
-        const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
-            cookies: {
-                getAll() {
-                    return request.cookies.getAll();
-                },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) => {
-                        successResponse.cookies.set(name, value, options);
-                    });
-                },
-            },
-        });
-
+        const supabase = await createClient();
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
-            return successResponse;
+            return NextResponse.redirect(absoluteRedirectUrl(request, next));
         }
 
         const err = error as { message: string; status?: number; code?: string };
@@ -72,10 +71,10 @@ export async function GET(request: NextRequest) {
             status: err.status,
             code: err.code,
         });
-        const fail = new URL("/", origin);
-        fail.searchParams.set("auth_error", "oauth_exchange_failed");
-        return NextResponse.redirect(fail);
+
+        const failPath = `/?auth_error=oauth_exchange_failed`;
+        return NextResponse.redirect(absoluteRedirectUrl(request, failPath));
     }
 
-    return NextResponse.redirect(new URL("/", origin));
+    return NextResponse.redirect(absoluteRedirectUrl(request, "/"));
 }

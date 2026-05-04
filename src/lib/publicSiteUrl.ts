@@ -1,21 +1,33 @@
 /**
- * Origin used in Supabase `redirectTo` (OAuth, magic links, reset password).
+ * Base URL for Supabase `redirectTo` from the client (OAuth, signup confirmation, password reset).
  *
- * - **Production domain** (`flarexrate.com`): uses `NEXT_PUBLIC_SITE_URL` when set so OAuth returns to the custom domain, not `*.netlify.app`.
- * - **Netlify deploy previews** (`*.netlify.app`): **always** uses `window.location.origin`. PKCE stores the code verifier on the origin that starts the login; forcing `NEXT_PUBLIC_SITE_URL` here breaks exchange when testing from a preview URL.
- * - **Local**: falls back to current origin when env is unset.
+ * ### Flow (Google / GitHub via Supabase)
+ *
+ * 1. User clicks sign-in → `signInWithOAuth({ options: { redirectTo: <origin>/auth/callback } })`.
+ * 2. Redirect to provider → Supabase → browser returns to `redirectTo` with `?code=`.
+ * 3. `app/auth/callback/route.ts` (Server Route Handler) runs `exchangeCodeForSession` with
+ *    `createClient` from `@/utils/supabase/server` per [Supabase social login + PKCE](https://supabase.com/docs/guides/auth/social-login).
+ *    Redirects use `x-forwarded-host` so Netlify keeps the public domain (e.g. flarexrate.com).
+ *
+ * ### Why `window.location.origin` (no separate “canonical env” for OAuth)
+ *
+ * PKCE stores the verifier on the **origin where the flow started**. The redirect URI must be that
+ * same origin’s `/auth/callback` (allow-listed in Supabase). Using the live browser origin is the
+ * usual pattern for client-initiated OAuth and avoids production bugs where `NEXT_PUBLIC_SITE_URL`
+ * was pointed at `*.netlify.app` while users open `flarexrate.com`.
+ *
+ * ### Supabase dashboard (required)
+ *
+ * Under **Authentication → URL Configuration → Redirect URLs**, include every origin you use, e.g.:
+ * `https://flarexrate.com/auth/callback`, `http://localhost:3000/auth/callback`,
+ * `https://*.netlify.app/auth/callback` for previews.
+ *
+ * Optional `NEXT_PUBLIC_SITE_URL` is only a fallback when this helper runs without `window` (should
+ * not occur for current AuthModal-only usage).
  */
 export function getAuthRedirectOrigin(): string {
-    const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
-
     if (typeof window !== "undefined") {
-        const host = window.location.hostname;
-        if (host.endsWith(".netlify.app")) {
-            return window.location.origin;
-        }
-        if (fromEnv) return fromEnv;
         return window.location.origin;
     }
-
-    return fromEnv ?? "";
+    return process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ?? "";
 }
