@@ -1,50 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import { useEffect, useLayoutEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translations } from "@/lib/translations";
 import { measurePerformance, measureWebVitals } from "@/lib/performance";
 import CurrencyConverter from "@/components/CurrencyConverter";
 import CurrencyCard from "@/components/CurrencyCard";
-import { createClient } from "@/utils/supabase/client";
 import { getOAuthCallbackUrl } from "@/lib/publicSiteUrl";
 
 
 export default function Home() {
   const { language, mounted } = useLanguage();
   const t = translations[mounted ? language : "en"];
-  const [showOauthErrorBanner, setShowOauthErrorBanner] = useState(false);
-
-  /** Client `/auth/callback` redirects here with `?auth_error=oauth_exchange_failed` if PKCE exchange fails */
-  useEffect(() => {
-    if (!mounted || typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("auth_error") !== "oauth_exchange_failed") return;
-    setShowOauthErrorBanner(true);
-    params.delete("auth_error");
-    const qs = params.toString();
-    const clean =
-      window.location.pathname +
-      (qs ? `?${qs}` : "") +
-      window.location.hash;
-    window.history.replaceState(null, "", clean);
-  }, [mounted]);
-
-  /** If the user is actually signed in, never keep the OAuth exchange error banner up. */
-  useEffect(() => {
-    if (!mounted) return;
-    const supabase = createClient();
-    void supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setShowOauthErrorBanner(false);
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) setShowOauthErrorBanner(false);
-    });
-    return () => subscription.unsubscribe();
-  }, [mounted]);
 
   useEffect(() => {
     if (mounted) {
@@ -156,39 +124,8 @@ export default function Home() {
     };
   }, [mounted]);
 
-  const tt = t as typeof translations["en"] & {
-    oauthExchangeFailedTitle?: string;
-    oauthExchangeFailedBody?: string;
-    oauthErrorDismiss?: string;
-  };
-
   return (
     <main className="relative z-10 w-full min-w-0 flex flex-col items-center justify-center px-3 sm:px-6 lg:px-8 homepage-vertical-center">
-      {showOauthErrorBanner && (
-        <div
-          className="w-full max-w-6xl px-4 sm:px-8 mb-4 order-first"
-          role="alert"
-        >
-          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/50 px-4 py-3 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 text-left">
-            <div className="min-w-0">
-              <p className="font-medium text-amber-900 dark:text-amber-100">
-                {tt.oauthExchangeFailedTitle ?? "Couldn’t complete sign-in"}
-              </p>
-              <p className="text-sm text-amber-800 dark:text-amber-200/95 mt-1">
-                {tt.oauthExchangeFailedBody ??
-                  "Try signing in again in this tab and allow cookies for this site."}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowOauthErrorBanner(false)}
-              className="shrink-0 self-end sm:self-center rounded-lg px-3 py-1.5 text-sm font-medium bg-amber-200/80 text-amber-950 hover:bg-amber-300/90 dark:bg-amber-900/80 dark:text-amber-100 dark:hover:bg-amber-800"
-            >
-              {tt.oauthErrorDismiss ?? "Got it"}
-            </button>
-          </div>
-        </div>
-      )}
       {/* Header — two lines: Convert currencies instantly. + Quick, safe... */}
       <div className="w-full max-w-6xl py-3 sm:py-6 lg:py-8 px-4 sm:px-8 mb-0">
         <h1 className="text-center text-2xl sm:text-5xl lg:text-6xl font-bold text-flare-primary w-full max-w-full">

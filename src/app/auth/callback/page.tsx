@@ -69,9 +69,7 @@ function CallbackContent() {
                 return;
             }
 
-            window.location.replace(
-                `${window.location.origin}/?auth_error=oauth_exchange_failed`,
-            );
+            window.location.replace(`${window.location.origin}/`);
         };
 
         void run();
