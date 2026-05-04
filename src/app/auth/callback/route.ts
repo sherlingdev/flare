@@ -1,13 +1,21 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { createExchangeRouteHandlerClient } from "@/utils/supabase/route-handler-exchange";
 
 /**
  * OAuth PKCE callback — matches Supabase Server-Side Auth guide:
  * https://supabase.com/docs/guides/auth/social-login/auth-github (Next.js `route.ts` snippet)
  *
+ * Session cookies from `exchangeCodeForSession` are applied to the **redirect** `NextResponse`
+ * (see `@/utils/supabase/route-handler-exchange`) so Set-Cookie is not dropped in the App Router.
+ *
  * Uses `x-forwarded-host` / `x-forwarded-proto` so redirects after login use the **public** domain
  * on Netlify (custom domain) instead of the internal `*.netlify.app` origin.
  */
+
+function noStore(res: NextResponse) {
+    res.headers.set("Cache-Control", "no-store, private, max-age=0, must-revalidate");
+    return res;
+}
 
 function safeNextPath(raw: string | null): string {
     const fallback = "/";
@@ -52,17 +60,21 @@ export async function GET(request: NextRequest) {
 
     if (isRecovery && accessToken) {
         const tokenString = `#access_token=${encodeURIComponent(accessToken)}&type=recovery`;
-        return NextResponse.redirect(
-            `${absoluteRedirectUrl(request, "/auth/reset-password")}${tokenString}`
+        return noStore(
+            NextResponse.redirect(
+                `${absoluteRedirectUrl(request, "/auth/reset-password")}${tokenString}`
+            )
         );
     }
 
     if (code) {
-        const supabase = await createClient();
+        const successUrl = absoluteRedirectUrl(request, next);
+        const redirectResponse = NextResponse.redirect(successUrl);
+        const supabase = createExchangeRouteHandlerClient(request, redirectResponse);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (!error) {
-            return NextResponse.redirect(absoluteRedirectUrl(request, next));
+            return noStore(redirectResponse);
         }
 
         const err = error as { message: string; status?: number; code?: string };
@@ -73,8 +85,10 @@ export async function GET(request: NextRequest) {
         });
 
         const failPath = `/?auth_error=oauth_exchange_failed`;
-        return NextResponse.redirect(absoluteRedirectUrl(request, failPath));
+        return noStore(
+            NextResponse.redirect(absoluteRedirectUrl(request, failPath))
+        );
     }
 
-    return NextResponse.redirect(absoluteRedirectUrl(request, "/"));
+    return noStore(NextResponse.redirect(absoluteRedirectUrl(request, "/")));
 }
