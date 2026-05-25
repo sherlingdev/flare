@@ -10,6 +10,7 @@ import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
 import AuthModal from "@/components/AuthModal";
 import { useAuthModal } from "@/contexts/AuthModalContext";
+import { setPendingAuthToast } from "@/lib/authToastStorage";
 
 // Lazy load icons for better performance
 const Sun = lazy(() => import("lucide-react").then(module => ({ default: module.Sun })));
@@ -181,7 +182,8 @@ export default function Header({
             // Ignore errors
         }
 
-        // Sign out and refresh page
+        setPendingAuthToast("signed-out");
+
         supabase.auth.signOut().catch(() => {
             // Ignore errors
         });

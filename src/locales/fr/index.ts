@@ -597,6 +597,10 @@ const fr = {
     resetPasswordSent: "E-mail de réinitialisation envoyé ! Veuillez vérifier votre boîte de réception.",
     resetPasswordError: "Échec de l'envoi de l'e-mail. Veuillez réessayer.",
     backToLogin: "Retour à la connexion",
+    authSigningIn: "Connexion en cours...",
+    authSignedIn: "Connexion réussie !",
+    authSignedOut: "Déconnexion réussie !",
+    authToastDismiss: "Fermer la notification",
 
     // Currency variations
     mainVariations: "Variations principales",

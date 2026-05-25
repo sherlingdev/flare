@@ -596,6 +596,10 @@ const it = {
     resetPasswordSent: "Email di reimpostazione inviata! Controlla la tua casella di posta.",
     resetPasswordError: "Invio email fallito. Riprova.",
     backToLogin: "Torna al login",
+    authSigningIn: "Accesso in corso...",
+    authSignedIn: "Accesso effettuato!",
+    authSignedOut: "Disconnessione effettuata!",
+    authToastDismiss: "Chiudi notifica",
 
     // Loader
     loading: "Caricamento...",

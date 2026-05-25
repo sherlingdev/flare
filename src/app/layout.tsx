@@ -11,6 +11,8 @@ import { LoadingProvider } from "@/contexts/LoadingContext";
 import Loader from "@/components/Loader";
 import { ConverterProvider } from "@/contexts/ConverterContext";
 import { AuthModalProvider } from "@/contexts/AuthModalContext";
+import { AuthToastProvider } from "@/contexts/AuthToastContext";
+import AuthToast from "@/components/AuthToast";
 import type { Metadata } from "next";
 
 const dmSans = DM_Sans({
@@ -152,7 +154,9 @@ export default function RootLayout({
             <ConverterProvider>
               <ThemeProvider>
                 <AuthModalProvider>
+                <AuthToastProvider>
                 <Loader />
+                <AuthToast />
                 <Schema />
                 <AdsterraScript />
                 <AdSenseScript />
@@ -160,6 +164,7 @@ export default function RootLayout({
                 <Layout>
                   {children}
                 </Layout>
+                </AuthToastProvider>
                 </AuthModalProvider>
               </ThemeProvider>
             </ConverterProvider>

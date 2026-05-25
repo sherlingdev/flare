@@ -7,6 +7,7 @@ import { translations } from "@/lib/translations";
 import { createClient } from "@/utils/supabase/client";
 import { getAuthRedirectOrigin, getOAuthCallbackUrl } from "@/lib/publicSiteUrl";
 import { useAuthModal } from "@/contexts/AuthModalContext";
+import { useAuthToast } from "@/contexts/AuthToastContext";
 import { Eye, EyeOff } from "lucide-react";
 
 interface AuthModalProps {
@@ -76,13 +77,13 @@ const PasswordInput = ({
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full pr-12 text-sm bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-200"
+                className="w-full pr-14 text-sm bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-200"
                 required={required}
             />
             <button
                 type="button"
                 onClick={onToggleVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
+                className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
                 aria-label={showPassword ? "Hide password" : "Show password"}
             >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -123,6 +124,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const { mounted: langMounted, language } = useLanguage();
     const t = translations[langMounted ? language : "en"] as typeof translations["en"];
     const { isResetPasswordMode: contextResetMode, setResetPasswordMode: setContextResetMode } = useAuthModal();
+    const { showSigningIn, showSignedIn, dismiss: dismissAuthToast } = useAuthToast();
 
     // State management
     const [isLogin, setIsLogin] = useState(true);
@@ -266,28 +268,33 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         });
 
         if (signInError) {
+            dismissAuthToast();
             setError(translateError(signInError.message, t));
             setLoading(false);
             return false;
         }
 
         if (!data.user || !data.session) {
+            dismissAuthToast();
             setError(t.loginFailed || "Login failed. Please check your credentials.");
             setLoading(false);
             return false;
         }
 
+        dismissAuthToast();
+        showSignedIn();
         onClose();
         setEmail("");
         setPassword("");
         setLoading(false);
         return true;
-    }, [email, password, t, onClose]);
+    }, [email, password, t, onClose, dismissAuthToast, showSignedIn]);
 
     const handleOAuth = useCallback(
         async (provider: "google" | "github") => {
             setError("");
             setOauthLoading(provider);
+            showSigningIn();
             try {
                 const supabase = createClient();
                 const redirectTo = getOAuthCallbackUrl();
@@ -296,15 +303,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     options: { redirectTo },
                 });
                 if (oauthError) {
+                    dismissAuthToast();
                     setError(translateError(oauthError.message, t));
                     setOauthLoading(null);
                 }
             } catch {
+                dismissAuthToast();
                 setError(t.unexpectedError || "An unexpected error occurred. Please try again.");
                 setOauthLoading(null);
             }
         },
-        [t]
+        [t, showSigningIn, dismissAuthToast]
     );
 
     const handleRegister = useCallback(async () => {
@@ -347,6 +356,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         if (data.user) {
             if (data.session) {
                 // User created and automatically logged in (email confirmation disabled)
+                dismissAuthToast();
+                showSignedIn();
                 resetFormState();
                 setIsLogin(true);
                 onClose();
@@ -375,7 +386,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         }
 
         return true;
-    }, [email, password, confirmPassword, fullName, t, onClose, resetFormState]);
+    }, [email, password, confirmPassword, fullName, t, onClose, resetFormState, dismissAuthToast, showSignedIn]);
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -397,6 +408,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         }
 
         setLoading(true);
+        if (isLogin) {
+            showSigningIn();
+        }
 
         try {
             if (isLogin) {
@@ -405,11 +419,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 await handleRegister();
             }
         } catch (err) {
+            dismissAuthToast();
             const errorMessage = err instanceof Error ? err.message : (t.unexpectedError || "An unexpected error occurred. Please try again.");
             setError(errorMessage);
             setLoading(false);
         }
-    }, [email, password, isLogin, t, handleLogin, handleRegister, resetFormState]);
+    }, [email, password, isLogin, t, handleLogin, handleRegister, resetFormState, showSigningIn, dismissAuthToast]);
 
     const handleResendConfirmationEmail = useCallback(async () => {
         if (!email) {
@@ -595,10 +610,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-flare-primary hover:opacity-70 transition-opacity duration-200 z-10"
+                    className="absolute top-4 right-6 sm:right-8 inline-flex h-10 w-10 items-center justify-center rounded-lg text-flare-primary/90 hover:text-flare-primary hover:bg-slate-100/60 dark:hover:bg-slate-700/40 transition-colors duration-200 z-10"
                     aria-label="Close modal"
                 >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -613,14 +628,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     </p>
                 </div>
 
-                {!isForgotPassword && !isResetPasswordMode && (
+                {isLogin && !isForgotPassword && !isResetPasswordMode && (
                     <>
-                        <div className="space-y-3 mb-2">
+                        <div className="space-y-3 mb-4">
                             <button
                                 type="button"
                                 disabled={!!oauthLoading || loading}
                                 onClick={() => void handleOAuth("google")}
-                                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full min-h-[44px] flex items-center justify-center gap-2 px-4 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm leading-5 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {oauthLoading === "google" ? t.loading : t.signInWithGoogle}
                             </button>
@@ -628,17 +643,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 type="button"
                                 disabled={!!oauthLoading || loading}
                                 onClick={() => void handleOAuth("github")}
-                                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full min-h-[44px] flex items-center justify-center gap-2 px-4 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm leading-5 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {oauthLoading === "github" ? t.loading : t.signInWithGitHub}
                             </button>
                         </div>
-                        <div className="relative my-5">
+                        <div className="relative my-4">
                             <div className="absolute inset-0 flex items-center" aria-hidden>
-                                <div className="w-full border-t border-gray-200 dark:border-slate-600" />
+                                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
                             </div>
-                            <div className="relative flex justify-center text-xs uppercase tracking-wide">
-                                <span className="px-3 bg-[#FFFFFFF2] dark:bg-[#1E293BF2] text-gray-500 dark:text-gray-400">
+                            <div className="relative flex justify-center">
+                                <span className="px-3 bg-[#FFFFFFF2] dark:bg-[#1E293BF2] text-[11px] font-medium uppercase tracking-[0.14em] text-gray-400 dark:text-gray-400">
                                     {t.or}
                                 </span>
                             </div>

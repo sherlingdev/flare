@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { setPendingAuthToast } from "@/lib/authToastStorage";
+import { useAuthToast } from "@/contexts/AuthToastContext";
 
 /**
  * OAuth PKCE completion (Google + GitHub via Supabase).
@@ -23,11 +25,12 @@ function safeNextPath(raw: string | null): string {
 
 function CallbackContent() {
     const started = useRef(false);
+    const { showSigningIn } = useAuthToast();
 
-    /**
-     * Read params from `window.location`, not only `useSearchParams()`, so we never treat `code` as
-     * missing on the first hydration tick (avoids spurious `router.replace` / odd URL states).
-     */
+    useEffect(() => {
+        showSigningIn();
+    }, [showSigningIn]);
+
     useEffect(() => {
         if (started.current) return;
         started.current = true;
@@ -55,6 +58,7 @@ function CallbackContent() {
             const { error } = await supabase.auth.exchangeCodeForSession(code);
 
             if (!error) {
+                setPendingAuthToast("signed-in");
                 window.location.replace(`${window.location.origin}${next}`);
                 return;
             }
@@ -65,6 +69,7 @@ function CallbackContent() {
                 data: { session },
             } = await supabase.auth.getSession();
             if (session) {
+                setPendingAuthToast("signed-in");
                 window.location.replace(`${window.location.origin}${next}`);
                 return;
             }

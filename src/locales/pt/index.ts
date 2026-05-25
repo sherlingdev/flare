@@ -596,6 +596,10 @@ const pt = {
     resetPasswordSent: "E-mail de redefinição enviado! Por favor, verifique sua caixa de entrada.",
     resetPasswordError: "Falha ao enviar o e-mail. Por favor, tente novamente.",
     backToLogin: "Voltar ao login",
+    authSigningIn: "Entrando...",
+    authSignedIn: "Login realizado com sucesso!",
+    authSignedOut: "Logout realizado com sucesso!",
+    authToastDismiss: "Fechar notificação",
 
     // Currency variations
     mainVariations: "Principais variações",

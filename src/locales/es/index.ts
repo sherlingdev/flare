@@ -596,6 +596,10 @@ const es = {
     resetPasswordSent: "¡Correo de restablecimiento enviado! Por favor revisa tu bandeja de entrada.",
     resetPasswordError: "Error al enviar el correo. Por favor intenta de nuevo.",
     backToLogin: "Volver al inicio de sesión",
+    authSigningIn: "Iniciando sesión...",
+    authSignedIn: "¡Sesión iniciada correctamente!",
+    authSignedOut: "¡Sesión cerrada correctamente!",
+    authToastDismiss: "Cerrar notificación",
 
     // Loader
     loading: "Cargando...",

@@ -596,6 +596,10 @@ const en = {
     resetPasswordSent: "Password reset email sent! Please check your inbox.",
     resetPasswordError: "Failed to send reset email. Please try again.",
     backToLogin: "Back to login",
+    authSigningIn: "Signing in...",
+    authSignedIn: "Signed in successfully!",
+    authSignedOut: "Signed out successfully!",
+    authToastDismiss: "Dismiss notification",
 
     // Loader
     loading: "Loading...",
