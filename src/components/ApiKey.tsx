@@ -13,6 +13,7 @@ const rateLimitTemplates: Record<Language, string> = {
     fr: 'Veuillez attendre {time} avant de réessayer',
     pt: 'Por favor, aguarde {time} antes de tentar novamente',
     de: 'Bitte warten Sie {time}, bevor Sie es erneut versuchen',
+    sv: 'Vänta {time} innan du försöker igen',
     it: 'Attendere {time} prima di riprovare',
     zh: '请稍候 {time} 后再试'
 };

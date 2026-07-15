@@ -84,6 +84,17 @@ const emailCopy: Record<Language, {
         footer: 'Flare Exchange Rate | Währungen sofort umrechnen. Schnell, sicher und immer präzise.',
         viewDocs: 'API-Dokumentation anzeigen: https://flarexrate.com/documentation'
     },
+    sv: {
+        subject: 'Flare Exchange Rate | API-nyckel',
+        generated: 'API-nyckeln för Flare Exchange Rate har genererats.',
+        apiKeyLabel: 'API-nyckel:',
+        importantLabel: 'Viktigt:',
+        importantBody: 'Spara denna API-nyckel på ett säkert ställe. Nyckeln visas bara en gång och kan inte hämtas igen senare. Om du förlorar den kan du generera en ny med samma e-postadress.',
+        usage: 'För att använda API-nyckeln, inkludera den i begärans headers:',
+        button: 'Visa API-dokumentation',
+        footer: 'Flare Exchange Rate | Konvertera valutor direkt. Snabbt, säkert och alltid korrekt.',
+        viewDocs: 'Visa API-dokumentation: https://flarexrate.com/documentation'
+    },
     zh: {
         subject: 'Flare Exchange Rate | API 密钥',
         generated: 'Flare Exchange Rate 的 API 密钥已成功生成。',
