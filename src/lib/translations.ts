@@ -5,6 +5,7 @@ import pt from '@/locales/pt';
 import de from '@/locales/de';
 import zh from '@/locales/zh';
 import it from '@/locales/it';
+import sv from '@/locales/sv';
 export const translations = {
     en,
     es,
@@ -13,6 +14,7 @@ export const translations = {
     de,
     zh,
     it,
+    sv,
 };
 
 export type SupportedLocale = keyof typeof translations;

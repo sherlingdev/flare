@@ -62,6 +62,7 @@ export const metadata: Metadata = {
       'fr-FR': 'https://flarexrate.com',
       'pt-BR': 'https://flarexrate.com',
       'de-DE': 'https://flarexrate.com',
+      'sv-SE': 'https://flarexrate.com',
       'zh-CN': 'https://flarexrate.com',
       'it-IT': 'https://flarexrate.com',
     },

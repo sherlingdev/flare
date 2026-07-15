@@ -20,6 +20,7 @@ const languageNames: Record<Language, string> = {
     fr: "Français",
     pt: "Português",
     de: "Deutsch",
+    sv: "Svenska",
     zh: "中文 (简体)",
     it: "Italiano"
 };

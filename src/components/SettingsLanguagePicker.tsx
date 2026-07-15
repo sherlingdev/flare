@@ -7,7 +7,7 @@ import CurrencyRow from "./CurrencyRow";
 import CurrencyRowSelector from "./CurrencyRowSelector";
 import LanguageSelectModal from "./LanguageSelectModal";
 
-const LANG_ORDER: Language[] = ["en", "es", "pt", "fr", "de", "it", "zh"];
+const LANG_ORDER: Language[] = ["en", "es", "pt", "fr", "de", "sv", "it", "zh"];
 
 const LANGUAGE_OPTIONS: { code: Language; name: string }[] = [
     { code: "en", name: "English" },
@@ -15,6 +15,7 @@ const LANGUAGE_OPTIONS: { code: Language; name: string }[] = [
     { code: "pt", name: "Português" },
     { code: "fr", name: "Français" },
     { code: "de", name: "Deutsch" },
+    { code: "sv", name: "Svenska" },
     { code: "it", name: "Italiano" },
     { code: "zh", name: "中文 (简体)" },
 ];

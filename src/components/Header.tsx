@@ -78,6 +78,7 @@ export default function Header({
         { code: "pt", name: "Português" },    // Large market (Brazil)
         { code: "fr", name: "Français" },     // Major European language
         { code: "de", name: "Deutsch" },      // Major European language
+        { code: "sv", name: "Svenska" },      // Nordic market
         { code: "it", name: "Italiano" },     // European language
         { code: "zh", name: "中文" },         // Large market (China)
     ];
